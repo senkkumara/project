@@ -7,6 +7,11 @@ using namespace std;
 #include "points.h"
 #include "point.h"
 
+Points::Points()
+{
+
+}
+
 Points::Points(string &filename)
 {
 	std::string line;
@@ -45,6 +50,11 @@ Points::~Points()
 	//TODO: Add destructor
 }
 
+Points_ptr Points::create()
+{
+	return Points_ptr(new Points());
+}
+
 Points_ptr Points::create(string &filename)
 {
 	return Points_ptr(new Points(filename));
@@ -58,7 +68,7 @@ vector<Point_ptr> Points::getItems()
 /**
  *	Add a point to the list.
  */
-void Points::add(Point_ptr pnt)
+void Points::add(Point_ptr &pnt)
 {
 	_items.push_back(pnt);
 }
@@ -66,7 +76,7 @@ void Points::add(Point_ptr pnt)
 /**
  *	Remove a point from the list.
  */
-void Points::remove(Point_ptr pnt)
+void Points::remove(Point_ptr &pnt)
 {
 
 }

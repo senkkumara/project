@@ -65,7 +65,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="feature.cpp" />
+    <ClCompile Include="features.cpp" />
     <ClCompile Include="layer.cpp" />
+    <ClCompile Include="layers.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="point.cpp" />
     <ClCompile Include="points.cpp" />
@@ -73,7 +75,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="feature.h" />
+    <ClInclude Include="features.h" />
     <ClInclude Include="layer.h" />
+    <ClInclude Include="layers.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="point.h" />
     <ClInclude Include="points.h" />

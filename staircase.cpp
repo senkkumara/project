@@ -9,13 +9,13 @@ using namespace std;
 Staircase::Staircase(string &filename)
 {
 	// Get points
-	_pnts = Points::create(filename);
-
+	_points = Points::create(filename);
+	
 	// Sort points into layers
-	_lyrs = Layers::create(_pnts);
+	_layers = Layers::create(_points);
 
 	// Sort levels into features
-	_feats = Features::create(_lyrs);
+	//_features = Features::create(_layers);
 }
 
 Staircase::~Staircase()
@@ -37,15 +37,15 @@ std::ostream &operator<<(std::ostream &strm, const Staircase &s)
 
 shared_ptr<Points> Staircase::getPoints()
 {
-	return _pnts;
+	return _points;
 }
 
 shared_ptr<Layers> Staircase::getLayers()
 {
-	return _lyrs;
+	return _layers;
 }
 
 shared_ptr<Features> Staircase::getFeatures()
 {
-	return _feats;
+	return _features;
 }

@@ -33,6 +33,12 @@
     <ClCompile Include="points.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="layers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="features.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -51,6 +57,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="points.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="layers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="features.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
