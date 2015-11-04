@@ -9,6 +9,9 @@ using namespace std;
 #include "points.h"
 #include "point.h"
 
+class Layers;
+typedef shared_ptr<Layers> Layers_ptr;
+
 class Layers
 {
 private:
@@ -24,8 +27,8 @@ private:
 
 public:
 	// Factories
-	static shared_ptr<Layers> create();
-	static shared_ptr<Layers> create(Points_ptr &points);
+	static Layers_ptr create();
+	static Layers_ptr create(Points_ptr &points);
 
 	// Member functions (public)
 	void add(Layer_ptr &layer);
@@ -40,8 +43,5 @@ public:
 	// Getters
 	vector<Layer_ptr> getItems();
 };
-
-typedef shared_ptr<Layers> Layers_ptr;
-
 
 #endif

@@ -8,6 +8,9 @@ using namespace std;
 #include "layers.h"
 #include "layer.h"
 
+class Feature;
+typedef shared_ptr<Feature> Feature_ptr;
+
 class Feature
 {
 private:
@@ -24,12 +27,10 @@ private:
 	friend std::ostream &operator<<(std::ostream &strm, const Feature &f);
 public:
 	// Factories
-	static shared_ptr<Feature> create();
+	static Feature_ptr create();
 
 	// Getters
 	Layers_ptr getLayers();
 };
-
-typedef shared_ptr<Feature> Feature_ptr;
 
 #endif

@@ -7,6 +7,9 @@ using namespace std;
 #include <ostream>
 #include <vector>
 
+class Point;
+typedef shared_ptr<Point> Point_ptr;
+
 class Point
 {
 private:
@@ -24,11 +27,11 @@ private:
 
 public:
 	// Factories
-	static shared_ptr<Point> create(double xcoord, 
+	static Point_ptr create(double xcoord, 
 									double ycoord,
 									double zcoord);
 
-	static shared_ptr<Point> create(vector<double> &coords);
+	static Point_ptr create(vector<double> &coords);
 
 	// Getters
 	double getX();
@@ -36,7 +39,5 @@ public:
 	double getZ();
 	double getComponent(int index);
 };
-
-typedef shared_ptr<Point> Point_ptr;
 
 #endif

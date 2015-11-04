@@ -8,6 +8,9 @@ using namespace std;
 #include "points.h"
 #include "point.h"
 
+class Layer;
+typedef shared_ptr<Layer> Layer_ptr;
+
 class Layer
 {
 private:
@@ -34,8 +37,8 @@ private:
 	friend bool operator>(Layer &ly1, Layer &ly2);
 public:
 	// Factories
-	static shared_ptr<Layer> create();
-	static shared_ptr<Layer> create(Point_ptr &pnt);
+	static Layer_ptr create();
+	static Layer_ptr create(Point_ptr &pnt);
 
 	// Member functions (public)
 	void add(Point_ptr &ptr);
@@ -52,7 +55,5 @@ public:
 	void setMin(double);
 	void setMax(double);
 };
-
-typedef shared_ptr<Layer> Layer_ptr;
 
 #endif

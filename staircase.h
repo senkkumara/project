@@ -13,6 +13,9 @@ using namespace std;
 #include "points.h"
 #include "point.h"
 
+class Staircase;
+typedef shared_ptr<Staircase> Staircase_ptr;
+
 class Staircase
 {
 private:
@@ -29,14 +32,12 @@ private:
 	friend std::ostream& operator<<(std::ostream &strm, const Staircase &s);
 public:
 	// Factories
-	static shared_ptr<Staircase> create(string &filename);
+	static Staircase_ptr create(string &filename);
 
 	// Getters
 	Points_ptr getPoints();
 	Layers_ptr getLayers();
 	Features_ptr getFeatures();
 };
-
-typedef shared_ptr<Staircase> Staircase_ptr;
 
 #endif

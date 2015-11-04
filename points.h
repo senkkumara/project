@@ -6,6 +6,9 @@
 #include <vector>
 #include "point.h"
 
+class Points;
+typedef shared_ptr<Points> Points_ptr;
+
 class Points
 {
 private:
@@ -22,8 +25,8 @@ private:
 
 public:
 	// Factories
-	static shared_ptr<Points> create();
-	static shared_ptr<Points> create(string &filename);
+	static Points_ptr create();
+	static Points_ptr create(string &filename);
 	
 	// Member functions (public)
 	void add(Point_ptr &point);
@@ -35,7 +38,5 @@ public:
 	// Getters
 	vector<Point_ptr> getItems();
 };
-
-typedef shared_ptr<Points> Points_ptr;
 
 #endif
