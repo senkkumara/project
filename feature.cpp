@@ -2,21 +2,35 @@ using namespace std;
 
 #include "feature.h"
 
+/**
+ *	(Private) Default constructor.
+ *
+ *	Do not use this directly, use the provided factory method.
+ */
 Feature::Feature()
 {
-
+	init();
 }
 
-Feature::~Feature()
+/**
+ *	(Private) Initialises the member variables.
+ */
+void Feature::init()
 {
-	//TODO: Add destructor
+	_layers = Layers::create();
 }
 
+/**
+ *	Factory method using default constructor.
+ */
 Feature_ptr Feature::create()
 {
 	return Feature_ptr(new Feature());
 }
 
+/**
+ *	Get the layers the feature comprises of.
+ */
 Layers_ptr Feature::getLayers()
 {
 	return _layers;

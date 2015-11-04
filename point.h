@@ -11,8 +11,8 @@ class Point
 {
 private:
 	// Constructors
-	Point(double, double, double);
-	Point(std::vector<double>);
+	Point(double xcoord, double ycoord, double zcoord);
+	Point(std::vector<double> &coords);
 
 	// Member variables (private)
 	std::vector<double> _coords;
@@ -21,17 +21,20 @@ private:
 	friend std::ostream &operator<<(std::ostream &strm, const Point &p);
 	friend bool operator==(Point &cP1, Point &cP2);
 	friend bool operator!=(Point &cP1, Point &cP2);
-public:
-	~Point();
 
+public:
 	// Factories
-	static shared_ptr<Point> create(double, double, double);
-	static shared_ptr<Point> create(vector<double>);
+	static shared_ptr<Point> create(double xcoord, 
+									double ycoord,
+									double zcoord);
+
+	static shared_ptr<Point> create(vector<double> &coords);
 
 	// Getters
 	double getX();
 	double getY();
 	double getZ();
+	double getComponent(int index);
 };
 
 typedef shared_ptr<Point> Point_ptr;

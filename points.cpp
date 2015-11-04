@@ -7,13 +7,23 @@ using namespace std;
 #include "points.h"
 #include "point.h"
 
+/**
+ *	(Private) Default constructor.
+ *
+ *	Do not use this directly, use the provided factory method.
+ */
 Points::Points()
 {
-
+	// do nothing...
 }
 
+/**
+ *	(Private) Constructs a vector of points extracted from a
+ *	file with the name provided as an argument.
+ */
 Points::Points(string &filename)
 {
+	_filename = filename;
 	std::string line;
 	ifstream file(filename);
 	std::vector<std::string> entry;
@@ -25,13 +35,13 @@ Points::Points(string &filename)
 			stringstream ss(line);
 			string item;
 			int count = 0;
-			char delim = '\t';
 			vector<double> tmp;
 
-			while (getline(ss, item, delim) && count < 3)
+			// Extract the first three segments of each entry
+			while (getline(ss, item, '\t') && count < 3)
 			{
 				tmp.push_back(atof(item.c_str()));
-				count++;
+				count++;	// Track no of segments
 			}
 			
 			add(Point::create(tmp));
@@ -41,42 +51,38 @@ Points::Points(string &filename)
 	}
 	else
 	{
-		cout << "File is not open...";
+		throw 1;
 	}
 }
 
-Points::~Points()
-{
-	//TODO: Add destructor
-}
-
+/**
+ *	Factory method using default constructor.
+ */
 Points_ptr Points::create()
 {
 	return Points_ptr(new Points());
 }
 
+/**
+ *	Factory method using the filename constructor.
+ */
 Points_ptr Points::create(string &filename)
 {
 	return Points_ptr(new Points(filename));
 }
 
-vector<Point_ptr> Points::getItems()
+/**
+ *	Add a point to the vector.
+ */
+void Points::add(Point_ptr &point)
 {
-	return _items;
+	_items.push_back(point);
 }
 
 /**
- *	Add a point to the list.
+ *	Remove a point from the vector.
  */
-void Points::add(Point_ptr &pnt)
-{
-	_items.push_back(pnt);
-}
-
-/**
- *	Remove a point from the list.
- */
-void Points::remove(Point_ptr &pnt)
+void Points::remove(Point_ptr &point)
 {
 
 }
@@ -90,9 +96,26 @@ Point_ptr Points::get(int index)
 }
 
 /**
- *	Return the size of the list.
+ *	Return the size of the vector.
  */
 int Points::size()
 {
 	return _items.size();
+}
+
+/**
+ *	Translate the points in the xy plane and rotate about
+ *	the z-axis.
+ */
+void transform(double dx = 0.0, double dy = 0.0, double dth = 0.0)
+{
+
+}
+
+/**
+ *	Get the vector of points.
+ */
+vector<Point_ptr> Points::getItems()
+{
+	return _items;
 }

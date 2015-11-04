@@ -20,6 +20,7 @@ private:
 	Staircase(std::string &filename);
 
 	// Member variables (private)
+	string _filename;
 	Features_ptr _features;
 	Layers_ptr _layers;
 	Points_ptr _points;
@@ -27,10 +28,8 @@ private:
 	// Operator overloads
 	friend std::ostream& operator<<(std::ostream &strm, const Staircase &s);
 public:
-	~Staircase();
-
 	// Factories
-	static shared_ptr<Staircase> create(string filename);
+	static shared_ptr<Staircase> create(string &filename);
 
 	// Getters
 	Points_ptr getPoints();

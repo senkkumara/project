@@ -12,12 +12,17 @@ class Layer
 {
 private:
 	// Constructors
+	Layer();
 	Layer(Point_ptr &ptr);
 
 	// Member variables (private)
+	double _tol;
 	double _min;
 	double _max;
 	Points_ptr _points;
+
+	// Member functions (private)
+	void init();
 
 	// Operator overloads
 	friend std::ostream &operator<<(std::ostream &strm, const Layer &ly);
@@ -28,9 +33,8 @@ private:
 	friend bool operator>=(Layer &ly1, Layer &ly2);
 	friend bool operator>(Layer &ly1, Layer &ly2);
 public:
-	~Layer();
-
 	// Factories
+	static shared_ptr<Layer> create();
 	static shared_ptr<Layer> create(Point_ptr &pnt);
 
 	// Member functions (public)
@@ -39,6 +43,7 @@ public:
 	bool onLayer(Point_ptr &ptr);
 
 	// Getters
+	double getTolerance();
 	double getMin();
 	double getMax();
 	Points_ptr getPoints();

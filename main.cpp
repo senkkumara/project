@@ -10,8 +10,8 @@ int main()
 	Staircase_ptr sc = Staircase::create(filename);
 
 	cout << "Points: " << sc->getPoints()->size() << endl;
-	//cout << "Layers: " << sc->getLayers()->size() << endl;
-	//cout << "Features: " << sc->getFeatures()->size() << endl;
+	cout << "Layers: " << sc->getLayers()->size() << endl;
+	cout << "Features: " << sc->getFeatures()->size() << endl;
 
 	// pause
 	int i;

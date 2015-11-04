@@ -17,11 +17,12 @@ private:
 	// Member variables (private)
 	Layers_ptr _layers;
 
+	// Member functions (private)
+	void init();
+
 	// Operator overloads
 	friend std::ostream &operator<<(std::ostream &strm, const Feature &f);
 public:
-	~Feature();
-
 	// Factories
 	static shared_ptr<Feature> create();
 
