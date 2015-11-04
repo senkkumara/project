@@ -64,6 +64,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="exceptions.cpp" />
     <ClCompile Include="feature.cpp" />
     <ClCompile Include="features.cpp" />
     <ClCompile Include="layer.cpp" />
@@ -74,6 +75,7 @@
     <ClCompile Include="staircase.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="exceptions.h" />
     <ClInclude Include="feature.h" />
     <ClInclude Include="features.h" />
     <ClInclude Include="layer.h" />
