@@ -91,6 +91,7 @@ void Layers::_findInterfaces()
 	}
 	else if (count > 2)
 	{
+		// Remove excess points
 		_trim(layer, get(1));
 	}
 
@@ -105,17 +106,8 @@ void Layers::_findInterfaces()
 		throw 1;	// Points are coincident
 	}
 
-	// Create edge
-	if (x1 < x2)
-	{
-		arr[0] = pnt1;
-		arr[1] = pnt2;
-	}
-	else
-	{
-		arr[0] = pnt2;
-		arr[1] = pnt1;
-	}
+	arr[0] = pnt1;
+	arr[1] = pnt2;
 
 	layer->setExit(Edge::create(arr));
 
@@ -145,6 +137,7 @@ void Layers::_findInterfaces()
 	}
 	else if (count > 2)
 	{
+		// Remove excess points
 		_trim(layer, get(size() - 2));
 	}
 
@@ -232,8 +225,11 @@ void Layers::_trim(Layer_ptr &ly1, Layer_ptr &ly2)
 	// Remove the two points with the lowest proximity
 	for (int i = 0; i < 2; i++)
 	{
+		// Populate holders with first element
 		point = map.begin()->first;
 		dist = map.begin()->second;
+
+		// Search map for lower values
 		for (auto &itr : map)
 		{
 			if (itr.second < dist)
@@ -243,6 +239,7 @@ void Layers::_trim(Layer_ptr &ly1, Layer_ptr &ly2)
 			}
 		}
 
+		// Remove lowest valued point from map
 		map.erase(map.find(point));
 	}
 
@@ -288,7 +285,7 @@ void Layers::add(Layer_ptr &layer)
  */
 void Layers::remove(Layer_ptr layer)
 {
-	for (int i = 0; i < _items.size(); i++)
+	for (unsigned int i = 0; i < _items.size(); i++)
 	{
 		if (*layer == *_items.at(i))
 		{

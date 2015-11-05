@@ -27,7 +27,8 @@ Edge_ptr Edge::create(Point_ptr points[2])
 }
 
 /**
- *	
+ *	(Private) Calculate the yaw, pitch and roll of the edge in
+ *	3D space.
  */
 void Edge::_calculateAngles()
 {
@@ -39,9 +40,9 @@ void Edge::_calculateAngles()
 	double dz = pnt2->getZ() - pnt1->getZ();
 
 	// Store values
-	_angle[0] = _calculateAngle(dy, dz);	// anti-clockwise from y;
-	_angle[1] = _calculateAngle(dz, dx);	// anti-clockwise from z;
-	_angle[2] = _calculateAngle(dx, dy);	// anti-clockwise from x;
+	_angles[0] = _calculateAngle(dy, dz);	// anti-clockwise from y;
+	_angles[1] = _calculateAngle(dz, dx);	// anti-clockwise from z;
+	_angles[2] = _calculateAngle(dx, dy);	// anti-clockwise from x;
 }
 
 /**
@@ -65,12 +66,79 @@ double Edge::_calculateAngle(double d1, double d2)
 	return angle;
 }
 
+/**
+ *	Swap the ends of the edge.
+ */
+void Edge::invert()
+{
+	Point_ptr tmp = _points[0];
+	_points[0] = _points[1];
+	_points[1] = tmp;
+}
+
+/**
+ *	Return the "left" point of the edge - as read from a person
+ *	walking up the stairs (assuming it has been set up correctly!).
+ */
+Point_ptr Edge::left()
+{
+	return _points[0];
+}
+
+/**
+ *	Return the "right" point of the edge - as read from a person
+ *	walking up the stairs (assuming it has been set up correctly!).
+ */
+Point_ptr Edge::right()
+{
+	return _points[1];
+}
+
+/**
+ *	Return the angle about the X-axis (+ive y-axis forms origin)
+ */
+double Edge::angX()
+{
+	return ang(0);
+}
+
+/**
+ *	Return the angle about the Y-axis (+ive z-axis forms origin)
+ */
+double Edge::angY()
+{
+	return ang(1);
+}
+
+/**
+ *	Return the angle about the Z-axis (+ive x-axis forms origin)
+ */
+double Edge::angZ()
+{
+	return ang(2);
+}
+
+/**
+ *	Return the angle about the axis corresponding to an index -
+ *	e.g. X = 0, Y = 1, Z = 2
+ */
+double Edge::ang(int index = 0)
+{
+	return getAngles()[index];
+}
+
+/**
+ *	Get the points that the edge comprises of.
+ */
 Point_ptr* Edge::getPoints()
 {
 	return _points;
 }
 
-double* Edge::getAngle()
+/**
+ *	Get the angles of the edge in 3D space.
+ */
+double* Edge::getAngles()
 {
-	return _angle;
+	return _angles;
 }

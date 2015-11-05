@@ -15,7 +15,7 @@ private:
 
 	// Member variables (private)
 	Point_ptr	_points[2];
-	double		_angle[3];
+	double		_angles[3];
 
 	// Member functions (private)
 	void		_calculateAngles();
@@ -25,9 +25,18 @@ public:
 	// Factories
 	static Edge_ptr create(Point_ptr points[2]);
 
+	// Member functions (public)
+	void		invert();
+	Point_ptr	left();
+	Point_ptr	right();
+	double		angX();
+	double		angY();
+	double		angZ();
+	double		ang(int index);
+
 	// Getters
 	Point_ptr*	getPoints();
-	double*		getAngle();
+	double*		getAngles();
 };
 
 #endif
