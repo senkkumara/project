@@ -158,3 +158,11 @@ bool operator!=(Layer &ly1, Layer &ly2)
 {
 	return !(ly1 == ly2);
 }
+
+/**
+ *	<< operator overload.
+ */
+std::ostream &operator<<(std::ostream &strm, const Layer &ly)
+{
+	return strm;
+}

@@ -27,7 +27,7 @@ private:
 	Edge_ptr	_findEnd();
 	void		_findInterfaces();
 	Point_ptr	_findClosestPoint(Point_ptr &point, Layer_ptr &layer);
-	double		_findClosestProximity(Point_ptr &point, Layer_ptr &layer);
+	double		_findClosestPointProximity(Point_ptr &point, Layer_ptr &layer);
 	double		_calculateProximity(Point_ptr &p1, Point_ptr &p2);
 	void		_trim(Layer_ptr &ly1, Layer_ptr &ly2);
 	void		_categorise();

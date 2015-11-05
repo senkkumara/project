@@ -29,12 +29,9 @@ Staircase_ptr Staircase::create(string &filename)
 	return Staircase_ptr(new Staircase(filename));
 }
 
-/**
- *	<< operator overload
- */
-std::ostream &operator<<(std::ostream &strm, const Staircase &s)
+void Staircase::print()
 {
-	return strm;
+	cout << "This is a staircase..." << endl;
 }
 
 /**
@@ -59,4 +56,12 @@ shared_ptr<Layers> Staircase::getLayers()
 shared_ptr<Features> Staircase::getFeatures()
 {
 	return _features;
+}
+
+/**
+ *	<< operator overload.
+ */
+std::ostream &operator<<(std::ostream &strm, const Staircase &s)
+{
+	return strm;
 }

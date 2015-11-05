@@ -35,6 +35,9 @@ public:
 	// Factories
 	static Staircase_ptr create(string &filename);
 
+	// Member functions (public)
+	void print();
+
 	// Getters
 	Points_ptr		getPoints();
 	Layers_ptr		getLayers();

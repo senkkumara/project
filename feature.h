@@ -11,6 +11,8 @@ using namespace std;
 class Feature;
 typedef shared_ptr<Feature> Feature_ptr;
 
+enum FeatureType {};
+
 class Feature
 {
 private:
@@ -18,10 +20,11 @@ private:
 	Feature();
 
 	// Member variables (private)
-	Layers_ptr _layers;
+	Layers_ptr	_layers;
+	FeatureType _type;
 
 	// Member functions (private)
-	void init();
+	void _init();
 
 	// Operator overloads
 	friend std::ostream &operator<<(std::ostream &strm, const Feature &f);
@@ -33,7 +36,8 @@ public:
 	static Feature_ptr create();
 
 	// Getters
-	Layers_ptr getLayers();
+	Layers_ptr	getLayers();
+	FeatureType getType();
 };
 
 #endif

@@ -84,7 +84,7 @@ void Points::add(Point_ptr &point)
  */
 void Points::remove(Point_ptr point)
 {
-	for (int i = 0; i < _items.size(); i++)
+	for (unsigned int i = 0; i < _items.size(); i++)
 	{
 		if (*point == *_items.at(i))
 		{
@@ -149,4 +149,12 @@ void Points::mirrorComponent(int index)
 vector<Point_ptr> Points::getItems()
 {
 	return _items;
+}
+
+/**
+ *	<< operator overload.
+ */
+std::ostream &operator<<(std::ostream &strm, const Points &p)
+{
+	return strm;
 }

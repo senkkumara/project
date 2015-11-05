@@ -9,13 +9,13 @@ using namespace std;
  */
 Feature::Feature()
 {
-	init();
+	_init();
 }
 
 /**
  *	(Private) Initialises the member variables.
  */
-void Feature::init()
+void Feature::_init()
 {
 	_layers = Layers::create();
 }
@@ -34,6 +34,22 @@ Feature_ptr Feature::create()
 Layers_ptr Feature::getLayers()
 {
 	return _layers;
+}
+
+/**
+ *	Get the type of the feature.
+ */
+FeatureType Feature::getType()
+{
+	return _type;
+}
+
+/**
+ *	<< operator overload.
+ */
+std::ostream &operator<<(std::ostream &strm, const Feature &f)
+{
+	return strm;
 }
 
 /**

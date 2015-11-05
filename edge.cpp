@@ -142,3 +142,35 @@ double* Edge::getAngles()
 {
 	return _angles;
 }
+
+/**
+ *	<< operator overload.
+ */
+std::ostream &operator<<(std::ostream &strm, const Edge &e)
+{
+	return strm << "Left: " << e._points[0] << ", "
+				<< "Right: " << e._points[1] << endl;
+}
+
+/**
+ *	== operator overload.
+ */
+bool operator==(Edge &e1, Edge &e2)
+{
+	Point_ptr p11 = e1.left();
+	Point_ptr p12 = e1.right();
+	Point_ptr p21 = e2.left();
+	Point_ptr p22 = e2.right();
+
+	return ((*p11 == *p21 || *p11 == *p22) &&
+			(*p12 == *p21 || *p12 == *p22) &&
+			(*p11 != *p12) && (*p21 != *p22));
+}
+
+/**
+ *	!= operator overload.
+ */
+bool operator!=(Edge &e1, Edge &e2)
+{
+	return !(e1 == e2);
+}

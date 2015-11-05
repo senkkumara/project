@@ -132,7 +132,7 @@ void Point::setComponent(int index, double value)
 /**
  *	<< operator overload.
  */
-std::ostream &operator<<(std::ostream &strm, const Point& p)
+std::ostream &operator<<(std::ostream &strm, const Point &p)
 {
 	return strm << '(' << p._coords.at(0) 
 				<< ", " << p._coords.at(1)

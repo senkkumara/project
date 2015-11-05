@@ -12,8 +12,13 @@ using namespace std;
 class Layer;
 typedef shared_ptr<Layer> Layer_ptr;
 
-enum LayerType { LT_START, LT_END, LT_STRAIGHT,
-	LT_WINDER, LT_FLATLANDING };
+enum LayerType {
+	LT_START,
+	LT_END,
+	LT_STRAIGHT,
+	LT_WINDER,
+	LT_FLATLANDING
+};
 
 class Layer
 {

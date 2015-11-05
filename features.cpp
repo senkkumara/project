@@ -53,7 +53,7 @@ void Features::add(Feature_ptr &feature)
  */
 void Features::remove(Feature_ptr &feature)
 {
-	for (int i = 0; i < _items.size(); i++)
+	for (unsigned int i = 0; i < _items.size(); i++)
 	{
 		if (*feature == *_items.at(i))
 		{
@@ -85,4 +85,12 @@ int Features::size()
 vector<Feature_ptr> Features::getItems()
 {
 	return _items;
+}
+
+/**
+ *	<< operator overload.
+ */
+std::ostream &operator<<(std::ostream &strm, const Features &fs)
+{
+	return strm;
 }

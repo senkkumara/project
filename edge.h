@@ -21,6 +21,12 @@ private:
 	void		_calculateAngles();
 	double		_calculateAngle(double d1, double d2);
 
+	// Operator overloads
+	friend std::ostream &operator<<(std::ostream &strm, const Edge &e);
+	friend bool operator==(Edge &e1, Edge &e2);
+	friend bool operator!=(Edge &e1, Edge &e2);
+
+
 public:
 	// Factories
 	static Edge_ptr create(Point_ptr points[2]);

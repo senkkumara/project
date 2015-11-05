@@ -185,7 +185,7 @@ Point_ptr Layers::_findClosestPoint(Point_ptr &point, Layer_ptr &layer)
  *	(Private) Find the smallest distance between a point and the
  *	points contained by a layer.
  */
-double Layers::_findClosestProximity(Point_ptr &point, Layer_ptr &layer)
+double Layers::_findClosestPointProximity(Point_ptr &point, Layer_ptr &layer)
 {
 	return _calculateProximity(_findClosestPoint(point, layer), point);
 }
@@ -218,7 +218,7 @@ void Layers::_trim(Layer_ptr &ly1, Layer_ptr &ly2)
 	for (int i = 0; i < points1->size(); i++)
 	{
 		point = points1->get(i);
-		dist = _findClosestProximity(point, ly2);
+		dist = _findClosestPointProximity(point, ly2);
 		map.emplace(point, dist); 
 	}
 	
@@ -361,4 +361,12 @@ bool Layers::hasOverlaps()
 vector<Layer_ptr> Layers::getItems()
 {
 	return _items;
+}
+
+/**
+ *	<< operator overload.
+ */
+std::ostream &operator<<(std::ostream &strm, const Layers &ly)
+{
+	return strm;
 }
