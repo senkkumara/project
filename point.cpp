@@ -52,6 +52,18 @@ Point_ptr Point::create(vector<double> &coords)
 }
 
 /**
+ *	Returns an array that can be used for affine transformations.
+ */
+void Point::getMatrix(double matrix[4])
+{
+	for (int i = 0; i < 3; i++)
+	{
+		matrix[i] = getComponent(i);
+	}
+	matrix[3] = 1;
+}
+
+/**
  *	Gets the X component of the point position.
  */
 double Point::getX()
@@ -82,6 +94,39 @@ double Point::getZ()
 double Point::getComponent(int index)
 {
 	return _coords.at(index);
+}
+
+/**
+ *	Sets the X component of the point position.
+ */
+void Point::setX(double value)
+{
+	return setComponent(0, value);
+}
+
+/**
+ *	Sets the Y component of the point position.
+ */
+void Point::setY(double value)
+{
+	return setComponent(1, value);
+}
+
+/**
+ *	Sets the Z component of the point position.
+ */
+void Point::setZ(double value)
+{
+	return setComponent(2, value);
+}
+
+/**
+ *	Sets the component of the point position corresponding
+ *	to the provided index (e.g. X has an index of 1).
+ */
+void Point::setComponent(int index, double value)
+{
+	_coords.at(index) = value;
 }
 
 /**

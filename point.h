@@ -28,16 +28,25 @@ private:
 public:
 	// Factories
 	static Point_ptr create(double xcoord, 
-									double ycoord,
-									double zcoord);
+							double ycoord,
+							double zcoord);
 
 	static Point_ptr create(vector<double> &coords);
+
+	// Member functions (public)
+	void getMatrix(double matrix[4]);
 
 	// Getters
 	double getX();
 	double getY();
 	double getZ();
 	double getComponent(int index);
+
+	// Setters
+	void setX(double value);
+	void setY(double value);
+	void setZ(double value);
+	void setComponent(int index, double value);
 };
 
 #endif

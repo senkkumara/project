@@ -64,6 +64,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="edge.cpp" />
     <ClCompile Include="exceptions.cpp" />
     <ClCompile Include="feature.cpp" />
     <ClCompile Include="features.cpp" />
@@ -75,6 +76,7 @@
     <ClCompile Include="staircase.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="edge.h" />
     <ClInclude Include="exceptions.h" />
     <ClInclude Include="feature.h" />
     <ClInclude Include="features.h" />

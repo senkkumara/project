@@ -35,3 +35,19 @@ Layers_ptr Feature::getLayers()
 {
 	return _layers;
 }
+
+/**
+ *	== operator overload.
+ */
+bool operator==(Feature &f1, Feature &f2)
+{
+	return true;
+}
+
+/**
+ *	!= operator overload.
+ */
+bool operator!=(Feature &f1, Feature &f2)
+{
+	return !(f1 == f2);
+}

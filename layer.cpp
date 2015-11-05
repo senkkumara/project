@@ -11,7 +11,7 @@ using namespace std;
  */
 Layer::Layer()
 {
-	init();
+	_init();
 }
 
 /**
@@ -22,16 +22,16 @@ Layer::Layer()
  */
 Layer::Layer(Point_ptr &pnt)
 {
-	init();
+	_init();
+	_max = pnt->getZ() + _tol;
+	_min = pnt->getZ() - _tol;
 	add(pnt);
-	setMax(pnt->getZ() + _tol);
-	setMin(pnt->getZ() - _tol);
 }
 
 /**
  *	(Private) Initialises the member variables.
  */
-void Layer::init()
+void Layer::_init()
 {
 	_tol = 50.0;
 	_points = Points::create();
@@ -64,16 +64,9 @@ void Layer::add(Point_ptr &pnt)
 /**
  *	Removes a point from the layer.
  */
-void Layer::remove(Point_ptr &pnt)
+void Layer::remove(Point_ptr pnt)
 {
-	//TODO: implement function
-	/*for (int i = 0; i < _pnts.size(); i++)
-	{
-		if (*pnt == *_pnts.at(i))
-		{
-			_pnts.erase(_pnts.begin + i - 1);
-		}
-	}*/
+	_points->remove(pnt);
 }
 
 /**
@@ -119,17 +112,49 @@ Points_ptr Layer::getPoints()
 }
 
 /**
- *	Set the minimum z-value for this layer.
+ *	Get the entry edge for the layer.
  */
-void Layer::setMin(double min)
+Edge_ptr Layer::getEntry()
 {
-	_min = min;
+	return _entry;
 }
 
 /**
- *	Set the maximum z-value for this layer.
+ *	Get the exit edge for the layer.
  */
-void Layer::setMax(double max)
+Edge_ptr Layer::getExit()
 {
-	_max = max;
+	return _exit;
+}
+
+/** 
+ *	Set the entry edge of the layer.
+ */
+void Layer::setEntry(Edge_ptr edge)
+{
+	_entry = edge;
+}
+
+/**
+ *	Set the exit edge of the layer.
+ */
+void Layer::setExit(Edge_ptr edge)
+{
+	_exit = edge;
+}
+
+/**
+ *	== operator overload.
+ */
+bool operator==(Layer &ly1, Layer &ly2)
+{
+	return true;
+}
+
+/**
+ *	!= operator overload.
+ */
+bool operator!=(Layer &ly1, Layer &ly2)
+{
+	return !(ly1 == ly2);
 }

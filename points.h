@@ -17,8 +17,8 @@ private:
 	Points(string &filename);
 
 	// Variable members (private)
-	vector<Point_ptr> _items;
-	string _filename;
+	vector<Point_ptr>	_items;
+	string				_filename;
 
 	// Operator overloads
 	friend std::ostream &operator<<(std::ostream &strm, const Points &ps);
@@ -29,11 +29,15 @@ public:
 	static Points_ptr create(string &filename);
 	
 	// Member functions (public)
-	void add(Point_ptr &point);
-	void remove(Point_ptr &point);
-	Point_ptr get(int index);
-	int size();
-	void transform(double dx, double dy, double dth);
+	void		add(Point_ptr &point);
+	void		remove(Point_ptr point);
+	Point_ptr	get(int index);
+	int			size();
+	void		transform(double matrix[4][4]);
+	void		mirrorX();
+	void		mirrorY();
+	void		mirrorZ();
+	void		mirrorComponent(int index);
 
 	// Getters
 	vector<Point_ptr> getItems();

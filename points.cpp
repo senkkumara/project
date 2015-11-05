@@ -82,9 +82,16 @@ void Points::add(Point_ptr &point)
 /**
  *	Remove a point from the vector.
  */
-void Points::remove(Point_ptr &point)
+void Points::remove(Point_ptr point)
 {
-
+	for (int i = 0; i < _items.size(); i++)
+	{
+		if (*point == *_items.at(i))
+		{
+			_items.erase(_items.begin() + i);
+			return;
+		}
+	}
 }
 
 /**
@@ -107,9 +114,33 @@ int Points::size()
  *	Translate the points in the xy plane and rotate about
  *	the z-axis.
  */
-void transform(double dx = 0.0, double dy = 0.0, double dth = 0.0)
+void Points::transform(double matrix[4][4])
 {
 
+}
+
+void Points::mirrorX()
+{
+	mirrorComponent(0);
+}
+
+void Points::mirrorY()
+{
+	mirrorComponent(1);
+}
+
+void Points::mirrorZ()
+{
+	mirrorComponent(2);
+}
+
+void Points::mirrorComponent(int index)
+{
+	for (int i = 0; i < size(); i++)
+	{
+		get(i)->setComponent(index,
+			get(i)->getComponent(index) * -1);
+	}
 }
 
 /**

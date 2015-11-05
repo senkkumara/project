@@ -53,7 +53,14 @@ void Features::add(Feature_ptr &feature)
  */
 void Features::remove(Feature_ptr &feature)
 {
-	//TODO: implement function
+	for (int i = 0; i < _items.size(); i++)
+	{
+		if (*feature == *_items.at(i))
+		{
+			_items.erase(_items.begin() + i);
+			return;
+		}
+	}
 }
 
 /**

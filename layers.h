@@ -22,6 +22,16 @@ private:
 	// Member variables (private)
 	vector<Layer_ptr> _items;
 
+	// Member functions (private)
+	Edge_ptr	_findStart();
+	Edge_ptr	_findEnd();
+	void		_findInterfaces();
+	Point_ptr	_findClosestPoint(Point_ptr &point, Layer_ptr &layer);
+	double		_findClosestProximity(Point_ptr &point, Layer_ptr &layer);
+	double		_calculateProximity(Point_ptr &p1, Point_ptr &p2);
+	void		_trim(Layer_ptr &ly1, Layer_ptr &ly2);
+	void		_categorise();
+
 	// Operator overloads
 	friend std::ostream &operator<<(std::ostream &strm, const Layers &lys);
 
@@ -31,14 +41,13 @@ public:
 	static Layers_ptr create(Points_ptr &points);
 
 	// Member functions (public)
-	void add(Layer_ptr &layer);
-	void remove(Layer_ptr &layer);
-	Layer_ptr get(int index);
-	Layer_ptr findLayer(Point_ptr &point);
-	int size();
-	void sort();
-	void trim();
-	bool hasOverlaps();
+	void		add(Layer_ptr &layer);
+	void		remove(Layer_ptr layer);
+	Layer_ptr	get(int index);
+	Layer_ptr	findLayer(Point_ptr &point);
+	int			size();
+	void		sort();
+	bool		hasOverlaps();
 
 	// Getters
 	vector<Layer_ptr> getItems();

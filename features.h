@@ -31,10 +31,10 @@ public:
 	static Features_ptr create(Layers_ptr &layers);
 	
 	// Member functions (public)
-	void add(Feature_ptr &feature);
-	void remove (Feature_ptr &feature);
-	Feature_ptr get(int &index);
-	int size();
+	void			add(Feature_ptr &feature);
+	void			remove (Feature_ptr &feature);
+	Feature_ptr		get(int &index);
+	int				size();
 
 	// Getters
 	vector<Feature_ptr> getItems();
