@@ -17,23 +17,21 @@ class Layers
 private:
 	// Constructors
 	Layers();
-	Layers(Points_ptr &pnts);
+	Layers(Points_ptr &points);
 
 	// Member variables (private)
 	vector<Layer_ptr> _items;
 
 	// Member functions (private)
-	Edge_ptr	_findStart();
-	Edge_ptr	_findEnd();
 	void		_findInterfaces();
-	Point_ptr	_findClosestPoint(Point_ptr &point, Layer_ptr &layer);
-	double		_findClosestPointProximity(Point_ptr &point, Layer_ptr &layer);
-	double		_calculateProximity(Point_ptr &p1, Point_ptr &p2);
-	void		_trim(Layer_ptr &ly1, Layer_ptr &ly2);
+	void		_findInterface(Layer_ptr &layer1, Layer_ptr &layer2);
+	PointPair	_findClosestPoint(Point_ptr &point, Layer_ptr &layer);
+	double		_calculateProximity(Point_ptr &point1, Point_ptr &point2);
+	void		_trim(Layer_ptr &layer1, Layer_ptr &layer2);
 	void		_categorise();
 
 	// Operator overloads
-	friend std::ostream &operator<<(std::ostream &strm, const Layers &lys);
+	friend std::ostream &operator<<(std::ostream &strm, const Layers &ls);
 
 public:
 	// Factories

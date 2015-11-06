@@ -11,7 +11,8 @@ class Edge
 {
 private:
 	// Constructors
-	Edge(Point_ptr points[2]);
+	Edge(Point_ptr point1, Point_ptr point2);
+
 
 	// Member variables (private)
 	Point_ptr	_points[2];
@@ -29,7 +30,7 @@ private:
 
 public:
 	// Factories
-	static Edge_ptr create(Point_ptr points[2]);
+	static Edge_ptr create(Point_ptr point1, Point_ptr point2);
 
 	// Member functions (public)
 	void		invert();

@@ -36,8 +36,8 @@ public:
 	static Feature_ptr create();
 
 	// Getters
-	Layers_ptr	getLayers();
-	FeatureType getType();
+	Layers_ptr		getLayers();
+	FeatureType		getType();
 };
 
 #endif

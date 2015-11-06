@@ -20,12 +20,12 @@ Layer::Layer()
  *
  *	Do not use this directly, use the provided factory method.
  */
-Layer::Layer(Point_ptr &pnt)
+Layer::Layer(Point_ptr &point)
 {
 	_init();
-	_max = pnt->getZ() + _tol;
-	_min = pnt->getZ() - _tol;
-	add(pnt);
+	_max = point->getZ() + _tol;
+	_min = point->getZ() - _tol;
+	add(point);
 }
 
 /**
@@ -48,35 +48,35 @@ Layer_ptr Layer::create()
 /**
  *	Factory method using constructor with a point argument.
  */
-Layer_ptr Layer::create(Point_ptr &pnt)
+Layer_ptr Layer::create(Point_ptr &point)
 {
-	return Layer_ptr(new Layer(pnt));
+	return Layer_ptr(new Layer(point));
 }
 
 /**
  *	Adds a point to the layer.
  */
-void Layer::add(Point_ptr &pnt)
+void Layer::add(Point_ptr &point)
 {
-	_points->add(pnt);
+	_points->add(point);
 }
 
 /**
  *	Removes a point from the layer.
  */
-void Layer::remove(Point_ptr pnt)
+void Layer::remove(Point_ptr point)
 {
-	_points->remove(pnt);
+	_points->remove(point);
 }
 
 /**
  *	Returns bool depending on whether a point is on
  *	this layer.
  */
-bool Layer::onLayer(Point_ptr &pnt)
+bool Layer::onLayer(Point_ptr &point)
 {
-	return pnt->getZ() <= _max &&
-		pnt->getZ() >= _min;
+	return point->getZ() <= _max &&
+		point->getZ() >= _min;
 }
 
 /**
@@ -127,6 +127,14 @@ Edge_ptr Layer::getExit()
 	return _exit;
 }
 
+/**
+ *	Get the layer type.
+ */
+LayerType Layer::getType()
+{
+	return _type;
+}
+
 /** 
  *	Set the entry edge of the layer.
  */
@@ -144,9 +152,17 @@ void Layer::setExit(Edge_ptr edge)
 }
 
 /**
+ *	Set the type of the layer.
+ */
+void Layer::setType(LayerType type)
+{
+	_type = type;
+}
+
+/**
  *	== operator overload.
  */
-bool operator==(Layer &ly1, Layer &ly2)
+bool operator==(Layer &layer1, Layer &layer2)
 {
 	return true;
 }
@@ -154,15 +170,15 @@ bool operator==(Layer &ly1, Layer &ly2)
 /**
  *	!= operator overload.
  */
-bool operator!=(Layer &ly1, Layer &ly2)
+bool operator!=(Layer &layer1, Layer &layer2)
 {
-	return !(ly1 == ly2);
+	return !(layer1 == layer2);
 }
 
 /**
  *	<< operator overload.
  */
-std::ostream &operator<<(std::ostream &strm, const Layer &ly)
+std::ostream &operator<<(std::ostream &strm, const Layer &layer)
 {
 	return strm;
 }

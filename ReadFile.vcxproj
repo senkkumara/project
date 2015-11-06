@@ -74,6 +74,8 @@
     <ClCompile Include="point.cpp" />
     <ClCompile Include="points.cpp" />
     <ClCompile Include="staircase.cpp" />
+    <ClCompile Include="tester.cpp" />
+    <ClCompile Include="tests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="edge.h" />
@@ -86,6 +88,11 @@
     <ClInclude Include="point.h" />
     <ClInclude Include="points.h" />
     <ClInclude Include="staircase.h" />
+    <ClInclude Include="tester.h" />
+    <ClInclude Include="tests.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

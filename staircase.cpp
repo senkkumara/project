@@ -37,7 +37,7 @@ void Staircase::print()
 /**
  *	Get the points the staircase comprises of.
  */
-shared_ptr<Points> Staircase::getPoints()
+Points_ptr Staircase::getPoints()
 {
 	return _points;
 }
@@ -45,7 +45,7 @@ shared_ptr<Points> Staircase::getPoints()
 /**
  *	Get the layers the staircase comprises of.
  */
-shared_ptr<Layers> Staircase::getLayers()
+Layers_ptr Staircase::getLayers()
 {
 	return _layers;
 }
@@ -53,7 +53,7 @@ shared_ptr<Layers> Staircase::getLayers()
 /**
  *	Get the features the staircase comprises of.
  */
-shared_ptr<Features> Staircase::getFeatures()
+Features_ptr Staircase::getFeatures()
 {
 	return _features;
 }

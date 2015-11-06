@@ -12,18 +12,19 @@ using namespace std;
  *
  *	Do not use this directly, use the provided factory method.
  */
-Edge::Edge(Point_ptr points[2])
+Edge::Edge(Point_ptr point1, Point_ptr point2)
 {
-	_points[0] = points[0];
-	_points[1] = points[1];
+	_points[0] = point1;
+	_points[1] = point2;
+	_calculateAngles();
 }
 
 /**
  *	Factory method using constructor with a point array argument.
  */
-Edge_ptr Edge::create(Point_ptr points[2])
+Edge_ptr Edge::create(Point_ptr point1, Point_ptr point2)
 {
-	return Edge_ptr(new Edge(points));
+	return Edge_ptr(new Edge(point1, point2));
 }
 
 /**
@@ -40,9 +41,9 @@ void Edge::_calculateAngles()
 	double dz = pnt2->getZ() - pnt1->getZ();
 
 	// Store values
-	_angles[0] = _calculateAngle(dy, dz);	// anti-clockwise from y;
-	_angles[1] = _calculateAngle(dz, dx);	// anti-clockwise from z;
-	_angles[2] = _calculateAngle(dx, dy);	// anti-clockwise from x;
+	_angles[0] = _calculateAngle(dz, dy);	// anti-clockwise from y;
+	_angles[1] = _calculateAngle(dx, dz);	// anti-clockwise from z;
+	_angles[2] = _calculateAngle(dy, dx);	// anti-clockwise from x;
 }
 
 /**
@@ -51,19 +52,7 @@ void Edge::_calculateAngles()
  */
 double Edge::_calculateAngle(double d1, double d2)
 {
-	double angle = atan2(d1, d2);
-
-	// Correct for negative deltas
-	if (d1 < 0)
-	{
-		angle += M_PI;
-	}
-	else if (d1 > 0 && d2 < 0)
-	{
-		angle += 2 * M_PI;
-	}
-
-	return angle;
+	return atan2(d1, d2);
 }
 
 /**
