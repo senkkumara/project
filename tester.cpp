@@ -10,6 +10,11 @@ Tester::Tester(Layer_ptr &layer)
 	_layer = layer;
 }
 
+void Tester::_init()
+{
+
+}
+
 Tester_ptr Tester::create(Layer_ptr &layer)
 {
 	return Tester_ptr(new Tester(layer));

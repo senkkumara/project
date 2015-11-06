@@ -4,6 +4,7 @@ using namespace std;
 #include "layers.h"
 #include "layer.h"
 #include "point.h"
+#include "tester.h"
 
 /**
  *	(Private) Default constructor.
@@ -172,12 +173,15 @@ double Layers::_calculateProximity(Point_ptr &point1, Point_ptr &point2)
  */
 void Layers::_categorise()
 {
+	Tester_ptr tester;
+
 	get(0)->setType(LT_START);
 	get(size() -1)->setType(LT_END);
 
 	for (int i = 1; i < size() -2; i++)
 	{
-
+		tester = Tester::create(get(i));
+		tester->run();
 	}
 }
 

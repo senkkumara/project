@@ -11,6 +11,8 @@ using namespace std;
 class Tester;
 typedef shared_ptr<Tester> Tester_ptr;
 
+
+
 class Tester
 {
 private:
@@ -19,6 +21,9 @@ private:
 
 	// Member variables (private)
 	Layer_ptr _layer;
+
+	// Member functions (private)
+	void _init();
 
 	// Operator overloads
 	friend std::ostream &operator<<(std::ostream &strm, const Tester &t);
@@ -32,6 +37,11 @@ public:
 
 	// Getters
 	Layer_ptr getLayer();
+};
+
+struct TestResult
+{
+	bool result;
 };
 
 #endif
