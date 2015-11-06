@@ -24,7 +24,7 @@ TestResult Tests::HasLayerGotFivePoints(Layer_ptr layer)
 	return HasLayerGotXPoints(layer, 4);
 }
 
-TestResult Tests::HasLayerGotXPoints(Layer_ptr layer, int count)
+TestResult Tests::HasLayerGotXOrMorePoints(Layer_ptr layer, int count)
 {
 	if (layer->getPoints()->size() >= count)
 	{
@@ -36,7 +36,7 @@ TestResult Tests::HasLayerGotXPoints(Layer_ptr layer, int count)
 
 TestResult Tests::HasLayerGotSixOrMorePoints(Layer_ptr layer)
 {
-	return HasLayerGotXPoints(layer, 6);
+	return HasLayerGotXOrMorePoints(layer, 6);
 }
 
 TestResult Tests::AreTheInterfacesParallel(Layer_ptr layer)
@@ -49,6 +49,6 @@ TestResult Tests::AreTheInterfacesParallel(Layer_ptr layer)
 	double max = tol;
 
 
-	
+	return TestResult(true);
 
 }

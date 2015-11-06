@@ -10,6 +10,17 @@ using namespace std;
 
 class Tester;
 typedef shared_ptr<Tester> Tester_ptr;
+
+struct TestResult
+{
+	TestResult(bool r)
+	{
+		result = r;
+	};
+
+	bool result;
+};
+
 typedef TestResult (*TestFn)(Layer_ptr);
 
 class Tester
@@ -36,16 +47,6 @@ public:
 
 	// Getters
 	Layer_ptr getLayer();
-};
-
-struct TestResult
-{
-	TestResult(bool r)
-	{
-		result = r;
-	};
-
-	bool result;
 };
 
 #endif

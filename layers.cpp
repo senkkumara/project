@@ -178,10 +178,11 @@ void Layers::_categorise()
 	get(0)->setType(LT_START);
 	get(size() -1)->setType(LT_END);
 
-	for (int i = 1; i < size() -2; i++)
+	for (int i = 1; i < size() -1; i++)
 	{
-		tester = Tester::create(get(i));
-		tester->run();
+		get(i)->setType(LT_STRAIGHT);
+		//tester = Tester::create(get(i));
+		//tester->run();
 	}
 }
 

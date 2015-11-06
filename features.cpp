@@ -2,6 +2,7 @@ using namespace std;
 
 #include "features.h"
 #include "feature.h"
+#include <iostream>
 
 /**
  *	(Private) Default constructor.
@@ -25,11 +26,21 @@ Features::Features(Layers_ptr &layers)
 
 	Layer_ptr layer;
 	LayerType type;
-	LayerType prevType;
+	FeatureType prevType;
 	for (int i = 0; i < layers->size() -1; i++)
 	{
 		layer = layers->get(i);
 		type = layer->getType();
+		prevType = last()->getType();
+		cout << type << ", " << prevType << endl;
+
+		if (type == prevType) {
+			last()->add(layer);
+		}
+		else
+		{
+			add(Feature::create(layer));
+		}
 		
 	}
 
@@ -57,7 +68,7 @@ Features_ptr Features::create(Layers_ptr &layers)
  */
 void Features::add(Feature_ptr &feature)
 {
-
+	_items.push_back(feature);
 }
 
 /**

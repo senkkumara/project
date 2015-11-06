@@ -16,7 +16,7 @@ Feature::Feature(Layer_ptr &layer)
 {
 	_init();
 
-	switch (layer->getType)
+	switch (layer->getType())
 	{
 	case 1:
 		_type = FT_START;
