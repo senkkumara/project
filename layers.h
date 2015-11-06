@@ -42,6 +42,8 @@ public:
 	void		add(Layer_ptr &layer);
 	void		remove(Layer_ptr layer);
 	Layer_ptr	get(int index);
+	Layer_ptr	first();
+	Layer_ptr	last();
 	Layer_ptr	findLayer(Point_ptr &point);
 	int			size();
 	void		sort();

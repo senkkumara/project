@@ -33,7 +33,9 @@ public:
 	// Member functions (public)
 	void			add(Feature_ptr &feature);
 	void			remove (Feature_ptr &feature);
-	Feature_ptr		get(int &index);
+	Feature_ptr		get(int index);
+	Feature_ptr		first();
+	Feature_ptr		last();
 	int				size();
 
 	// Getters

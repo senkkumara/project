@@ -11,13 +11,21 @@ using namespace std;
 class Feature;
 typedef shared_ptr<Feature> Feature_ptr;
 
-enum FeatureType {};
+enum FeatureType
+{
+	FT_START,
+	FT_END,
+	FT_STRAIGHT,
+	FT_WINDER,
+	FT_FLATLANDING
+};
 
 class Feature
 {
 private:
 	// Constructors
 	Feature();
+	Feature(Layer_ptr &layer);
 
 	// Member variables (private)
 	Layers_ptr	_layers;
@@ -34,6 +42,11 @@ private:
 public:
 	// Factories
 	static Feature_ptr create();
+	static Feature_ptr create(Layer_ptr &layer);
+
+	// Member functions (public)
+	void add(Layer_ptr &layer);
+	void remove(Layer_ptr layer);
 
 	// Getters
 	Layers_ptr		getLayers();

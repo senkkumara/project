@@ -12,7 +12,7 @@ Tester::Tester(Layer_ptr &layer)
 
 void Tester::_init()
 {
-
+	
 }
 
 Tester_ptr Tester::create(Layer_ptr &layer)
@@ -22,7 +22,8 @@ Tester_ptr Tester::create(Layer_ptr &layer)
 
 void Tester::run()
 {
-
+	
+	_layer->setType(LT_STRAIGHT);
 }
 
 Layer_ptr Tester::getLayer()

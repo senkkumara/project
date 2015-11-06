@@ -2,13 +2,16 @@
 #define TEST_H
 
 #include "layer.h"
+#include "tester.h"
 
 namespace Tests
 {
-	bool HasLayerGotFourPoints(Layer_ptr layer);
-	bool HasLayerGotFivePoints(Layer_ptr layer);
-	bool HasLayerGotSixOrMorePoints(Layer_ptr layer);
-	bool AreTheInterfacesParallel(Layer_ptr layer);
+	TestResult HasLayerGotXPoints(Layer_ptr layer, int count);
+	TestResult HasLayerGotXOrMorePoints(Layer_ptr layer, int count);
+	TestResult HasLayerGotFourPoints(Layer_ptr layer);
+	TestResult HasLayerGotFivePoints(Layer_ptr layer);
+	TestResult HasLayerGotSixOrMorePoints(Layer_ptr layer);
+	TestResult AreTheInterfacesParallel(Layer_ptr layer);
 };
 
 #endif

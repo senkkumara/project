@@ -102,6 +102,16 @@ Point_ptr Points::get(int index)
 	return _items.at(index);
 }
 
+Point_ptr Points::first()
+{
+	return get(0);
+}
+
+Point_ptr Points::last()
+{
+	return get(size() - 1);
+}
+
 /**
  *	Return the size of the vector.
  */

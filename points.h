@@ -32,6 +32,8 @@ public:
 	void		add(Point_ptr &point);
 	void		remove(Point_ptr point);
 	Point_ptr	get(int index);
+	Point_ptr	first();
+	Point_ptr	last();
 	int			size();
 	void		transform(double matrix[4][4]);
 	void		mirrorX();

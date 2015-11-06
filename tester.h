@@ -10,8 +10,7 @@ using namespace std;
 
 class Tester;
 typedef shared_ptr<Tester> Tester_ptr;
-
-
+typedef TestResult (*TestFn)(Layer_ptr);
 
 class Tester
 {
@@ -41,6 +40,11 @@ public:
 
 struct TestResult
 {
+	TestResult(bool r)
+	{
+		result = r;
+	};
+
 	bool result;
 };
 

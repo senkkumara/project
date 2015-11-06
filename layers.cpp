@@ -232,6 +232,16 @@ Layer_ptr Layers::get(int index)
 	return _items.at(index);
 }
 
+Layer_ptr Layers::first()
+{
+	return get(0);
+}
+
+Layer_ptr Layers::last()
+{
+	return get(size() - 1);
+}
+
 /**
  *	Find the layer that contains the argument part.
  */

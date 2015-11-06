@@ -21,7 +21,19 @@ Features::Features()
  */
 Features::Features(Layers_ptr &layers)
 {
-	
+	add(Feature::create(layers->first()));
+
+	Layer_ptr layer;
+	LayerType type;
+	LayerType prevType;
+	for (int i = 0; i < layers->size() -1; i++)
+	{
+		layer = layers->get(i);
+		type = layer->getType();
+		
+	}
+
+	add(Feature::create(layers->last()));
 }
 
 /**
@@ -66,9 +78,19 @@ void Features::remove(Feature_ptr &feature)
 /**
  *	Retrieve a feature by index.
  */
-Feature_ptr Features::get(int &index)
+Feature_ptr Features::get(int index)
 {
 	return _items.at(index);
+}
+
+Feature_ptr Features::first()
+{
+	return get(0);
+}
+
+Feature_ptr Features::last()
+{
+	return get(size() - 1);
 }
 
 /**
