@@ -26,6 +26,7 @@ Layer::Layer(Point_ptr &point)
 	_init();
 	_max = point->getZ() + _tol;
 	_min = point->getZ() - _tol;
+
 	add(point);
 }
 

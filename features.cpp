@@ -22,31 +22,58 @@ Features::Features()
  */
 Features::Features(Layers_ptr &layers)
 {
-	/*
+	// Build first two features
 	add(Feature::create(layers->first()));
+	add(Feature::create(layers->get(1)));
 
+	// Build intermediate features
 	Layer_ptr layer;
-	LayerType type;
 	FeatureType prevType;
-	for (int i = 0; i < layers->size() -1; i++)
+	LayerType type;
+	bool create;
+	for (int i = 2; i < layers->size() -1; i++)
 	{
+		create = true;
 		layer = layers->get(i);
 		type = layer->getType();
-		prevType = last()->getType();
-		//cout << type << ", " << prevType << endl;
+		prevType = get(size() - 1)->getType();
 
-		if (type == prevType) {
-			last()->add(layer);
+		switch (type)
+		{
+		case LT_STRAIGHT:
+			if (prevType == FT_STRAIGHT)
+			{
+				create = false;
+			}
+			break;
+		case LT_WINDER:
+			if (prevType == FT_WINDER)
+			{
+				create = false;
+			}
+			break;
+		case LT_WINDER_CORNER:
+			if (prevType == FT_WINDER)
+			{
+				create = false;
+			}
+			break;
+		case LT_LANDING_FLAT:
+			break;
 		}
-		else
+
+		if (create)
 		{
 			add(Feature::create(layer));
 		}
-		
+		else
+		{
+			get(size() -1)->add(layer);
+		}
 	}
 
+	// Build end feature
 	add(Feature::create(layers->last()));
-	*/
 }
 
 /**

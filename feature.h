@@ -17,7 +17,6 @@ enum FeatureType
 	FT_END,
 	FT_STRAIGHT,
 	FT_WINDER,
-	FT_WINDER_CORNER,
 	FT_LANDING_FLAT,
 	FT_UNKNOWN
 };
@@ -35,6 +34,7 @@ private:
 
 	// Member functions (private)
 	void _init();
+	FeatureType _mapTypes(LayerType lt);
 
 	// Operator overloads
 	friend std::ostream &operator<<(std::ostream &strm, const Feature &f);
