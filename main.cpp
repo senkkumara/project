@@ -6,12 +6,18 @@ using namespace std;
 
 int main()
 {
-	std::string filename = "C:/temp/55912.pts";
+	std::string filename = "C:/temp/56432.pts";
 	Staircase_ptr sc = Staircase::create(filename);
 
 	cout << "Points: " << sc->getPoints()->size() << endl;
 	cout << "Layers: " << sc->getLayers()->size() << endl;
 	cout << "Features: " << sc->getFeatures()->size() << endl;
+
+	Layers_ptr layers = sc->getLayers();
+	for (int i = 0; i < layers->size(); i++)
+	{
+		cout << layers->get(i)->getType() << endl;
+	}
 
 	// pause
 	int i;

@@ -22,6 +22,7 @@ Features::Features()
  */
 Features::Features(Layers_ptr &layers)
 {
+	/*
 	add(Feature::create(layers->first()));
 
 	Layer_ptr layer;
@@ -32,7 +33,7 @@ Features::Features(Layers_ptr &layers)
 		layer = layers->get(i);
 		type = layer->getType();
 		prevType = last()->getType();
-		cout << type << ", " << prevType << endl;
+		//cout << type << ", " << prevType << endl;
 
 		if (type == prevType) {
 			last()->add(layer);
@@ -45,6 +46,7 @@ Features::Features(Layers_ptr &layers)
 	}
 
 	add(Feature::create(layers->last()));
+	*/
 }
 
 /**

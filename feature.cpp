@@ -15,25 +15,6 @@ Feature::Feature()
 Feature::Feature(Layer_ptr &layer)
 {
 	_init();
-
-	switch (layer->getType())
-	{
-	case 1:
-		_type = FT_START;
-		break;
-	case 2:
-		_type = FT_END;
-		break;
-	case 3:
-		_type = FT_STRAIGHT;
-		break;
-	case 4:
-		_type = FT_WINDER;
-		break;
-	case 5:
-		_type = FT_FLATLANDING;
-		break;
-	}
 	
 	add(layer);
 }

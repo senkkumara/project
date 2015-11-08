@@ -23,8 +23,10 @@ private:
 	vector<Layer_ptr> _items;
 
 	// Member functions (private)
+	void		_build(Points_ptr &points);
 	void		_findInterfaces();
 	void		_findInterface(Layer_ptr &layer1, Layer_ptr &layer2);
+	void		_checkInterfaces();
 	PointPair	_findClosestPoint(Point_ptr &point, Layer_ptr &layer);
 	double		_calculateProximity(Point_ptr &point1, Point_ptr &point2);
 	void		_trim(Layer_ptr &layer1, Layer_ptr &layer2);

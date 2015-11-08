@@ -1,10 +1,12 @@
 using namespace std;
 
+#define _USE_MATH_DEFINES
 #include <iostream>
 #include "layers.h"
 #include "layer.h"
 #include "point.h"
 #include "tester.h"
+#include "tests.h"
 
 /**
  *	(Private) Default constructor.
@@ -24,11 +26,30 @@ Layers::Layers()
  */
 Layers::Layers(Points_ptr &points)
 {
+	// Build layers from points
+	_build(points);
+
+	// Find entry and exit edges of layers
+	_findInterfaces();
+	_checkInterfaces();
+
+	// Find layer types
+	_categorise();
+}
+
+/**
+ *	Build the layers required to contain the points provided.
+ *
+ *	NB: function assumes points only ever have INCREASING Z. Will need to consider
+ *	XY plane changes for staircases that undulate (unlikely).
+ */
+void Layers::_build(Points_ptr &points)
+{
 	Point_ptr point;
 	Layer_ptr layer;
 
-	// Build starting layer
-	add(Layer::create(points->get(0)));
+	// Build starting layer - based on first point
+	add(Layer::create(points->first()));
 
 	// Build remaining layers
 	for (int i = 1; i < points->size(); i++)
@@ -45,13 +66,6 @@ Layers::Layers(Points_ptr &points)
 		}
 		
 	}
-
-	// Find entry and exit edges of layers
-	_findInterfaces();
-
-	// Find layer types
-	_categorise();
-
 }
 
 /**
@@ -60,12 +74,22 @@ Layers::Layers(Points_ptr &points)
  */
 void Layers::_findInterfaces()
 {
-	for (int i = 1; i < _items.size(); i++)
+	// Start from second layer because the function compares the exit from
+	// previous layer with the entry of the current - first layer has no entry.
+	for (int i = 1; i < size(); i++)
 	{
 		_findInterface(get(i - 1), get(i));
 	}
 }
 
+/**
+ *	Finds the exit interface of one layer and the entry of the subsequent layer
+ *	by finding the two points on each layer with the closest proximity on the XY
+ *	plane.
+ *
+ *	NB: this function assumes that these points are roughly directly coincident
+ *	on the XY plane - one is directly above the other.
+ */
 void Layers::_findInterface(Layer_ptr &layer1, Layer_ptr &layer2)
 {
 	Points_ptr points1 = layer1->getPoints();
@@ -115,6 +139,40 @@ void Layers::_findInterface(Layer_ptr &layer1, Layer_ptr &layer2)
 }
 
 /**
+ *	This function attempts to determine whether any of the interfaces are flipped.
+ */
+void Layers::_checkInterfaces()
+{
+	Layer_ptr layer = first();
+	Edge_ptr entry;
+	Edge_ptr exit = layer->getExit();
+
+	// Check the angle of the exit from the first interface is not between 90 and
+	// 270 degrees
+	if (exit->angZ() > M_PI_2 && exit->angZ() < (1.5 * M_PI))
+	{
+		cout << "inverting" << endl;
+		exit->invert();
+	}
+
+	double tol = 45 * M_PI / 180;
+	double min = M_PI - tol;		// +135
+	double max = (-1 * M_PI) + tol;	// -135 (225)
+	double angle;
+
+	// Check the remaining interfaces
+	for (int i = 1; i < size() - 1; i++)
+	{
+		layer = get(i);
+		angle = layer->getIfcAngle();
+		if (angle > min || angle < max)
+		{
+			layer->invertExit();
+		}
+	}
+}
+
+/**
  *	(Private) Find the point contained by a layer that is located
  *	closest to the point provided on the xy plane.
  *
@@ -132,7 +190,7 @@ PointPair Layers::_findClosestPoint(Point_ptr &point, Layer_ptr &layer)
 	
 	// Populate variables with first point
 	closest.point1 = point;
-	closest.point2 = points->get(0);
+	closest.point2 = points->first();
 	closest.dist = _calculateProximity(closest.point1, closest.point2);
 
 	// Search remaining points for a closer one
@@ -140,7 +198,6 @@ PointPair Layers::_findClosestPoint(Point_ptr &point, Layer_ptr &layer)
 	{
 		tmpPoint = points->get(i);
 		tmpDist = _calculateProximity(point, tmpPoint);
-
 
 		// If point is closer, update tracking variables
 		if (tmpDist < closest.dist)
@@ -169,20 +226,40 @@ double Layers::_calculateProximity(Point_ptr &point1, Point_ptr &point2)
 }
 
 /**
- *	Determine and set the type of each of the layers.
+ *	Determine and set the type of each of the layers. It will also attempt to
+ *	locate and correct any interfaces that are inverted.
  */
 void Layers::_categorise()
 {
-	Tester_ptr tester;
-
 	get(0)->setType(LT_START);
 	get(size() -1)->setType(LT_END);
 
-	for (int i = 1; i < size() -1; i++)
+	Layer_ptr layer;
+	for (int i = 1; i < size() - 1; i++)
 	{
-		get(i)->setType(LT_STRAIGHT);
-		//tester = Tester::create(get(i));
-		//tester->run();
+		layer = get(i);
+		if (Tests::HasLayerGotFourPoints(layer).result)
+		{
+			if (Tests::HasInterfaceAngleEqualTo0(layer).result)
+			{
+				layer->setType(LT_STRAIGHT);
+			}
+			else
+			{
+				layer->setType(LT_WINDER);
+			}
+		}
+		else
+		{
+			if (Tests::HasLayerGotFivePoints(layer).result)
+			{
+				layer->setType(LT_WINDER_CORNER);
+			}
+			else
+			{
+				layer->setType(LT_LANDING_FLAT);
+			}
+		}
 	}
 }
 
@@ -233,11 +310,17 @@ Layer_ptr Layers::get(int index)
 	return _items.at(index);
 }
 
+/**
+ *	Retrieve the first layer.
+ */
 Layer_ptr Layers::first()
 {
 	return get(0);
 }
 
+/**
+ *	Retrieve the last layer.
+ */
 Layer_ptr Layers::last()
 {
 	return get(size() - 1);
@@ -273,7 +356,7 @@ int Layers::size()
  */
 void Layers::sort()
 {
-	
+	//TODO: implement method.
 }
 
 /**

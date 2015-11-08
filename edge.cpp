@@ -41,9 +41,9 @@ void Edge::_calculateAngles()
 	double dz = pnt2->getZ() - pnt1->getZ();
 
 	// Store values
-	_angles[0] = _calculateAngle(dz, dy);	// anti-clockwise from y;
-	_angles[1] = _calculateAngle(dx, dz);	// anti-clockwise from z;
-	_angles[2] = _calculateAngle(dy, dx);	// anti-clockwise from x;
+	_angles[0] = _calculateAngle(dy, dz);	// anti-clockwise from y;
+	_angles[1] = _calculateAngle(dz, dx);	// anti-clockwise from z;
+	_angles[2] = _calculateAngle(dx, dy);	// anti-clockwise from x;
 }
 
 /**
@@ -52,7 +52,7 @@ void Edge::_calculateAngles()
  */
 double Edge::_calculateAngle(double d1, double d2)
 {
-	return atan2(d1, d2);
+	return atan2(d2, d1);
 }
 
 /**
@@ -60,9 +60,12 @@ double Edge::_calculateAngle(double d1, double d2)
  */
 void Edge::invert()
 {
-	Point_ptr tmp = _points[0];
-	_points[0] = _points[1];
+	Point_ptr tmp = left();
+	_points[0] = right();
 	_points[1] = tmp;
+
+	// Recalculate angles
+	_calculateAngles();
 }
 
 /**

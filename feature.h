@@ -17,7 +17,9 @@ enum FeatureType
 	FT_END,
 	FT_STRAIGHT,
 	FT_WINDER,
-	FT_FLATLANDING
+	FT_WINDER_CORNER,
+	FT_LANDING_FLAT,
+	FT_UNKNOWN
 };
 
 class Feature
