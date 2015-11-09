@@ -64,31 +64,51 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="block.cpp" />
+    <ClCompile Include="chair.cpp" />
+    <ClCompile Include="connection.cpp" />
     <ClCompile Include="edge.cpp" />
     <ClCompile Include="exceptions.cpp" />
     <ClCompile Include="feature.cpp" />
     <ClCompile Include="features.cpp" />
+    <ClCompile Include="installation.cpp" />
+    <ClCompile Include="job.cpp" />
     <ClCompile Include="layer.cpp" />
     <ClCompile Include="layers.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="plan.cpp" />
     <ClCompile Include="point.cpp" />
     <ClCompile Include="points.cpp" />
+    <ClCompile Include="rail.cpp" />
+    <ClCompile Include="section.cpp" />
     <ClCompile Include="staircase.cpp" />
+    <ClCompile Include="support.cpp" />
+    <ClCompile Include="supports.cpp" />
     <ClCompile Include="test.cpp" />
     <ClCompile Include="tester.cpp" />
     <ClCompile Include="tests.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="block.h" />
+    <ClInclude Include="chair.h" />
+    <ClInclude Include="connection.h" />
     <ClInclude Include="edge.h" />
     <ClInclude Include="exceptions.h" />
     <ClInclude Include="feature.h" />
     <ClInclude Include="features.h" />
+    <ClInclude Include="installation.h" />
+    <ClInclude Include="job.h" />
     <ClInclude Include="layer.h" />
     <ClInclude Include="layers.h" />
     <ClInclude Include="main.h" />
+    <ClInclude Include="plan.h" />
     <ClInclude Include="point.h" />
     <ClInclude Include="points.h" />
+    <ClInclude Include="rail.h" />
+    <ClInclude Include="section.h" />
     <ClInclude Include="staircase.h" />
+    <ClInclude Include="support.h" />
+    <ClInclude Include="supports.h" />
     <ClInclude Include="test.h" />
     <ClInclude Include="tester.h" />
     <ClInclude Include="tests.h" />

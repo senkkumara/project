@@ -48,7 +48,7 @@ FeatureType Feature::_mapTypes(LayerType type)
 		return FT_WINDER;
 	case LT_LANDING_FLAT:
 		return FT_LANDING_FLAT;
-	case LT_UNKNOWN:
+	default:
 		return FT_UNKNOWN;
 	}
 }
