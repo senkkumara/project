@@ -117,7 +117,7 @@ void Layers::_findInterface(Layer_ptr &layer1, Layer_ptr &layer2)
 
 		// Search map for lower values
 		int k = 0;		// track position of lowest so can be removed
-		for (int j = 0; j < pairs.size(); j++)
+		for (unsigned int j = 0; j < pairs.size(); j++)
 		{
 			if (pairs[j].dist < dist)
 			{
@@ -238,9 +238,9 @@ void Layers::_categorise()
 	for (int i = 1; i < size() - 1; i++)
 	{
 		layer = get(i);
-		if (Tests::HasLayerGotFourPoints(layer).result)
+		if (Tests::isPointCountEqualTo4(layer).result)
 		{
-			if (Tests::HasInterfaceAngleEqualTo0(layer).result)
+			if (Tests::isInterfaceAngleEqualTo0(layer).result)
 			{
 				layer->setType(LT_STRAIGHT);
 			}
@@ -251,9 +251,16 @@ void Layers::_categorise()
 		}
 		else
 		{
-			if (Tests::HasLayerGotFivePoints(layer).result)
+			if (Tests::isPointCountEqualTo5(layer).result)
 			{
-				layer->setType(LT_WINDER_CORNER);
+				if (Tests::isInterfaceAngleBetweenN60And60Inclusive(layer).result)
+				{
+					layer->setType(LT_WINDER_CORNER);
+				}
+				else
+				{
+					layer->setType(LT_LANDING_FLAT);
+				}
 			}
 			else
 			{
