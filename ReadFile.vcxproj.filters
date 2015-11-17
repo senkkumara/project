@@ -30,9 +30,6 @@
     <ClCompile Include="layer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="exceptions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="edge.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -82,6 +79,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="section.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="facet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="facets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -153,6 +156,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="connection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="facet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="facets.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

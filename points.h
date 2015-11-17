@@ -1,6 +1,8 @@
 #ifndef POINTS_H
 #define POINTS_H
 
+using namespace std;
+
 #include <memory>
 #include <ostream>
 #include <vector>
