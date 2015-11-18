@@ -1,11 +1,16 @@
 #ifndef POINTS_H
 #define POINTS_H
 
+/**
+ *	points.h
+ *	-----------------------------------------------------------------------
+ *	A Points object is container for one or more Point objects.
+ */
+
 using namespace std;
 
 #include <memory>
 #include <ostream>
-#include <string>
 #include <vector>
 #include "point.h"
 
@@ -23,8 +28,13 @@ private:
 	std::vector<Point_ptr>	_items;
 	std::string				_filename;
 
+	// Member functions (private)
+	void	_extractFromPTS(std::string &filename);
+
 	// Operator overloads
 	friend std::ostream &operator<<(std::ostream &strm, const Points &ps);
+	friend std::ostream &operator<<(std::ostream &strm,
+		const Points_ptr &ps);
 
 public:
 	// Factories
@@ -50,9 +60,9 @@ public:
 
 struct PointPair
 {
-	Point_ptr point1;
-	Point_ptr point2;
-	double dist;
+	Point_ptr	point1;
+	Point_ptr	point2;
+	double		dist;
 };
 
 #endif

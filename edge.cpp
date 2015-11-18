@@ -64,6 +64,14 @@ std::ostream &operator<<(std::ostream &strm, const Edge &e)
 }
 
 /**
+ *	<< operator overload.
+ */
+std::ostream &operator<<(std::ostream &strm, const Edge_ptr &e)
+{
+	return strm << *e;
+}
+
+/**
  *	== operator overload.
  */
 bool operator==(Edge &e1, Edge &e2)

@@ -1,15 +1,20 @@
 #ifndef EDGES_H
 #define EDGES_H
 
+/**
+ *	edges.h
+ *	-----------------------------------------------------------------------
+ *	A Edges object is container for one or more Edge objects.
+ */
+
 using namespace std;
 
 #include <memory>
 #include <ostream>
-#include <string>
 #include <vector>
 #include "edge.h"
 
-class Edges;
+class Edges;	// Pre-declare class for shared pointer typedef
 typedef shared_ptr<Edges> Edges_ptr;
 
 class Edges
@@ -23,6 +28,8 @@ private:
 
 	// Operator overloads
 	friend std::ostream &operator<<(std::ostream &strm, const Edges &es);
+	friend std::ostream &operator<<(std::ostream &strm,
+		const Edges_ptr &es);
 
 public:
 	// Factories

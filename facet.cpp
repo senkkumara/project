@@ -155,6 +155,14 @@ std::ostream &operator<<(std::ostream &strm, const Facet &f)
 }
 
 /**
+ *	<< operator overload.
+ */
+std::ostream &operator<<(std::ostream &strm, const Facet_ptr &f)
+{
+	return strm << *f;
+}
+
+/**
  *	== operator overload.
  */
 bool operator==(Facet &f1, Facet &f2)

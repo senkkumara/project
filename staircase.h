@@ -54,7 +54,7 @@ private:
 	Edges_ptr		_rightBoundary;
 
 	// Member functions (private)
-	void			_findGeomType(std::string &filename);
+	void			_setGeomType(std::string &filename);
 
 	// Operator overloads
 	friend std::ostream& operator<<(std::ostream &strm, const Staircase &s);

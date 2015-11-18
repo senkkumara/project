@@ -1,3 +1,9 @@
+/**
+ *	facets.cpp
+ *	-----------------------------------------------------------------------
+ *	See "facets.h" for a description.
+ */
+
 using namespace std;
 
 #include "facets.h"
@@ -22,6 +28,7 @@ Facets::Facets()
 Facets::Facets(std::string &filename)
 {
 	//TODO: implement method
+	throw MethodNotImplementedException("Facets::Facets");
 }
 
 /**
@@ -55,7 +62,7 @@ void Facets::remove(Facet_ptr facet)
 {
 	for (unsigned int i = 0; i < _items.size(); i++)
 	{
-		if (*facet == *_items.at(i))
+		if (facet == _items.at(i))
 		{
 			_items.erase(_items.begin() + i);
 			return;
@@ -91,7 +98,8 @@ int Facets::size()
 
 void Facets::_extractFromDXF(std::string &filename)
 {
-
+	//TODO: implement method
+	throw MethodNotImplementedException("Facets::_extractFromDXF");
 }
 
 void Facets::_extractFromSTL(string &filename)

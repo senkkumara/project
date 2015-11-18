@@ -16,7 +16,7 @@ using namespace std;
 #include "points.h"
 #include "edge.h"
 
-class Facet;
+class Facet;	// Pre-declare class for shared pointer typedef
 typedef shared_ptr<Facet> Facet_ptr;
 
 class Facet
@@ -42,6 +42,9 @@ private:
 
 	// Operator overloads
 	friend std::ostream &operator<<(std::ostream &strm, const Facet &f);
+	friend std::ostream &operator<<(std::ostream &strm,
+		const Facet_ptr &f);
+
 	friend bool operator==(Facet &cF1, Facet &cF2);
 	friend bool operator!=(Facet &cF1, Facet &cF2);
 	friend bool operator==(Facet_ptr &cF1, Facet_ptr &cF2);

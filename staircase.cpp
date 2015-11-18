@@ -33,7 +33,7 @@ Staircase::Staircase()
 Staircase::Staircase(std::string &filename)
 {
 	_filename = filename;
-	_findGeomType(filename);
+	_setGeomType(filename);
 
 	switch (_geomType)
 	{
@@ -51,9 +51,10 @@ Staircase::Staircase(std::string &filename)
 }
 
 /**
- *	
+ *	(Private) Based on the extension of the filename argument, determine
+ *	how the geometry is to be built (e.g. facet- or point-based).
  */
-void Staircase::_findGeomType(std::string &filename)
+void Staircase::_setGeomType(std::string &filename)
 {
 	// Check file has an extension
 	if (filename.find(".") == std::string::npos)
@@ -85,6 +86,14 @@ void Staircase::_findGeomType(std::string &filename)
 	{
 		throw UnsupportedFileTypeException(ext);
 	}
+}
+
+/**
+ *	<< operator overload.
+ */
+std::ostream &operator<<(std::ostream &strm, const Staircase &s)
+{
+	return strm;
 }
 
 /**
@@ -200,12 +209,4 @@ Layers_ptr Staircase::getLayers()
 Features_ptr Staircase::getFeatures()
 {
 	return _features;
-}
-
-/**
- *	<< operator overload.
- */
-std::ostream &operator<<(std::ostream &strm, const Staircase &s)
-{
-	return strm;
 }

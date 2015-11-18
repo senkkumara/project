@@ -12,7 +12,7 @@
 #include <memory>
 #include "point.h"
 
-class Edge;
+class Edge;		// Pre-declare class for shared pointer typedef
 typedef shared_ptr<Edge> Edge_ptr;
 
 class Edge
@@ -31,6 +31,9 @@ private:
 
 	// Operator overloads
 	friend std::ostream &operator<<(std::ostream &strm, const Edge &e);
+	friend std::ostream &operator<<(std::ostream &strm,
+		const Edge_ptr &e);
+
 	friend bool operator==(Edge &e1, Edge &e2);
 	friend bool operator!=(Edge &e1, Edge &e2);
 	friend bool operator==(Edge_ptr &e1, Edge_ptr &e2);

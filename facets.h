@@ -1,6 +1,12 @@
 #ifndef FACETS_H
 #define FACETS_H
 
+/**
+ *	facets.h
+ *	-----------------------------------------------------------------------
+ *	A Facets object is container for one or more Facet objects.
+ */
+
 using namespace std;
 
 #include <memory>
@@ -21,11 +27,15 @@ private:
 	// Member variables (private)
 	vector<Facet_ptr>	_items;
 	std::string			_filename;
-	void _extractFromSTL(std::string &filename);
-	void _extractFromDXF(std::string &filename);
+
+	// Member functions (private)
+	void	_extractFromSTL(std::string &filename);
+	void	_extractFromDXF(std::string &filename);
 
 	// Operator overloads
 	friend std::ostream &operator<<(std::ostream &strm, const Facets &fs);
+	friend std::ostream &operator<<(std::ostream &strm,
+		const Facets_ptr &fs);
 
 public:
 	// Factories

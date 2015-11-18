@@ -49,6 +49,14 @@ std::ostream &operator<<(std::ostream &strm, const Point &p)
 }
 
 /**
+ *	<< operator overload.
+ */
+std::ostream &operator<<(std::ostream &strm, const Point_ptr &p)
+{
+	return strm << *p;
+}
+
+/**
  *	== operator overload.
  */
 bool operator==(Point &cP1, Point &cP2)

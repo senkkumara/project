@@ -15,7 +15,7 @@ using namespace std;
 #include <ostream>
 #include <vector>
 
-class Point;
+class Point;		// Pre-declare class for shared pointer typedef
 typedef shared_ptr<Point> Point_ptr;
 
 class Point
@@ -30,6 +30,9 @@ private:
 
 	// Operator overloads
 	friend std::ostream &operator<<(std::ostream &strm, const Point &p);
+	friend std::ostream &operator<<(std::ostream &strm,
+		const Point_ptr &p);
+
 	friend bool operator==(Point &cP1, Point &cP2);
 	friend bool operator!=(Point &cP1, Point &cP2);
 	friend bool operator==(Point_ptr &cP1, Point_ptr &cP2);

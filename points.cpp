@@ -1,9 +1,16 @@
+/**
+ *	points.cpp
+ *	-----------------------------------------------------------------------
+ *	See "points.h" for a description.
+ */
+
 using namespace std;
 
+#include "points.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include "points.h"
+#include "exceptions.h"
 
 /**
  *	(Private) Default constructor.
@@ -54,6 +61,26 @@ Points::Points(std::string &filename)
 }
 
 /**
+ *	<< operator overload.
+ */
+std::ostream &operator<<(std::ostream &strm, const Points &p)
+{
+	//TODO: Implement method
+	throw MethodNotImplementedException("<< Operator Points");
+	return strm;
+}
+
+/**
+ *	<< operator overload.
+ */
+std::ostream &operator<<(std::ostream &strm, const Points_ptr &p)
+{
+	//TODO: Implement method
+	throw MethodNotImplementedException("<< Operator Points Pointer");
+	return strm;
+}
+
+/**
  *	Factory method using default constructor.
  */
 Points_ptr Points::create()
@@ -84,7 +111,7 @@ void Points::remove(Point_ptr point)
 {
 	for (unsigned int i = 0; i < _items.size(); i++)
 	{
-		if (*point == *_items.at(i))
+		if (point == _items.at(i))
 		{
 			_items.erase(_items.begin() + i);
 			return;
@@ -100,11 +127,17 @@ Point_ptr Points::get(int index)
 	return _items.at(index);
 }
 
+/**
+ *	Get the first point in the vector.
+ */
 Point_ptr Points::first()
 {
 	return get(0);
 }
 
+/**
+ *	Get the last point in the vector.
+ */
 Point_ptr Points::last()
 {
 	return get(size() - 1);
@@ -124,24 +157,38 @@ int Points::size()
  */
 void Points::transform(double matrix[4][4])
 {
-
+	//TODO: Implement method
+	throw MethodNotImplementedException("Points::transform");
 }
 
+/**
+ *	Mirror the points about the X-axis.
+ */
 void Points::mirrorX()
 {
 	mirrorComponent(0);
 }
 
+/**
+ *	Mirror the points about the Y-axis.
+ */
 void Points::mirrorY()
 {
 	mirrorComponent(1);
 }
 
+/**
+ *	Mirror the points about the Z-axis.
+ */
 void Points::mirrorZ()
 {
 	mirrorComponent(2);
 }
 
+/**
+ *	Mirror the points about the axis specified by an index
+ *	(X = 0, Y = 1, Z = 2).
+ */
 void Points::mirrorComponent(int index)
 {
 	for (int i = 0; i < size(); i++)
@@ -157,12 +204,4 @@ void Points::mirrorComponent(int index)
 vector<Point_ptr> Points::getItems()
 {
 	return _items;
-}
-
-/**
- *	<< operator overload.
- */
-std::ostream &operator<<(std::ostream &strm, const Points &p)
-{
-	return strm;
 }
