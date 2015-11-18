@@ -8,8 +8,8 @@ using namespace std;
 Job::Job()
 {
 	_mode = MODE_ITERATE;
-	_staircase = Staircase::create();
-	// _installation = Installation::create(_staircase);
+	_application = Application::create();
+	// _solution = Solution::create(_application);
 }
 
 /**
@@ -18,8 +18,8 @@ Job::Job()
 Job::Job(std::string &filename)
 {
 	_mode = MODE_CLEAN;
-	_staircase = Staircase::create(filename);
-	// _installation = Installation::create(_staircase);
+	_application = Application::create(filename);
+	// _solution = Solution::create(_application);
 }
 
 /**

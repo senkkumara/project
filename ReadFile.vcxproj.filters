@@ -24,9 +24,6 @@
     <ClCompile Include="feature.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="staircase.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="layer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -63,9 +60,6 @@
     <ClCompile Include="job.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="installation.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="supports.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -90,6 +84,12 @@
     <ClCompile Include="edges.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="application.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="solution.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -99,9 +99,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="feature.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="staircase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="layer.h">
@@ -143,9 +140,6 @@
     <ClInclude Include="job.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="installation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="supports.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -168,6 +162,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="edges.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="application.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="solution.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -26,7 +26,7 @@ int main()
 			filename = "C:/temp/" + filename;
 		}
 
-		// Create staircase
+		// Create application
 		try {
 			Job_ptr jb = Job::create(filename);
 		}

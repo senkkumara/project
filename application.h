@@ -1,13 +1,13 @@
-#ifndef STAIRCASE_H
-#define STAIRCASE_H
+#ifndef APPLICATION_H
+#define APPLICATION_H
 
 /**
- *	staircase.h
+ *	application.h
  *	-----------------------------------------------------------------------
- *	A Staircase object represents the application side of a rail design
+ *	A Application object represents the application side of a rail design
  *	job - see "job.h". It contains geometric information about an
  *	application which can then be passed the solution side of the job -
- *	see "installation.h".
+ *	see "solution.h".
  */
 
 using namespace std;
@@ -26,8 +26,8 @@ using namespace std;
 #include "points.h"
 #include "point.h"
 
-class Staircase;	// Pre-declare class for shared pointer typedef
-typedef shared_ptr<Staircase> Staircase_ptr;
+class Application;	// Pre-declare class for shared pointer typedef
+typedef shared_ptr<Application> Application_ptr;
 
 enum GeometryType
 {
@@ -35,12 +35,12 @@ enum GeometryType
 	GEOM_POINT
 };
 
-class Staircase
+class Application
 {
 private:
 	// Constructors
-	Staircase();
-	Staircase(std::string &filename);	// "Clean" Mode
+	Application();
+	Application(std::string &filename);	// "Clean" Mode
 
 	// Member variables (private)
 	std::string		_filename;
@@ -57,12 +57,12 @@ private:
 	void			_setGeomType(std::string &filename);
 
 	// Operator overloads
-	friend std::ostream& operator<<(std::ostream &strm, const Staircase &s);
+	friend std::ostream& operator<<(std::ostream &strm, const Application &s);
 
 public:
 	// Factories
-	static Staircase_ptr create();
-	static Staircase_ptr create(std::string &filename);
+	static Application_ptr create();
+	static Application_ptr create(std::string &filename);
 
 	// Member functions (public)
 	void print();

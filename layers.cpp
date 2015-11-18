@@ -46,7 +46,7 @@ Layers::Layers(Facets_ptr &facets)
  *	Build the layers required to contain the points provided.
  *
  *	NB: function assumes points only ever have INCREASING Z. Will need to consider
- *	XY plane changes for staircases that undulate (unlikely).
+ *	XY plane changes for applications that undulate (unlikely).
  */
 void Layers::_build(Points_ptr &points)
 {

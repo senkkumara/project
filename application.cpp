@@ -1,7 +1,7 @@
 /**
- *	staircase.cpp
+ *	application.cpp
  *	-----------------------------------------------------------------------
- *	See "staircase.h" for a description.
+ *	See "application.h" for a description.
  */
 
 using namespace std;
@@ -9,28 +9,28 @@ using namespace std;
 #include <iostream>
 #include <string>
 #include <sstream>
-#include "staircase.h"
+#include "application.h"
 #include "facet.h"
 #include "exceptions.h"
 
 /**
- *	(Private) Constructs a staircase from the file currently
+ *	(Private) Constructs a application from the file currently
  *	in session.
  *
  *	Do not use this directly, use the provided factory method.
  */
-Staircase::Staircase()
+Application::Application()
 {
 	// do nothing...
 }
 
 /**
- *	(Private) Constructs a staircase from facets retrieved from
+ *	(Private) Constructs a application from facets retrieved from
  *	a text file argument.
  *
  *	Do not use this directly, use the provided factory method.
  */
-Staircase::Staircase(std::string &filename)
+Application::Application(std::string &filename)
 {
 	_filename = filename;
 	_setGeomType(filename);
@@ -54,7 +54,7 @@ Staircase::Staircase(std::string &filename)
  *	(Private) Based on the extension of the filename argument, determine
  *	how the geometry is to be built (e.g. facet- or point-based).
  */
-void Staircase::_setGeomType(std::string &filename)
+void Application::_setGeomType(std::string &filename)
 {
 	// Check file has an extension
 	if (filename.find(".") == std::string::npos)
@@ -91,7 +91,7 @@ void Staircase::_setGeomType(std::string &filename)
 /**
  *	<< operator overload.
  */
-std::ostream &operator<<(std::ostream &strm, const Staircase &s)
+std::ostream &operator<<(std::ostream &strm, const Application &s)
 {
 	return strm;
 }
@@ -99,27 +99,27 @@ std::ostream &operator<<(std::ostream &strm, const Staircase &s)
 /**
  *	Factory method using the default constructor
  */
-Staircase_ptr Staircase::create()
+Application_ptr Application::create()
 {
-	return Staircase_ptr(new Staircase());
+	return Application_ptr(new Application());
 }
 
 /**
  *	Factory method using constructor that takes a filename as
  *	an argument.
  */
-Staircase_ptr Staircase::create(string &filename)
+Application_ptr Application::create(string &filename)
 {
-	return Staircase_ptr(new Staircase(filename));
+	return Application_ptr(new Application(filename));
 }
 
 /**
- *	Prints a summary report for the staircase.
+ *	Prints a summary report for the application.
  */
-void Staircase::print()
+void Application::print()
 {
 	cout << endl;
-	cout << "===== Staircase Report =====" << endl;
+	cout << "===== Application Report =====" << endl;
 	cout << "Filename: " << getFilename() << endl;
 	cout << "Points: " << getPoints()->size() << endl;
 	cout << "Layers: " << getLayers()->size() << endl;
@@ -180,33 +180,33 @@ void Staircase::print()
 }
 
 /**
- *	Get the filename the staircase was created from.
+ *	Get the filename the application was created from.
  */
-std::string Staircase::getFilename()
+std::string Application::getFilename()
 {
 	return _filename;
 }
 
 /**
- *	Get the points the staircase comprises of.
+ *	Get the points the application comprises of.
  */
-Points_ptr Staircase::getPoints()
+Points_ptr Application::getPoints()
 {
 	return _points;
 }
 
 /**
- *	Get the layers the staircase comprises of.
+ *	Get the layers the application comprises of.
  */
-Layers_ptr Staircase::getLayers()
+Layers_ptr Application::getLayers()
 {
 	return _layers;
 }
 
 /**
- *	Get the features the staircase comprises of.
+ *	Get the features the application comprises of.
  */
-Features_ptr Staircase::getFeatures()
+Features_ptr Application::getFeatures()
 {
 	return _features;
 }

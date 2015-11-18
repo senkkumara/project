@@ -5,13 +5,13 @@ using namespace std;
 
 #include <memory>
 #include <string>
-#include "staircase.h"
-#include "installation.h"
+#include "application.h"
+#include "solution.h"
 
 enum Mode
 {
-	MODE_CLEAN,			// No staircase, use text file
-	MODE_ITERATE		// Installation started, use CAD
+	MODE_CLEAN,			// No application, use text file
+	MODE_ITERATE		// Solution started, use CAD
 };
 
 class Job;
@@ -26,8 +26,8 @@ private:
 
 	// Member variables (private)
 	Mode				_mode;
-	Staircase_ptr		_staircase;
-	Installation_ptr	_installation;
+	Application_ptr		_application;
+	Solution_ptr	_solution;
 
 public:
 	// Factories
@@ -36,8 +36,8 @@ public:
 
 	// Getters
 	Mode				getMode();
-	Staircase_ptr		getStaircase();
-	Installation_ptr	getInstallation();
+	Application_ptr		getApplication();
+	Solution_ptr	getSolution();
 };
 
 #endif
