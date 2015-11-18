@@ -5,6 +5,7 @@ using namespace std;
 
 #include <memory>
 #include <ostream>
+#include <string>
 #include <vector>
 #include "point.h"
 
@@ -16,11 +17,11 @@ class Points
 private:
 	// Constructors
 	Points();
-	Points(string &filename);
+	Points(std::string &filename);
 
-	// Variable members (private)
-	vector<Point_ptr>	_items;
-	string				_filename;
+	// Members variables (private)
+	std::vector<Point_ptr>	_items;
+	std::string				_filename;
 
 	// Operator overloads
 	friend std::ostream &operator<<(std::ostream &strm, const Points &ps);
@@ -28,7 +29,7 @@ private:
 public:
 	// Factories
 	static Points_ptr create();
-	static Points_ptr create(string &filename);
+	static Points_ptr create(std::string &filename);
 	
 	// Member functions (public)
 	void		add(Point_ptr &point);
@@ -44,7 +45,7 @@ public:
 	void		mirrorComponent(int index);
 
 	// Getters
-	vector<Point_ptr> getItems();
+	std::vector<Point_ptr> getItems();
 };
 
 struct PointPair

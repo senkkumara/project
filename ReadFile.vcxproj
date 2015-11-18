@@ -68,6 +68,7 @@
     <ClCompile Include="chair.cpp" />
     <ClCompile Include="connection.cpp" />
     <ClCompile Include="edge.cpp" />
+    <ClCompile Include="edges.cpp" />
     <ClCompile Include="facet.cpp" />
     <ClCompile Include="facets.cpp" />
     <ClCompile Include="feature.cpp" />
@@ -94,6 +95,7 @@
     <ClInclude Include="chair.h" />
     <ClInclude Include="connection.h" />
     <ClInclude Include="edge.h" />
+    <ClInclude Include="edges.h" />
     <ClInclude Include="exceptions.h" />
     <ClInclude Include="facet.h" />
     <ClInclude Include="facets.h" />

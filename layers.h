@@ -6,6 +6,8 @@ using namespace std;
 #include <memory>
 #include <vector>
 #include "layer.h"
+#include "facets.h"
+#include "facet.h"
 #include "points.h"
 #include "point.h"
 
@@ -18,6 +20,7 @@ private:
 	// Constructors
 	Layers();
 	Layers(Points_ptr &points);
+	Layers(Facets_ptr &facets);
 
 	// Member variables (private)
 	vector<Layer_ptr> _items;
@@ -39,6 +42,7 @@ public:
 	// Factories
 	static Layers_ptr create();
 	static Layers_ptr create(Points_ptr &points);
+	static Layers_ptr create(Facets_ptr &facets);
 
 	// Member functions (public)
 	void		add(Layer_ptr &layer);

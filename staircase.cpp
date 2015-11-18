@@ -1,10 +1,16 @@
+/**
+ *	staircase.cpp
+ *	-----------------------------------------------------------------------
+ *	See "staircase.h" for a description.
+ */
+
 using namespace std;
 
 #include <iostream>
-#include <fstream>
 #include <string>
 #include <sstream>
 #include "staircase.h"
+#include "facet.h"
 #include "exceptions.h"
 
 /**
@@ -15,7 +21,7 @@ using namespace std;
  */
 Staircase::Staircase()
 {
-	//TODO: Implement method.
+	// do nothing...
 }
 
 /**
@@ -27,21 +33,32 @@ Staircase::Staircase()
 Staircase::Staircase(std::string &filename)
 {
 	_filename = filename;
-	_extractGeometry(filename);
-	//_points = Points::create(filename);
-	//_layers = Layers::create(_points);
-	//_features = Features::create(_layers);
+	_findGeomType(filename);
+
+	switch (_geomType)
+	{
+	case GEOM_FACET:
+		_facets = Facets::create(filename);
+		_layers = Layers::create(_facets);
+		break;
+	case GEOM_POINT:
+		_points = Points::create(filename);
+		_layers = Layers::create(_points);
+		break;
+	}
+
+	_features = Features::create(_layers);
 }
 
 /**
  *	
  */
-void Staircase::_extractGeometry(std::string &filename)
+void Staircase::_findGeomType(std::string &filename)
 {
 	// Check file has an extension
 	if (filename.find(".") == std::string::npos)
 	{
-		throw UnsupportedFileTypeException();
+		throw UnsupportedFileTypeException("NO EXTENSION");
 	}
 
 	std::stringstream ss(filename);
@@ -54,71 +71,20 @@ void Staircase::_extractGeometry(std::string &filename)
 	// Check for valid file extension
 	if (ext == "STL")
 	{
-		_extractGeometryFromSTL(filename);
+		_geomType = GEOM_FACET;
 	}
 	else if (ext == "DXF")
 	{
-		_extractGeometryFromDXF(filename);
+		_geomType = GEOM_FACET;
+	}
+	else if (ext == "PTS")
+	{
+		_geomType = GEOM_POINT;
 	}
 	else
 	{
-		throw UnsupportedFileTypeException();
+		throw UnsupportedFileTypeException(ext);
 	}
-}
-
-void Staircase::_extractGeometryFromDXF(std::string &filename)
-{
-
-}
-
-void Staircase::_extractGeometryFromSTL(string &filename)
-{
-	std::string line;
-	ifstream file(filename);
-	
-	if (file.is_open())
-	{
-		bool get = false;
-		while (getline(file, line))
-		{
-			// Look for start of a facet loop - start collecting vertices
-			if (line.find("outer loop") != std::string::npos)
-			{
-				get = true;
-				continue;
-			}
-
-			// Look for the end of a facet loop - stop collecting vertices
-			if (line.find("endloop") != std::string::npos)
-			{
-				get = false;
-				continue;
-			}
-
-			// Get vertices
-			if (get && line.find("vertex") != std::string::npos)
-			{
-				// Remove "      vertex " prefix
-				stringstream ss(line = line.substr(line.find("vertex") + 7));
-				string item;
-				int count = 0;			// Only extract three entries (x, y, z)
-				vector<double> coords;
-
-				while (getline(ss, item, ' ') && count < 3)
-				{
-					coords.push_back(atof(item.c_str()));
-					count++;
-				}
-			}
-		}
-
-		file.close();
-	}
-	else
-	{
-		throw FileNotFoundException();
-	}
-
 }
 
 /**
@@ -138,6 +104,9 @@ Staircase_ptr Staircase::create(string &filename)
 	return Staircase_ptr(new Staircase(filename));
 }
 
+/**
+ *	Prints a summary report for the staircase.
+ */
 void Staircase::print()
 {
 	cout << endl;
@@ -162,7 +131,9 @@ void Staircase::print()
 			cout << "END" << endl;
 			break;
 		case FT_STRAIGHT:
-			cout << "STRAIGHT consisting of " << features->get(i)->getLayers()->size();
+			cout << "STRAIGHT consisting of "
+				 << features->get(i)->getLayers()->size();
+
 			if (features->get(i)->getLayers()->size() > 1)
 			{
 				cout << " steps";
@@ -174,7 +145,9 @@ void Staircase::print()
 			cout << endl;
 			break;
 		case FT_WINDER:
-			cout << "WINDER consisting of "  << features->get(i)->getLayers()->size();
+			cout << "WINDER consisting of " 
+				 << features->get(i)->getLayers()->size();
+
 			if (features->get(i)->getLayers()->size() > 1)
 			{
 				cout << " steps";
@@ -200,7 +173,7 @@ void Staircase::print()
 /**
  *	Get the filename the staircase was created from.
  */
-string Staircase::getFilename()
+std::string Staircase::getFilename()
 {
 	return _filename;
 }

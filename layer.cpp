@@ -56,7 +56,7 @@ void Layer::_setIfcAngle()
 		yOr = origin->getY();
 
 		// Get angle to rotate by
-		rot = _entry->angZ();
+		rot = _entry->getZAng();
 
 		// Get pre-transformed points
 		x1 = _exit->left()->getX();

@@ -1,8 +1,9 @@
 using namespace std;
 
 #define _USE_MATH_DEFINES
-#include <math.h>
+
 #include "tests.h"
+#include <math.h>
 
 const double angTol = 5 * M_PI / 180;
 

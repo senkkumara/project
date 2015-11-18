@@ -2,10 +2,8 @@ using namespace std;
 
 #include <iostream>
 #include <fstream>
-#include <string>
 #include <sstream>
 #include "points.h"
-#include "point.h"
 
 /**
  *	(Private) Default constructor.
@@ -21,30 +19,30 @@ Points::Points()
  *	(Private) Constructs a vector of points extracted from a
  *	file with the name provided as an argument.
  */
-Points::Points(string &filename)
+Points::Points(std::string &filename)
 {
 	_filename = filename;
 	std::string line;
-	ifstream file(filename);
+	std::ifstream file(filename);
 	std::vector<std::string> entry;
 
 	if (file.is_open())
 	{
 		while (getline(file, line))
 		{
-			stringstream ss(line);
-			string item;
+			std::stringstream ss(line);
+			std::string item;
 			int count = 0;
-			vector<double> tmp;
+			std::vector<double> coords;
 
 			// Extract the first three segments of each entry
 			while (getline(ss, item, '\t') && count < 3)
 			{
-				tmp.push_back(atof(item.c_str()));
+				coords.push_back(atof(item.c_str()));
 				count++;	// Track no of segments
 			}
 			
-			add(Point::create(tmp));
+			add(Point::create(coords));
 		}
 
 		file.close();

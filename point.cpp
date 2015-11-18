@@ -1,10 +1,14 @@
+/**
+ *	point.cpp
+ *	-----------------------------------------------------------------------
+ *	See "point.h" for a description.
+ */
+
 using namespace std;
 
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <sstream>
 #include "point.h"
+#include <iostream>
+#include <string>
 
 /**
  *	(Private) Constructs a point based on three numeric
@@ -34,6 +38,51 @@ Point::Point(std::vector<double> &coords)
 }
 
 /**
+ *	<< operator overload.
+ */
+std::ostream &operator<<(std::ostream &strm, const Point &p)
+{
+	return strm << '(' << p._coords.at(0) 
+				<< ", " << p._coords.at(1)
+				<< ", " << p._coords.at(2)
+				<< ')' << endl;
+}
+
+/**
+ *	== operator overload.
+ */
+bool operator==(Point &cP1, Point &cP2)
+{
+	return (cP1.getX() == cP2.getX() &&
+            cP1.getY() == cP2.getY() &&
+            cP1.getZ() == cP2.getZ());
+}
+
+/**
+ *	!= operator overload.
+ */
+bool operator!=(Point &cP1, Point &cP2)
+{
+	return !(cP1 == cP2);
+}
+
+/**
+ *	== operator overload.
+ */
+bool operator==(Point_ptr &p1, Point_ptr &p2)
+{
+	return (*p1 == *p2);
+}
+
+/**
+ *	!= operator overload.
+ */
+bool operator!=(Point_ptr &p1, Point_ptr &p2)
+{
+	return !(*p1 == *p2);
+}
+
+/**
  *	Factory method using constructor with numeric arguments.
  */
 Point_ptr Point::create(double xcoord = 0.0,
@@ -46,7 +95,7 @@ Point_ptr Point::create(double xcoord = 0.0,
 /**
  *	Factory method using constructor with a vector argument.
  */
-Point_ptr Point::create(vector<double> &coords)
+Point_ptr Point::create(std::vector<double> &coords)
 {
 	return Point_ptr(new Point(coords));
 }
@@ -127,33 +176,4 @@ void Point::setZ(double value)
 void Point::setComponent(int index, double value)
 {
 	_coords.at(index) = value;
-}
-
-/**
- *	<< operator overload.
- */
-std::ostream &operator<<(std::ostream &strm, const Point &p)
-{
-	return strm << '(' << p._coords.at(0) 
-				<< ", " << p._coords.at(1)
-				<< ", " << p._coords.at(2)
-				<< ')' << endl;
-}
-
-/**
- *	== operator overload.
- */
-bool operator==(Point &cP1, Point &cP2)
-{
-	return (cP1.getX() == cP2.getX() &&
-            cP1.getY() == cP2.getY() &&
-            cP1.getZ() == cP2.getZ());
-}
-
-/**
- *	!= operator overload.
- */
-bool operator!=(Point &cP1, Point &cP2)
-{
-	return !(cP1 == cP2);
 }

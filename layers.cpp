@@ -37,6 +37,11 @@ Layers::Layers(Points_ptr &points)
 	_categorise();
 }
 
+Layers::Layers(Facets_ptr &facets)
+{
+
+}
+
 /**
  *	Build the layers required to contain the points provided.
  *
@@ -149,7 +154,7 @@ void Layers::_checkInterfaces()
 
 	// Check the angle of the exit from the first interface is not between 90 and
 	// 270 degrees
-	if (exit->angZ() > M_PI_2 && exit->angZ() < (1.5 * M_PI))
+	if (exit->getZAng() > M_PI_2 && exit->getZAng() < (1.5 * M_PI))
 	{
 		cout << "inverting" << endl;
 		exit->invert();
@@ -284,6 +289,14 @@ Layers_ptr Layers::create()
 Layers_ptr Layers::create(Points_ptr &points)
 {
 	return Layers_ptr(new Layers(points));
+}
+
+/**
+ *	Factory method using constructor with facets argument.
+ */
+Layers_ptr Layers::create(Facets_ptr &facets)
+{
+	return Layers_ptr(new Layers(facets));
 }
 
 /**

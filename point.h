@@ -1,6 +1,14 @@
 #ifndef POINT_H
 #define POINT_H
 
+/**
+ *	point.h
+ *	-----------------------------------------------------------------------
+ *	A point object represents a point located in 3D space. It is one of the
+ *	three geometry objects used to model an application - also see "facet"
+ *	and "edge".
+ */
+
 using namespace std;
 
 #include <memory>
@@ -24,6 +32,8 @@ private:
 	friend std::ostream &operator<<(std::ostream &strm, const Point &p);
 	friend bool operator==(Point &cP1, Point &cP2);
 	friend bool operator!=(Point &cP1, Point &cP2);
+	friend bool operator==(Point_ptr &cP1, Point_ptr &cP2);
+	friend bool operator!=(Point_ptr &cP1, Point_ptr &cP2);
 
 public:
 	// Factories
@@ -31,7 +41,7 @@ public:
 							double ycoord,
 							double zcoord);
 
-	static Point_ptr create(vector<double> &coords);
+	static Point_ptr create(std::vector<double> &coords);
 
 	// Member functions (public)
 	void getMatrix(double matrix[4]);
