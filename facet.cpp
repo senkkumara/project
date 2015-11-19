@@ -17,11 +17,13 @@ Facet::Facet(Point_ptr points[3], double normals[3])
 	for (int i = 0; i < 3; i++)
 	{
 		_points[i] = points[i];
+		_normals[i] = normals[i];
 	}
 
 	_edges[0] = Edge::create(points[0], points[1]);
 	_edges[1] = Edge::create(points[1], points[2]);
 	_edges[2] = Edge::create(points[2], points[0]);
+
 }
 
 /**
