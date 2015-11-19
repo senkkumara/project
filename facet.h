@@ -35,10 +35,13 @@ private:
 	Edge_ptr	_edges[3];
 	double		_normals[3];
 	double		_angles[3];
+	double		_maxZ;
+	double		_minZ;
 
 	// Member functions (private)
 	void	_calculateAngles();
 	double	_calculateAngle(double d1, double d2);
+	void	_calculateZRange();
 
 	// Operator overloads
 	friend std::ostream &operator<<(std::ostream &strm, const Facet &f);
@@ -84,6 +87,8 @@ public:
 	Point_ptr*	getPoints();
 	Edge_ptr*	getEdges();
 	double*		getNormals();
+	double		getMinZ();
+	double		getMaxZ();
 };
 
 #endif

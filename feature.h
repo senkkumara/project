@@ -8,7 +8,7 @@ using namespace std;
 #include "layers.h"
 #include "layer.h"
 
-class Feature;
+class Feature;	// Pre-declare class for shared pointer typedef
 typedef shared_ptr<Feature> Feature_ptr;
 
 enum FeatureType
@@ -38,8 +38,13 @@ private:
 
 	// Operator overloads
 	friend std::ostream &operator<<(std::ostream &strm, const Feature &f);
+	friend std::ostream &operator<<(std::ostream &strm,
+		const Feature_ptr &f);
+
 	friend bool operator==(Feature &f1, Feature &f2);
 	friend bool operator!=(Feature &f1, Feature &f2);
+	friend bool operator==(Feature_ptr &f1, Feature_ptr &f2);
+	friend bool operator!=(Feature_ptr &f1, Feature_ptr &f2);
 
 public:
 	// Factories

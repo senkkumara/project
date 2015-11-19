@@ -1,8 +1,16 @@
+/**
+ *	layer.cpp
+ *	-----------------------------------------------------------------------
+ *	See "layer.h" for a description.
+ */
+
 using namespace std;
 
 #define _USE_MATH_DEFINES
-#include <iostream>
+
 #include "layer.h"
+#include <iostream>
+#include "edge.h"
 #include "point.h"
 
 /**
@@ -24,10 +32,25 @@ Layer::Layer()
 Layer::Layer(Point_ptr &point)
 {
 	_init();
-	_max = point->getZ() + _tol;
-	_min = point->getZ() - _tol;
+	_maxHeight = point->getZ() + _tol;
+	_minHeight = point->getZ() - _tol;
 
 	add(point);
+}
+
+/**
+ *	(Private) Constructs a layer and inserts an argument
+ *	facet onto it.
+ *
+ *	Do not use this directly, use the provided factory method.
+ */
+Layer::Layer(Facet_ptr &facet)
+{
+	_init();
+	_maxHeight = facet->getMaxZ() + _tol;
+	_minHeight = facet->getMinZ() - _tol;
+
+	add(facet);
 }
 
 /**
@@ -35,21 +58,24 @@ Layer::Layer(Point_ptr &point)
  */
 void Layer::_init()
 {
-	_tol = 50.0;
+	_tol = 35.0;
+	_facets = Facets::create();
+	_edges = Edges::create();
 	_points = Points::create();
 	_setIfcAngle();
 }
 
 /**
- *	Calculate the angle between the entry and the exit of the layer. The origin of
- *	the rotation is the entry edge.
+ *	Calculate the angle between the entry and the exit of the layer.
+ *	The origin of the rotation is the entry edge.
  */
 void Layer::_setIfcAngle()
 {
 	if (_entry && _exit)
 	{
 		Point_ptr origin = _entry->left();
-		double x1, y1,x2, y2, xOr, yOr, rot, xDash1, yDash1, xDash2, yDash2, dx, dy;
+		double x1, y1,x2, y2, xOr, yOr, rot,
+			xDash1, yDash1, xDash2, yDash2, dx, dy;
 		
 		// Get origin (distance to translate by)
 		xOr = origin->getX();
@@ -86,6 +112,118 @@ void Layer::_setIfcAngle()
 }
 
 /**
+ *	<< operator overload.
+ */
+std::ostream &operator<<(std::ostream &strm, const Layer &layer)
+{
+	return strm;
+}
+
+/**
+ *	<< operator overload.
+ */
+std::ostream &operator<<(std::ostream &strm, const Layer_ptr &layer)
+{
+	return strm << *layer;
+}
+
+/**
+ *	< operator overload.
+ */
+bool operator<(Layer &layer1, Layer &layer2)
+{
+	return true;
+}
+
+/**
+ *	<= operator overload.
+ */
+bool operator<=(Layer &layer1, Layer &layer2)
+{
+	return true;
+}
+
+/**
+ *	== operator overload.
+ */
+bool operator==(Layer &layer1, Layer &layer2)
+{
+	return true;
+}
+
+/**
+ *	!= operator overload.
+ */
+bool operator!=(Layer &layer1, Layer &layer2)
+{
+	return !(layer1 == layer2);
+}
+
+/**
+ *	>= operator overload.
+ */
+bool operator>=(Layer &layer1, Layer &layer2)
+{
+	return true;
+}
+
+/**
+ *	> operator overload.
+ */
+bool operator>(Layer &layer1, Layer &layer2)
+{
+	return true;
+}
+
+/**
+ *	< operator overload.
+ */
+bool operator<(Layer_ptr &layer1, Layer_ptr &layer2)
+{
+	return (*layer1 < *layer2);
+}
+
+/**
+ *	<= operator overload.
+ */
+bool operator<=(Layer_ptr &layer1, Layer_ptr &layer2)
+{
+	return (*layer1 <= *layer2);
+}
+
+/**
+ *	== operator overload.
+ */
+bool operator==(Layer_ptr &layer1, Layer_ptr &layer2)
+{
+	return (*layer1 == *layer2);
+}
+
+/**
+ *	!= operator overload.
+ */
+bool operator!=(Layer_ptr &layer1, Layer_ptr &layer2)
+{
+	return (*layer1 != *layer2);
+}
+
+/**
+ *	>= operator overload.
+ */
+bool operator>=(Layer_ptr &layer1, Layer_ptr &layer2)
+{
+	return (*layer1 >= *layer2);
+}
+
+/**
+ *	> operator overload.
+ */
+bool operator>(Layer_ptr &layer1, Layer_ptr &layer2)
+{
+	return (*layer1 > *layer2);
+}
+
+/**
  *	Factory method using default constructor.
  */
 Layer_ptr Layer::create()
@@ -99,6 +237,90 @@ Layer_ptr Layer::create()
 Layer_ptr Layer::create(Point_ptr &point)
 {
 	return Layer_ptr(new Layer(point));
+}
+
+/**
+ *	Factory method using constructor with a facet argument.
+ */
+Layer_ptr Layer::create(Facet_ptr &facet)
+{
+	return Layer_ptr(new Layer(facet));
+}
+
+/**
+ *	Adds a facet to the layer.
+ */
+void Layer::add(Facet_ptr &point)
+{
+	_facets->add(point);
+}
+
+/**
+ *	Removes a facet from the layer.
+ */
+void Layer::remove(Facet_ptr point)
+{
+	_facets->remove(point);
+}
+
+/**
+ *	Returns bool depending on whether a facet should be on
+ *	this layer.
+ */
+bool Layer::onLayer(Facet_ptr &facet)
+{
+	return facet->getMaxZ() <= _maxHeight &&
+		facet->getMinZ() >= _minHeight;
+}
+
+/**
+ *	Returns bool depending on whether a facet is on
+ *	this layer.
+ */
+bool Layer::hasFacet(Facet_ptr &facet)
+{
+	for (int i = 0; i < _facets->size(); i++)
+	{
+		if (_facets->get(i) == facet)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
+ *	Adds a edge to the layer.
+ */
+void Layer::add(Edge_ptr &edge)
+{
+	_edges->add(edge);
+}
+
+/**
+ *	Removes a edge from the layer.
+ */
+void Layer::remove(Edge_ptr edge)
+{
+	_edges->remove(edge);
+}
+
+/**
+ *	Returns bool depending on whether a edge is on
+ *	this layer.
+ */
+bool Layer::hasEdge(Edge_ptr &edge)
+{
+	for (int i = 0; i < _edges->size(); i++)
+	{
+		if (_edges->get(i) == edge)
+		{
+			return true;
+		}
+	}
+
+	return false;
 }
 
 /**
@@ -118,13 +340,30 @@ void Layer::remove(Point_ptr point)
 }
 
 /**
- *	Returns bool depending on whether a point is on
+ *	Returns bool depending on whether a point should be on
  *	this layer.
  */
 bool Layer::onLayer(Point_ptr &point)
 {
-	return point->getZ() <= _max &&
-		point->getZ() >= _min;
+	return point->getZ() <= _maxHeight &&
+		point->getZ() >= _minHeight;
+}
+
+/**
+ *	Returns bool depending on whether a point is on
+ *	this layer.
+ */
+bool Layer::hasPoint(Point_ptr &point)
+{
+	for (int i = 0; i < _points->size(); i++)
+	{
+		if (_points->get(i) == point)
+		{
+			return true;
+		}
+	}
+
+	return false;
 }
 
 /**
@@ -154,9 +393,25 @@ void Layer::invertExit()
 }
 
 /**
+ *	Get the entry edge for the layer.
+ */
+Edge_ptr Layer::entry()
+{
+	return _entry;
+}
+
+/**
+ *	Get the exit edge for the layer.
+ */
+Edge_ptr Layer::exit()
+{
+	return _exit;
+}
+
+/**
  *	Get the tolerance.
  */
-double Layer::getTolerance()
+double Layer::getHeightTol()
 {
 	return _tol;
 }
@@ -164,17 +419,33 @@ double Layer::getTolerance()
 /**
  *	Get the minimum z-value for this layer.
  */
-double Layer::getMin()
+double Layer::getMinHeight()
 {
-	return _min;
+	return _minHeight;
 }
 
 /**
  *	Get the maximum z-value for this layer.
  */
-double Layer::getMax()
+double Layer::getMaxHeight()
 {
-	return _max;
+	return _maxHeight;
+}
+
+/**
+ *	Get the facets the layer contains.
+ */
+Facets_ptr Layer::getFacets()
+{
+	return _facets;
+}
+
+/**
+ *	Get the Edges the layer contains.
+ */
+Edges_ptr Layer::getEdges()
+{
+	return _edges;
 }
 
 /**
@@ -183,22 +454,6 @@ double Layer::getMax()
 Points_ptr Layer::getPoints()
 {
 	return _points;
-}
-
-/**
- *	Get the entry edge for the layer.
- */
-Edge_ptr Layer::getEntry()
-{
-	return _entry;
-}
-
-/**
- *	Get the exit edge for the layer.
- */
-Edge_ptr Layer::getExit()
-{
-	return _exit;
 }
 
 /**
@@ -241,28 +496,4 @@ void Layer::setExit(Edge_ptr edge)
 void Layer::setType(LayerType type)
 {
 	_type = type;
-}
-
-/**
- *	== operator overload.
- */
-bool operator==(Layer &layer1, Layer &layer2)
-{
-	return true;
-}
-
-/**
- *	!= operator overload.
- */
-bool operator!=(Layer &layer1, Layer &layer2)
-{
-	return !(layer1 == layer2);
-}
-
-/**
- *	<< operator overload.
- */
-std::ostream &operator<<(std::ostream &strm, const Layer &layer)
-{
-	return strm;
 }

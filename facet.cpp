@@ -145,6 +145,32 @@ double Facet::_calculateAngle(double d1, double d2)
 }
 
 /**
+ *	(Private) Calculates the minimum and maximum Z-height of the 
+ *	facet.
+ */
+void Facet::_calculateZRange()
+{
+	_minZ = _points[0]->getZ();
+	_maxZ = _minZ;
+
+	double z;
+	for (int i = 1; i < 3; i++)
+	{
+		z = _points[i]->getZ();
+		if (z < _minZ)
+		{
+			_minZ = z;
+			continue;
+		}
+
+		if (z > _maxZ)
+		{
+			_maxZ = z;
+		}
+	}
+}
+
+/**
  *	<< operator overload.
  */
 std::ostream &operator<<(std::ostream &strm, const Facet &f)
@@ -388,4 +414,20 @@ Edge_ptr* Facet::getEdges()
 double* Facet::getNormals()
 {
 	return _normals;
+}
+
+/**
+ *	Get minimum Z value.
+ */
+double Facet::getMinZ()
+{
+	return _minZ;
+}
+
+/**
+ *	Get maximum Z value.
+ */
+double Facet::getMaxZ()
+{
+	return _maxZ;
 }

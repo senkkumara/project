@@ -11,7 +11,7 @@ using namespace std;
 #include "points.h"
 #include "point.h"
 
-class Layers;
+class Layers;	// Pre-declare class for shared pointer typedef
 typedef shared_ptr<Layers> Layers_ptr;
 
 class Layers

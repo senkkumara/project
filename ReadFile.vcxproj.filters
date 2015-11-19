@@ -90,6 +90,18 @@
     <ClCompile Include="solution.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="geometry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rise.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rises.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="surface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -168,6 +180,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="solution.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="geometry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="rise.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="rises.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="surface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

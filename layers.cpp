@@ -1,6 +1,7 @@
 using namespace std;
 
 #define _USE_MATH_DEFINES
+
 #include <iostream>
 #include "layers.h"
 #include "layer.h"
@@ -17,6 +18,21 @@ Layers::Layers()
 {
 	// do nothing...
 }
+
+/*
+Layers::Layers(Application_ptr &app)
+{
+	switch (app->getGeometryType())
+	{
+	case GEOM_FACET:
+		Layers(app->getFacets());
+		break;
+	case GEOM_POINT:
+		Layers(app->getPoints());
+		break;
+	}
+}
+*/
 
 /**
  *	(Private) Constructs a vector of layers from a vector
@@ -150,7 +166,7 @@ void Layers::_checkInterfaces()
 {
 	Layer_ptr layer = first();
 	Edge_ptr entry;
-	Edge_ptr exit = layer->getExit();
+	Edge_ptr exit = layer->exit();
 
 	// Check the angle of the exit from the first interface is not between 90 and
 	// 270 degrees
@@ -354,7 +370,7 @@ Layer_ptr Layers::findLayer(Point_ptr &point)
 	for (int j = _items.size() - 1; j >= 0; j--)
 	{
 		Layer_ptr lyr = _items.at(j);
-		if (lyr->onLayer(point))
+		if (lyr->hasPoint(point))
 		{
 			return lyr;
 		}
@@ -389,7 +405,7 @@ bool Layers::hasOverlaps()
 
 	for (int i = 1; i < size(); i++)
 	{
-		if (get(i)->getMin() < get(i - 1)->getMax())
+		if (get(i)->getMinHeight() < get(i - 1)->getMaxHeight())
 		{
 			return true;
 		}

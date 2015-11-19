@@ -9,7 +9,7 @@ using namespace std;
 #include "layer.h"
 #include "feature.h"
 
-class Features;
+class Features;	// Pre-declare class for shared pointer typedef
 typedef shared_ptr<Features> Features_ptr;
 
 class Features

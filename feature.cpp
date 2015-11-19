@@ -1,7 +1,15 @@
+/**
+ *	feature.cpp
+ *	-----------------------------------------------------------------------
+ *	See "feature.h" for a description.
+ */
+
 using namespace std;
 
-#include <iostream>
+#define _USE_MATH_DEFINES
+
 #include "feature.h"
+#include <iostream>
 
 /**
  *	(Private) Default constructor.
@@ -13,6 +21,12 @@ Feature::Feature()
 	_init();
 }
 
+/**
+ *	(Private) Constructs a new Features object and adds an initial Layer
+ *	object.
+ *
+ *	Do not use this directly, use the provided factory method.
+ */
 Feature::Feature(Layer_ptr &layer)
 {
 	_init();
@@ -51,6 +65,54 @@ FeatureType Feature::_mapTypes(LayerType type)
 	default:
 		return FT_UNKNOWN;
 	}
+}
+
+/**
+ *	<< operator overload.
+ */
+std::ostream &operator<<(std::ostream &strm, const Feature &f)
+{
+	return strm;
+}
+
+/**
+ *	<< operator overload.
+ */
+std::ostream &operator<<(std::ostream &strm, const Feature_ptr &f)
+{
+	return strm << *f;
+}
+
+/**
+ *	== operator overload.
+ */
+bool operator==(Feature &f1, Feature &f2)
+{
+	return true;
+}
+
+/**
+ *	!= operator overload.
+ */
+bool operator!=(Feature &f1, Feature &f2)
+{
+	return !(f1 == f2);
+}
+
+/**
+ *	== operator overload.
+ */
+bool operator==(Feature_ptr &f1, Feature_ptr &f2)
+{
+	return (*f1 == *f2);
+}
+
+/**
+ *	!= operator overload.
+ */
+bool operator!=(Feature_ptr &f1, Feature_ptr &f2)
+{
+	return (*f1 != *f2);
 }
 
 /**
@@ -99,28 +161,4 @@ Layers_ptr Feature::getLayers()
 FeatureType Feature::getType()
 {
 	return _type;
-}
-
-/**
- *	<< operator overload.
- */
-std::ostream &operator<<(std::ostream &strm, const Feature &f)
-{
-	return strm;
-}
-
-/**
- *	== operator overload.
- */
-bool operator==(Feature &f1, Feature &f2)
-{
-	return true;
-}
-
-/**
- *	!= operator overload.
- */
-bool operator!=(Feature &f1, Feature &f2)
-{
-	return !(f1 == f2);
 }

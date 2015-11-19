@@ -8,7 +8,7 @@ using namespace std;
 
 #include <iostream>
 #include <string>
-#include <sstream>
+
 #include "application.h"
 #include "facet.h"
 #include "exceptions.h"
@@ -33,59 +33,9 @@ Application::Application()
 Application::Application(std::string &filename)
 {
 	_filename = filename;
-	_setGeomType(filename);
-
-	switch (_geomType)
-	{
-	case GEOM_FACET:
-		_facets = Facets::create(filename);
-		_layers = Layers::create(_facets);
-		break;
-	case GEOM_POINT:
-		_points = Points::create(filename);
-		_layers = Layers::create(_points);
-		break;
-	}
-
-	_features = Features::create(_layers);
-}
-
-/**
- *	(Private) Based on the extension of the filename argument, determine
- *	how the geometry is to be built (e.g. facet- or point-based).
- */
-void Application::_setGeomType(std::string &filename)
-{
-	// Check file has an extension
-	if (filename.find(".") == std::string::npos)
-	{
-		throw UnsupportedFileTypeException("NO EXTENSION");
-	}
-
-	std::stringstream ss(filename);
-	std::size_t index = filename.find_last_of(".");
-	std::string ext = filename.substr(index + 1);
-
-	// Make uppercase to help comparison
-	for (auto & c: ext) c = toupper(c);
-
-	// Check for valid file extension
-	if (ext == "STL")
-	{
-		_geomType = GEOM_FACET;
-	}
-	else if (ext == "DXF")
-	{
-		_geomType = GEOM_FACET;
-	}
-	else if (ext == "PTS")
-	{
-		_geomType = GEOM_POINT;
-	}
-	else
-	{
-		throw UnsupportedFileTypeException(ext);
-	}
+	_geometry = Geometry::create(_filename);
+	/*_layer = Layers::create(_geometry);
+	_features = Features::create(_layers);*/
 }
 
 /**
@@ -93,7 +43,17 @@ void Application::_setGeomType(std::string &filename)
  */
 std::ostream &operator<<(std::ostream &strm, const Application &s)
 {
+	//TODO: Implement method
+	throw MethodNotImplementedException("<< Application");
 	return strm;
+}
+
+/**
+ *	<< operator overload.
+ */
+std::ostream &operator<<(std::ostream &strm, const Application_ptr &s)
+{
+	return strm << *s;
 }
 
 /**
@@ -121,7 +81,7 @@ void Application::print()
 	cout << endl;
 	cout << "===== Application Report =====" << endl;
 	cout << "Filename: " << getFilename() << endl;
-	cout << "Points: " << getPoints()->size() << endl;
+	cout << "Points: " << getGeometry()->getPoints()->size() << endl;
 	cout << "Layers: " << getLayers()->size() << endl;
 	cout << "Features: " << getFeatures()->size() << endl;
 	cout << endl;
@@ -188,14 +148,6 @@ std::string Application::getFilename()
 }
 
 /**
- *	Get the points the application comprises of.
- */
-Points_ptr Application::getPoints()
-{
-	return _points;
-}
-
-/**
  *	Get the layers the application comprises of.
  */
 Layers_ptr Application::getLayers()
@@ -209,4 +161,28 @@ Layers_ptr Application::getLayers()
 Features_ptr Application::getFeatures()
 {
 	return _features;
+}
+
+/**
+ *	Get the geometry the application comprises of.
+ */
+Geometry_ptr Application::getGeometry()
+{
+	return _geometry;
+}
+
+/**
+ *	Get the edges comprising the left boundary.
+ */
+Edges_ptr Application::left()
+{
+	return _leftBoundary;
+}
+
+/**
+ *	Get the edges comprising the right boundary.
+ */
+Edges_ptr Application::right()
+{
+	return _rightBoundary;
 }
