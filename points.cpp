@@ -23,44 +23,6 @@ Points::Points()
 }
 
 /**
- *	(Private) Constructs a vector of points extracted from a
- *	file with the name provided as an argument.
- */
-Points::Points(std::string &filename)
-{
-	_filename = filename;
-	std::string line;
-	std::ifstream file(filename);
-	std::vector<std::string> entry;
-
-	if (file.is_open())
-	{
-		while (getline(file, line))
-		{
-			std::stringstream ss(line);
-			std::string item;
-			int count = 0;
-			std::vector<double> coords;
-
-			// Extract the first three segments of each entry
-			while (getline(ss, item, '\t') && count < 3)
-			{
-				coords.push_back(atof(item.c_str()));
-				count++;	// Track no of segments
-			}
-			
-			add(Point::create(coords));
-		}
-
-		file.close();
-	}
-	else
-	{
-		throw 1;
-	}
-}
-
-/**
  *	<< operator overload.
  */
 std::ostream &operator<<(std::ostream &strm, const Points &p)
@@ -86,14 +48,6 @@ std::ostream &operator<<(std::ostream &strm, const Points_ptr &p)
 Points_ptr Points::create()
 {
 	return Points_ptr(new Points());
-}
-
-/**
- *	Factory method using the filename constructor.
- */
-Points_ptr Points::create(string &filename)
-{
-	return Points_ptr(new Points(filename));
 }
 
 /**

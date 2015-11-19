@@ -8,7 +8,10 @@ using namespace std;
 
 #include "geometry.h"
 #include <memory>
+#include <fstream>
+#include <iostream>
 #include <sstream>
+#include <string>
 #include "exceptions.h"
 
 /**
@@ -31,19 +34,14 @@ Geometry::Geometry(std::string &filename)
 {
 	_init();
 	_filename = filename;
-	_categoriseInput(_filename);
-
-	switch (_type)
-	{
-	case GEOM_FACET:
-		_facets = Facets::create(_filename);
-		break;
-	case GEOM_POINT:
-		_points = Points::create(_filename);
-		break;
-	}
+	_categoriseInput();
+	_build();
+	
 }
 
+/**
+ *	(Private) Initialises the key fields for the Geometry object.
+ */
 void Geometry::_init()
 {
 	_facets = Facets::create();
@@ -55,17 +53,17 @@ void Geometry::_init()
  *	(Private) Based on the extension of the filename argument, determine
  *	how the geometry is to be built (e.g. facet- or point-based).
  */
-void Geometry::_categoriseInput(std::string &filename)
+void Geometry::_categoriseInput()
 {
 	// Check file has an extension
-	if (filename.find(".") == std::string::npos)
+	if (_filename.find(".") == std::string::npos)
 	{
 		throw UnsupportedFileTypeException("NO EXTENSION");
 	}
 
-	std::stringstream ss(filename);
-	std::size_t index = filename.find_last_of(".");
-	std::string ext = filename.substr(index + 1);
+	std::stringstream ss(_filename);
+	std::size_t index = _filename.find_last_of(".");
+	std::string ext = _filename.substr(index + 1);
 
 	// Make uppercase to help comparison
 	for (auto & c: ext) c = toupper(c);
@@ -74,22 +72,165 @@ void Geometry::_categoriseInput(std::string &filename)
 	if (ext == "STL")
 	{
 		_fileType = FILE_STL;
-		_type = GEOM_FACET;
 	}
 	else if (ext == "DXF")
 	{
 		_fileType = FILE_DXF;
-		_type = GEOM_FACET;
-	}
-	else if (ext == "PTS")
-	{
-		_fileType = FILE_PTS;
-		_type = GEOM_POINT;
 	}
 	else
 	{
 		throw UnsupportedFileTypeException(ext);
 	}
+}
+
+/**
+ *	(Private) Extract the geometry from the provided file.
+ */
+void Geometry::_build()
+{
+	switch (_fileType)
+	{
+	case FILE_STL:
+		_buildFromSTL();
+		break;
+	case FILE_DXF:
+		_buildFromDXF();
+		break;
+	}
+}
+
+/**
+ *	(Private) Extract the geometry from the provided DXF file.
+ */
+void Geometry::_buildFromDXF()
+{
+	//TODO: implement method
+	throw MethodNotImplementedException("Facets::_extractFromDXF");
+}
+
+/**
+ *	(Private) Extract the geometry from the provided STL file.
+ */
+void Geometry::_buildFromSTL()
+{
+	std::string line;
+	ifstream file(_filename);
+	
+	if (!file.is_open())
+	{
+		// File could not be opened
+		throw FileNotFoundException();
+	}
+
+	Facet_ptr facet;
+	Point_ptr point;
+	Point_ptr points[3];
+	double normals[3];
+	std::string facetPrefix = "facet normal ";
+	std::string vertexPrefix = "vertex ";
+
+	// Each pass through the following loop should process all the lines
+	// that a facet comprises of in a STL file.
+	//
+	// Note the STL format is as follows:
+	//	solid <NAME>
+	//	 facet normal <nx> <ny> <nz>
+	//		 outer loop
+	//		  vertex <x1> <y1> <z1>
+	//		  vertex <x1> <y1> <z1>
+	//		  vertex <x1> <y1> <z1>
+	//		 endloop
+	//	 endfacet
+	//	...
+	//	endsolid <NAME>
+	while (getline(file, line))
+	{
+		// Look for start of a facet
+		if (line.find("facet") != std::string::npos)
+		{
+			// Remove "  facet normal " prefix
+			std::stringstream ss(line.substr(line.find(facetPrefix)
+				+ facetPrefix.length()));
+
+			std::string item;
+			int count = 0;		// Only extract three entries (x, y, z)
+
+			while (getline(ss, item, ' ') && count < 3)
+			{
+				istringstream os(item);
+				os >> normals[count];
+				count++;
+			}
+		}
+		else
+		{
+			// Possibly "solid NAME" or "endsolid" lines
+			continue;
+		}
+
+		// Check for loop start
+		getline(file, line);
+		if (line.find("outer loop") == std::string::npos)
+		{
+			throw MalformedFileException(_filename);
+		}
+
+		// Get vertices
+		getline(file, line);
+		int row = 0;	// Three vertices per loop
+		while (row < 3)
+		{	
+			if (line.find("vertex") == std::string::npos)
+			{
+				throw MalformedFileException(_filename);
+			}
+
+			// Remove "      vertex " prefix
+			std::stringstream ss(line.substr(line.find(vertexPrefix)
+				+ vertexPrefix.length()));
+
+			std::string item;
+			int count = 0;		// Only extract three entries (x, y, z)
+			std::vector<double> coords;
+
+			while (getline(ss, item, ' ') && count < 3)
+			{
+				coords.push_back(atof(item.c_str()));
+				count++;
+			}
+
+			point = Point::create(coords);
+			_points->add(point);
+			points[row] = point;
+
+			getline(file, line);	// Get next line
+			row++;
+		}
+
+		// Check for loop end
+		if (line.find("endloop") == std::string::npos)
+		{
+			throw MalformedFileException(_filename);
+		}
+
+		// Look for the end of a facet - create facet
+		getline(file, line);
+		if (line.find("endfacet") != std::string::npos)
+		{
+			_facets->add(Facet::create(points, normals));
+		}
+	}
+
+	// Extract edges from facets
+	for (int i = 0; i < _facets->size(); i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			_edges->add(_facets->get(i)->getEdges()[j]);
+		}
+	}
+
+	file.close();
 }
 
 /**
@@ -124,14 +265,6 @@ Geometry_ptr Geometry::create()
 Geometry_ptr Geometry::create(std::string &filename)
 {
 	return Geometry_ptr(new Geometry(filename));
-}
-
-/**
- *	Get the type of geometry captured by this object.
- */
-GeometryType Geometry::getType()
-{
-	return _type;
 }
 
 /**

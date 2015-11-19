@@ -65,7 +65,7 @@ Layers::Layers(Facets_ptr &facets)
  *	XY plane changes for applications that undulate (unlikely).
  */
 void Layers::_build(Points_ptr &points)
-{
+{/*
 	Point_ptr point;
 	Layer_ptr layer;
 
@@ -86,7 +86,7 @@ void Layers::_build(Points_ptr &points)
 			add(Layer::create(point));	// Create new
 		}
 		
-	}
+	}*/
 }
 
 /**

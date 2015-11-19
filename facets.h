@@ -22,15 +22,9 @@ class Facets
 private:
 	// Constructors
 	Facets();
-	Facets(std::string &filename);
 
 	// Member variables (private)
 	vector<Facet_ptr>	_items;
-	std::string			_filename;
-
-	// Member functions (private)
-	void	_extractFromSTL(std::string &filename);
-	void	_extractFromDXF(std::string &filename);
 
 	// Operator overloads
 	friend std::ostream &operator<<(std::ostream &strm, const Facets &fs);
@@ -40,7 +34,6 @@ private:
 public:
 	// Factories
 	static Facets_ptr create();
-	static Facets_ptr create(std::string &filename);
 
 	// Member functions (public)
 	void		add(Facet_ptr &facet);

@@ -5,8 +5,7 @@ using namespace std;
 
 #include <memory>
 #include <vector>
-#include "layers.h"
-#include "layer.h"
+#include "surface.h"
 #include "feature.h"
 
 class Features;	// Pre-declare class for shared pointer typedef
@@ -17,7 +16,7 @@ class Features
 private:
 	// Constructors
 	Features();
-	Features(Layers_ptr &layers);
+	Features(Surface_ptr &surface);
 
 	// Member variables (private)
 	vector<Feature_ptr> _items;
@@ -28,7 +27,7 @@ private:
 public:
 	// Factories
 	static Features_ptr create();
-	static Features_ptr create(Layers_ptr &layers);
+	static Features_ptr create(Surface_ptr &surface);
 	
 	// Member functions (public)
 	void			add(Feature_ptr &feature);

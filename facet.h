@@ -23,6 +23,7 @@ class Facet
 {
 private:
 	// Constructors
+	Facet(Point_ptr points[3], double normals[3]);
 	Facet(Point_ptr &point1, Point_ptr &point2, Point_ptr &point3);
 	Facet(Point_ptr &point1, Point_ptr &point2, Point_ptr &point3,
 		Edge_ptr &edge1, Edge_ptr &edge2, Edge_ptr &edge3);
@@ -39,6 +40,7 @@ private:
 	double		_minZ;
 
 	// Member functions (private)
+	void	_calculateNormals();
 	void	_calculateAngles();
 	double	_calculateAngle(double d1, double d2);
 	void	_calculateZRange();
@@ -55,6 +57,7 @@ private:
 
 public:
 	// Factories
+	static Facet_ptr create(Point_ptr* points, double* normals);
 	static Facet_ptr create(Point_ptr &point1, Point_ptr &point2,
 		Point_ptr &point3);
 

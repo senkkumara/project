@@ -14,12 +14,17 @@ Features::Features()
 	// do nothing...
 }
 
+Features::Features(Surface_ptr &surface)
+{
+
+}
+
 /**
  *	(Private) Constructs a vector of features from a vector
  *	containing layers.
  *
  *	Do not use this directly, use the provided factory method.
- */
+ *//*
 Features::Features(Layers_ptr &layers)
 {
 	// Build first two features
@@ -74,7 +79,7 @@ Features::Features(Layers_ptr &layers)
 
 	// Build end feature
 	add(Feature::create(layers->last()));
-}
+}*/
 
 /**
  *	Factory method using default constructor.
@@ -85,11 +90,11 @@ Features_ptr Features::create()
 }
 
 /**
- *	Factory method using constructor with layers argument.
+ *	Factory method using constructor with surface argument.
  */
-Features_ptr Features::create(Layers_ptr &layers)
+Features_ptr Features::create(Surface_ptr &surface)
 {
-	return Features_ptr(new Features(layers));
+	return Features_ptr(new Features(surface));
 }
 
 /**

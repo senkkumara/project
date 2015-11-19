@@ -82,7 +82,6 @@ private:
 public:
 	// Factories
 	static Layer_ptr create();
-	static Layer_ptr create(Point_ptr &point);
 	static Layer_ptr create(Facet_ptr &facet);
 
 	// Member functions (public)

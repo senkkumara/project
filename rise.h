@@ -26,8 +26,8 @@ private:
 
 	// Member fields (private)
 	Geometry_ptr	_geometry;
-	Edges_ptr		_entry;
-	Edges_ptr		_exit;
+	Edge_ptr		_entry;
+	Edge_ptr		_exit;
 	Edges_ptr		_left;
 	Edges_ptr		_right;
 
@@ -46,11 +46,11 @@ private:
 public:
 	// Factories
 	static Rise_ptr create();
-	static Rise_ptr create(Geometry_ptr &geometry);
+	static Rise_ptr create(Facet_ptr &facet);
 
 	// Member functions (public)
-	Edges_ptr		entry();
-	Edges_ptr		exit();
+	Edge_ptr		entry();
+	Edge_ptr		exit();
 	Edges_ptr		Left();
 	Edges_ptr		right();
 

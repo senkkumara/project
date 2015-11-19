@@ -34,8 +34,8 @@ Application::Application(std::string &filename)
 {
 	_filename = filename;
 	_geometry = Geometry::create(_filename);
-	/*_layer = Layers::create(_geometry);
-	_features = Features::create(_layers);*/
+	//_surface = Surface::create(_geometry);
+	//_features = Features::create(_surface);
 }
 
 /**
@@ -74,72 +74,6 @@ Application_ptr Application::create(string &filename)
 }
 
 /**
- *	Prints a summary report for the application.
- */
-void Application::print()
-{
-	cout << endl;
-	cout << "===== Application Report =====" << endl;
-	cout << "Filename: " << getFilename() << endl;
-	cout << "Points: " << getGeometry()->getPoints()->size() << endl;
-	cout << "Layers: " << getLayers()->size() << endl;
-	cout << "Features: " << getFeatures()->size() << endl;
-	cout << endl;
-
-	Features_ptr features = getFeatures();
-	for (int i = 0; i < features->size(); i++)
-	{
-		FeatureType type = features->get(i)->getType();
-		cout << "Feature " << (i + 1) << " is a ";
-		switch (type)
-		{
-		case FT_START:
-			cout << "START" << endl;
-			break;
-		case FT_END:
-			cout << "END" << endl;
-			break;
-		case FT_STRAIGHT:
-			cout << "STRAIGHT consisting of "
-				 << features->get(i)->getLayers()->size();
-
-			if (features->get(i)->getLayers()->size() > 1)
-			{
-				cout << " steps";
-			}
-			else
-			{
-				cout << " step";
-			}
-			cout << endl;
-			break;
-		case FT_WINDER:
-			cout << "WINDER consisting of " 
-				 << features->get(i)->getLayers()->size();
-
-			if (features->get(i)->getLayers()->size() > 1)
-			{
-				cout << " steps";
-			}
-			else
-			{
-				cout << " step";
-			}
-			cout << endl;
-			break;
-		case FT_LANDING_FLAT:
-			cout << "FLAT LANDING" << endl;
-			break;
-		case FT_UNKNOWN:
-			cout << "UNKNOWN" << endl;
-			break;
-		}
-	}
-
-	cout << endl << endl;
-}
-
-/**
  *	Get the filename the application was created from.
  */
 std::string Application::getFilename()
@@ -148,19 +82,19 @@ std::string Application::getFilename()
 }
 
 /**
- *	Get the layers the application comprises of.
- */
-Layers_ptr Application::getLayers()
-{
-	return _layers;
-}
-
-/**
  *	Get the features the application comprises of.
  */
 Features_ptr Application::getFeatures()
 {
 	return _features;
+}
+
+/**
+ *	Get the surface the application comprises of.
+ */
+Surface_ptr Application::getSurface()
+{
+	return _surface;
 }
 
 /**

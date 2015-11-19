@@ -25,21 +25,6 @@ Layer::Layer()
 
 /**
  *	(Private) Constructs a layer and inserts an argument
- *	point onto it.
- *
- *	Do not use this directly, use the provided factory method.
- */
-Layer::Layer(Point_ptr &point)
-{
-	_init();
-	_maxHeight = point->getZ() + _tol;
-	_minHeight = point->getZ() - _tol;
-
-	add(point);
-}
-
-/**
- *	(Private) Constructs a layer and inserts an argument
  *	facet onto it.
  *
  *	Do not use this directly, use the provided factory method.
@@ -229,14 +214,6 @@ bool operator>(Layer_ptr &layer1, Layer_ptr &layer2)
 Layer_ptr Layer::create()
 {
 	return Layer_ptr(new Layer());
-}
-
-/**
- *	Factory method using constructor with a point argument.
- */
-Layer_ptr Layer::create(Point_ptr &point)
-{
-	return Layer_ptr(new Layer(point));
 }
 
 /**

@@ -22,14 +22,9 @@ class Points
 private:
 	// Constructors
 	Points();
-	Points(std::string &filename);
 
 	// Members variables (private)
 	std::vector<Point_ptr>	_items;
-	std::string				_filename;
-
-	// Member functions (private)
-	void	_extractFromPTS(std::string &filename);
 
 	// Operator overloads
 	friend std::ostream &operator<<(std::ostream &strm, const Points &ps);
@@ -39,7 +34,6 @@ private:
 public:
 	// Factories
 	static Points_ptr create();
-	static Points_ptr create(std::string &filename);
 	
 	// Member functions (public)
 	void		add(Point_ptr &point);

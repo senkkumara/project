@@ -9,7 +9,20 @@ using namespace std;
 #define _USE_MATH_DEFINES
 
 #include "facet.h"
+#include <iostream>
 #include "exceptions.h"
+
+Facet::Facet(Point_ptr points[3], double normals[3])
+{
+	for (int i = 0; i < 3; i++)
+	{
+		_points[i] = points[i];
+	}
+
+	_edges[0] = Edge::create(points[0], points[1]);
+	_edges[1] = Edge::create(points[1], points[2]);
+	_edges[2] = Edge::create(points[2], points[0]);
+}
 
 /**
  *	(Private) Constructor taking a series of three points as an argument. Edges
@@ -27,6 +40,8 @@ Facet::Facet(Point_ptr &point1, Point_ptr &point2, Point_ptr &point3)
 	_edges[0] = Edge::create(point1, point2);
 	_edges[1] = Edge::create(point2, point3);
 	_edges[2] = Edge::create(point3, point1);
+
+	_calculateNormals();
 }
 
 /**
@@ -44,6 +59,8 @@ Facet::Facet(Point_ptr &point1, Point_ptr &point2, Point_ptr &point3,
 	_edges[0] = edge1;
 	_edges[1] = edge2;
 	_edges[2] = edge3;
+
+	_calculateNormals();
 }
 
 /**
@@ -62,6 +79,8 @@ Facet::Facet(Edge_ptr &edge1, Edge_ptr &edge2, Edge_ptr &edge3)
 	_edges[0] = edge1;
 	_edges[1] = edge2;
 	_edges[2] = edge3;
+
+	_calculateNormals();
 }
 
 /**
@@ -117,6 +136,45 @@ Facet::Facet(Edge_ptr &edge1, Edge_ptr &edge2, Edge_ptr &edge3, bool check)
 	}
 
 	Facet(edge1, edge2, edge3);
+}
+
+void Facet::_calculateNormals()
+{
+	double nX, nY, nZ, sum;
+	Point_ptr p1, p2, p3;
+
+	p1 = _points[0];
+	p2 = _points[1];
+	p3 = _points[2];
+
+	nX = ((p2->getY() - p1->getY()) * (p3->getZ() - p1->getZ())) - 
+		((p3->getY() - p1->getY()) * (p2->getZ() - p1->getZ()));
+
+	nY = ((p2->getZ() - p1->getZ()) * (p3->getX() - p1->getX())) -
+		((p2->getX() - p1->getX()) * (p3->getZ() - p1->getZ()));
+
+	nZ = ((p2->getX() - p1->getX()) * (p3->getY() - p1->getY())) -
+		((p3->getX() - p1->getX()) * (p2->getY() - p1->getY()));
+
+	nX = pow(nX, 2);
+	nY = pow(nY, 2);
+	nZ = pow(nZ, 2);
+
+	sum = nX + nY + nZ;
+
+	nX /= sum;
+	nY /= sum;
+	nZ /= sum;
+
+	nX = sqrt(nX);
+	nY = sqrt(nY);
+	nZ = sqrt(nZ);
+
+	_normals[0] = nX;
+	_normals[1] = nY;
+	_normals[2] = nZ;
+
+	cout << nX << " " << nY << " " << nZ << endl;
 }
 
 /**
@@ -226,6 +284,11 @@ bool operator==(Facet_ptr &f1, Facet_ptr &f2)
 bool operator!=(Facet_ptr &f1, Facet_ptr &f2)
 {
 	return !(*f1 == *f2);
+}
+
+Facet_ptr Facet::create(Point_ptr points[3], double normals[3])
+{
+	return Facet_ptr(new Facet(points, normals));
 }
 
 /**

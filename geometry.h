@@ -10,18 +10,10 @@
 class Geometry;
 typedef shared_ptr<Geometry> Geometry_ptr;
 
-enum GeometryType
-{
-	GEOM_FACET,
-	GEOM_POINT,
-	GEOM_UNKNOWN
-};
-
 enum FileType
 {
 	FILE_DXF,
 	FILE_STL,
-	FILE_PTS
 };
 
 class Geometry
@@ -34,14 +26,16 @@ private:
 	// Member fields (private)
 	std::string		_filename;
 	FileType		_fileType;
-	GeometryType	_type;
 	Facets_ptr		_facets;
 	Edges_ptr		_edges;
 	Points_ptr		_points;
 
 	// Member functions (private)
-	void _init();
-	void _categoriseInput(std::string &filename);
+	void	_init();
+	void	_categoriseInput();
+	void	_build();
+	void	_buildFromSTL();
+	void	_buildFromDXF();
 
 	// Operator overloads
 	friend std::ostream& operator<<(std::ostream &strm,
@@ -56,7 +50,6 @@ public:
 	static Geometry_ptr create(std::string &filename);
 
 	// Getters
-	GeometryType	getType();
 	Facets_ptr		getFacets();
 	Edges_ptr		getEdges();
 	Points_ptr		getPoints();

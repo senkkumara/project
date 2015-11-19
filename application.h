@@ -16,10 +16,9 @@ using namespace std;
 #include <vector>
 #include <memory>
 #include "features.h"
-#include "feature.h"
-#include "layers.h"
-#include "layer.h"
+#include "surface.h"
 #include "geometry.h"
+#include "edges.h"
 
 class Application;	// Pre-declare class for shared pointer typedef
 typedef shared_ptr<Application> Application_ptr;
@@ -34,30 +33,27 @@ private:
 	// Member variables (private)
 	std::string		_filename;
 	Features_ptr	_features;
-	Layers_ptr		_layers;
+	Surface_ptr		_surface;
 	Geometry_ptr	_geometry;
 	Edges_ptr		_leftBoundary;
 	Edges_ptr		_rightBoundary;
 
 	// Operator overloads
 	friend std::ostream& operator<<(std::ostream &strm,
-		const Application &s);
+		const Application &a);
 
 	friend std::ostream& operator<<(std::ostream &strm,
-		const Application_ptr &s);
+		const Application_ptr &a);
 
 public:
 	// Factories
 	static Application_ptr create();
 	static Application_ptr create(std::string &filename);
 
-	// Member functions (public)
-	void print();
-
 	// Getters
 	std::string		getFilename();
-	Layers_ptr		getLayers();
 	Features_ptr	getFeatures();
+	Surface_ptr		getSurface();
 	Geometry_ptr	getGeometry();
 	Edges_ptr		left();
 	Edges_ptr		right();
