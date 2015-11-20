@@ -89,7 +89,7 @@
     <ClCompile Include="application.cpp" />
     <ClCompile Include="support.cpp" />
     <ClCompile Include="supports.cpp" />
-    <ClCompile Include="surface.cpp" />
+    <ClCompile Include="surfaces.cpp" />
     <ClCompile Include="test.cpp" />
     <ClCompile Include="tester.cpp" />
     <ClCompile Include="tests.cpp" />
@@ -97,6 +97,7 @@
   <ItemGroup>
     <ClInclude Include="block.h" />
     <ClInclude Include="chair.h" />
+    <ClInclude Include="collection.h" />
     <ClInclude Include="connection.h" />
     <ClInclude Include="edge.h" />
     <ClInclude Include="edges.h" />
@@ -121,7 +122,7 @@
     <ClInclude Include="application.h" />
     <ClInclude Include="support.h" />
     <ClInclude Include="supports.h" />
-    <ClInclude Include="surface.h" />
+    <ClInclude Include="surfaces.h" />
     <ClInclude Include="test.h" />
     <ClInclude Include="tester.h" />
     <ClInclude Include="tests.h" />

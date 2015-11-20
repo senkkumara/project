@@ -12,6 +12,7 @@ using namespace std;
 #include <iostream>
 #include "edge.h"
 #include "point.h"
+#include "exceptions.h"
 
 /**
  *	(Private) Default constructor.

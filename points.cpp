@@ -7,9 +7,6 @@
 using namespace std;
 
 #include "points.h"
-#include <iostream>
-#include <fstream>
-#include <sstream>
 #include "exceptions.h"
 
 /**
@@ -28,7 +25,7 @@ Points::Points()
 std::ostream &operator<<(std::ostream &strm, const Points &p)
 {
 	//TODO: Implement method
-	throw MethodNotImplementedException("<< Operator Points");
+	throw MethodNotImplementedException("<< Points");
 	return strm;
 }
 
@@ -37,9 +34,7 @@ std::ostream &operator<<(std::ostream &strm, const Points &p)
  */
 std::ostream &operator<<(std::ostream &strm, const Points_ptr &p)
 {
-	//TODO: Implement method
-	throw MethodNotImplementedException("<< Operator Points Pointer");
-	return strm;
+	return strm << *p;
 }
 
 /**
@@ -48,61 +43,6 @@ std::ostream &operator<<(std::ostream &strm, const Points_ptr &p)
 Points_ptr Points::create()
 {
 	return Points_ptr(new Points());
-}
-
-/**
- *	Add a point to the vector.
- */
-void Points::add(Point_ptr &point)
-{
-	_items.push_back(point);
-}
-
-/**
- *	Remove a point from the vector.
- */
-void Points::remove(Point_ptr point)
-{
-	for (unsigned int i = 0; i < _items.size(); i++)
-	{
-		if (point == _items.at(i))
-		{
-			_items.erase(_items.begin() + i);
-			return;
-		}
-	}
-}
-
-/**
- *	Retrieve a point by index.
- */
-Point_ptr Points::get(int index)
-{
-	return _items.at(index);
-}
-
-/**
- *	Get the first point in the vector.
- */
-Point_ptr Points::first()
-{
-	return get(0);
-}
-
-/**
- *	Get the last point in the vector.
- */
-Point_ptr Points::last()
-{
-	return get(size() - 1);
-}
-
-/**
- *	Return the size of the vector.
- */
-int Points::size()
-{
-	return _items.size();
 }
 
 /**
@@ -147,15 +87,7 @@ void Points::mirrorComponent(int index)
 {
 	for (int i = 0; i < size(); i++)
 	{
-		get(i)->setComponent(index,
-			get(i)->getComponent(index) * -1);
+		this->get(i)->setComponent(index,
+			this->get(i)->getComponent(index) * -1);
 	}
-}
-
-/**
- *	Get the vector of points.
- */
-vector<Point_ptr> Points::getItems()
-{
-	return _items;
 }

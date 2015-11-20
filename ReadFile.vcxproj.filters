@@ -99,7 +99,7 @@
     <ClCompile Include="rises.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="surface.cpp">
+    <ClCompile Include="surfaces.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -191,7 +191,10 @@
     <ClInclude Include="rises.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="surface.h">
+    <ClInclude Include="collection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="surfaces.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

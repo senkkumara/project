@@ -1,8 +1,9 @@
 using namespace std;
 
 #include "features.h"
-#include "feature.h"
 #include <iostream>
+#include "exceptions.h"
+#include "feature.h"
 
 /**
  *	(Private) Default constructor.
@@ -14,7 +15,7 @@ Features::Features()
 	// do nothing...
 }
 
-Features::Features(Surface_ptr &surface)
+Features::Features(Surfaces_ptr &surfaces)
 {
 
 }
@@ -82,6 +83,24 @@ Features::Features(Layers_ptr &layers)
 }*/
 
 /**
+ *	<< operator overload.
+ */
+std::ostream &operator<<(std::ostream &strm, const Features &fs)
+{
+	//TODO: Implement method
+	throw MethodNotImplementedException("<< Features");
+	return strm;
+}
+
+/**
+ *	<< operator overload.
+ */
+std::ostream &operator<<(std::ostream &strm, const Features_ptr &fs)
+{
+	return strm << *fs;
+}
+
+/**
  *	Factory method using default constructor.
  */
 Features_ptr Features::create()
@@ -92,72 +111,7 @@ Features_ptr Features::create()
 /**
  *	Factory method using constructor with surface argument.
  */
-Features_ptr Features::create(Surface_ptr &surface)
+Features_ptr Features::create(Surfaces_ptr &surfaces)
 {
-	return Features_ptr(new Features(surface));
-}
-
-/**
- *	Add a feature to the vector.
- */
-void Features::add(Feature_ptr &feature)
-{
-	_items.push_back(feature);
-}
-
-/**
- *	Remove a feature from the vector.
- */
-void Features::remove(Feature_ptr &feature)
-{
-	for (unsigned int i = 0; i < _items.size(); i++)
-	{
-		if (*feature == *_items.at(i))
-		{
-			_items.erase(_items.begin() + i);
-			return;
-		}
-	}
-}
-
-/**
- *	Retrieve a feature by index.
- */
-Feature_ptr Features::get(int index)
-{
-	return _items.at(index);
-}
-
-Feature_ptr Features::first()
-{
-	return get(0);
-}
-
-Feature_ptr Features::last()
-{
-	return get(size() - 1);
-}
-
-/**
- *	Return the size of the vector.
- */
-int Features::size()
-{
-	return _items.size();
-}
-
-/**
- *	Get the vector containing the features.
- */
-vector<Feature_ptr> Features::getItems()
-{
-	return _items;
-}
-
-/**
- *	<< operator overload.
- */
-std::ostream &operator<<(std::ostream &strm, const Features &fs)
-{
-	return strm;
+	return Features_ptr(new Features(surfaces));
 }

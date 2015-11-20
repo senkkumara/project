@@ -25,7 +25,7 @@ Edges::Edges()
 std::ostream &operator<<(std::ostream &strm, const Edges &es)
 {
 	//TODO: Implement method
-	throw MethodNotImplementedException("<< Operator Edges");
+	throw MethodNotImplementedException("<< Edges");
 	return strm;
 }
 
@@ -34,9 +34,7 @@ std::ostream &operator<<(std::ostream &strm, const Edges &es)
  */
 std::ostream &operator<<(std::ostream &strm, const Edges_ptr &es)
 {
-	//TODO: Implement method
-	throw MethodNotImplementedException("<< Operator Edges Pointer");
-	return strm;
+	return strm << *es;
 }
 
 /**
@@ -45,59 +43,4 @@ std::ostream &operator<<(std::ostream &strm, const Edges_ptr &es)
 Edges_ptr Edges::create()
 {
 	return Edges_ptr(new Edges());
-}
-
-/**
- *	Add a edge to the vector.
- */
-void Edges::add(Edge_ptr &edge)
-{
-	_items.push_back(edge);
-}
-
-/**
- *	Remove a edge from the vector.
- */
-void Edges::remove(Edge_ptr edge)
-{
-	for (unsigned int i = 0; i < _items.size(); i++)
-	{
-		if (edge == _items.at(i))
-		{
-			_items.erase(_items.begin() + i);
-			return;
-		}
-	}
-}
-
-/**
- *	Retrieve a edge by index.
- */
-Edge_ptr Edges::get(int index)
-{
-	return _items.at(index);
-}
-
-/**
- *	Get the first edge in the vector.
- */
-Edge_ptr Edges::first()
-{
-	return get(0);
-}
-
-/**
- *	Get the last edge in the vector.
- */
-Edge_ptr Edges::last()
-{
-	return get(size() - 1);
-}
-
-/**
- *	Return the size of the vector.
- */
-int Edges::size()
-{
-	return _items.size();
 }

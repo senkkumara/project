@@ -36,7 +36,6 @@ Geometry::Geometry(std::string &filename)
 	_filename = filename;
 	_categoriseInput();
 	_build();
-	
 }
 
 /**

@@ -13,18 +13,16 @@ using namespace std;
 #include <ostream>
 #include <vector>
 #include "point.h"
+#include "collection.h"
 
 class Points;
 typedef shared_ptr<Points> Points_ptr;
 
-class Points
+class Points : public Collection<Point_ptr>
 {
 private:
 	// Constructors
 	Points();
-
-	// Members variables (private)
-	std::vector<Point_ptr>	_items;
 
 	// Operator overloads
 	friend std::ostream &operator<<(std::ostream &strm, const Points &ps);
@@ -36,20 +34,11 @@ public:
 	static Points_ptr create();
 	
 	// Member functions (public)
-	void		add(Point_ptr &point);
-	void		remove(Point_ptr point);
-	Point_ptr	get(int index);
-	Point_ptr	first();
-	Point_ptr	last();
-	int			size();
 	void		transform(double matrix[4][4]);
 	void		mirrorX();
 	void		mirrorY();
 	void		mirrorZ();
 	void		mirrorComponent(int index);
-
-	// Getters
-	std::vector<Point_ptr> getItems();
 };
 
 struct PointPair

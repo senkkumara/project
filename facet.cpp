@@ -12,6 +12,11 @@ using namespace std;
 #include <iostream>
 #include "exceptions.h"
 
+/**
+ *	(Private) Constructor taking an array of three points and the normals
+ *
+ *	Do not use this directly, use the provided factory method.
+ */
 Facet::Facet(Point_ptr points[3], double normals[3])
 {
 	for (int i = 0; i < 3; i++)
@@ -23,13 +28,12 @@ Facet::Facet(Point_ptr points[3], double normals[3])
 	_edges[0] = Edge::create(points[0], points[1]);
 	_edges[1] = Edge::create(points[1], points[2]);
 	_edges[2] = Edge::create(points[2], points[0]);
-
 }
 
 /**
- *	(Private) Constructor taking a series of three points as an argument. Edges
- *	are constructed from these points, joining the first to the second,
- *	second to third and third to first.
+ *	(Private) Constructor taking a series of three points as an argument.
+ *	Edges are constructed from these points, joining the first to the
+ *	second, second to third and third to first.
  *
  *	Do not use this directly, use the provided factory method.
  */
@@ -91,7 +95,8 @@ Facet::Facet(Edge_ptr &edge1, Edge_ptr &edge2, Edge_ptr &edge3)
  *
  *	Do not use this directly, use the provided factory method.
  */
-Facet::Facet(Edge_ptr &edge1, Edge_ptr &edge2, Edge_ptr &edge3, bool check)
+Facet::Facet(Edge_ptr &edge1, Edge_ptr &edge2, Edge_ptr &edge3,
+			 bool check)
 {
 	if (check) {
 		// Check join between edges 1 and 2
@@ -140,6 +145,10 @@ Facet::Facet(Edge_ptr &edge1, Edge_ptr &edge2, Edge_ptr &edge3, bool check)
 	Facet(edge1, edge2, edge3);
 }
 
+/**
+ *	(Private) Calculates the unit normal vector for the surface from
+ *	the three vertices.
+ */
 void Facet::_calculateNormals()
 {
 	double nX, nY, nZ, sum;
@@ -288,6 +297,9 @@ bool operator!=(Facet_ptr &f1, Facet_ptr &f2)
 	return !(*f1 == *f2);
 }
 
+/**
+ *	Factory method using the points and normals constructor.
+ */
 Facet_ptr Facet::create(Point_ptr points[3], double normals[3])
 {
 	return Facet_ptr(new Facet(points, normals));

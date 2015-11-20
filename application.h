@@ -16,7 +16,7 @@ using namespace std;
 #include <vector>
 #include <memory>
 #include "features.h"
-#include "surface.h"
+#include "surfaces.h"
 #include "geometry.h"
 #include "edges.h"
 
@@ -33,7 +33,7 @@ private:
 	// Member variables (private)
 	std::string		_filename;
 	Features_ptr	_features;
-	Surface_ptr		_surface;
+	Surfaces_ptr	_surfaces;
 	Geometry_ptr	_geometry;
 	Edges_ptr		_leftBoundary;
 	Edges_ptr		_rightBoundary;
@@ -53,7 +53,7 @@ public:
 	// Getters
 	std::string		getFilename();
 	Features_ptr	getFeatures();
-	Surface_ptr		getSurface();
+	Surfaces_ptr	getSurfaces();
 	Geometry_ptr	getGeometry();
 	Edges_ptr		left();
 	Edges_ptr		right();

@@ -6,10 +6,9 @@
 
 using namespace std;
 
+#include "application.h"
 #include <iostream>
 #include <string>
-
-#include "application.h"
 #include "facet.h"
 #include "exceptions.h"
 
@@ -34,7 +33,7 @@ Application::Application(std::string &filename)
 {
 	_filename = filename;
 	_geometry = Geometry::create(_filename);
-	//_surface = Surface::create(_geometry);
+	//_surfaces = Surfaces::create(_geometry);
 	//_features = Features::create(_surface);
 }
 
@@ -92,9 +91,9 @@ Features_ptr Application::getFeatures()
 /**
  *	Get the surface the application comprises of.
  */
-Surface_ptr Application::getSurface()
+Surfaces_ptr Application::getSurfaces()
 {
-	return _surface;
+	return _surfaces;
 }
 
 /**
