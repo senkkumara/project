@@ -1,6 +1,7 @@
 using namespace std;
 
 #include "surface.h"
+#include "exceptions.h"
 
 /**
  *	(Private) Initialises the member variables.
@@ -115,6 +116,112 @@ void Surface::invertExit()
 }
 
 /**
+ *	Adds a facet to the surface.
+ */
+void Surface::add(Facet_ptr &facet)
+{
+	_geometry->add(facet);
+}
+
+/**
+ *	Removes a facet from the surface.
+ */
+void Surface::remove(Facet_ptr facet)
+{
+	_geometry->remove(facet);
+}
+
+/**
+ *	Returns bool depending on whether a facet is on
+ *	this surface.
+ */
+bool Surface::has(Facet_ptr &facet)
+{
+	return _geometry->has(facet);
+}
+
+/**
+ *	Adds a edge to the surface.
+ */
+void Surface::add(Edge_ptr &edge)
+{
+	_geometry->add(edge);
+}
+
+/**
+ *	Removes a edge from the surface.
+ */
+void Surface::remove(Edge_ptr edge)
+{
+	_geometry->remove(edge);
+}
+
+/**
+ *	Returns bool depending on whether a edge is on
+ *	this surface.
+ */
+bool Surface::has(Edge_ptr &edge)
+{
+	return _geometry->has(edge);
+}
+
+/**
+ *	Adds a point to the surface.
+ */
+void Surface::add(Point_ptr &point)
+{
+	_geometry->add(point);
+}
+
+/**
+ *	Removes a point from the surface.
+ */
+void Surface::remove(Point_ptr point)
+{
+	_geometry->remove(point);
+}
+
+/**
+ *	Returns bool depending on whether a point is on
+ *	this surface.
+ */
+bool Surface::has(Point_ptr &point)
+{
+	return _geometry->has(point);
+}
+
+/**
+ *	Returns bool depending on whether a facet should be on
+ *	this surface.
+ */
+bool Surface::onSurface(Facet_ptr &facet)
+{
+	return facet->getMaxZ() <= _maxHeight &&
+		facet->getMinZ() >= _minHeight;
+}
+
+/**
+ *	Returns bool depending on whether a point should be on
+ *	this surface.
+ */
+bool Surface::onSurface(Edge_ptr &edge)
+{
+	//TODO: implement function
+	throw MethodNotImplementedException("Surface::onSurface");
+	return false;
+}
+
+/**
+ *	Returns bool depending on whether a point should be on
+ *	this surface.
+ */
+bool Surface::onSurface(Point_ptr &point)
+{
+	return point->getZ() <= _maxHeight &&
+		point->getZ() >= _minHeight;
+}
+
+/**
  *	Get the interface angle for the surface.
  */
 double Surface::getIfcAngle()
@@ -128,6 +235,30 @@ double Surface::getIfcAngle()
 Geometry_ptr Surface::getGeometry()
 {
 	return _geometry;
+}
+
+/**
+ *	Get the tolerance.
+ */
+double Surface::getHeightTol()
+{
+	return _tol;
+}
+
+/**
+ *	Get the minimum z-value for this layer.
+ */
+double Surface::getMinHeight()
+{
+	return _minHeight;
+}
+
+/**
+ *	Get the maximum z-value for this layer.
+ */
+double Surface::getMaxHeight()
+{
+	return _maxHeight;
 }
 
 /** 

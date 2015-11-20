@@ -34,5 +34,7 @@ int main()
 		{
 			cout << e.what() << endl;
 		}
+
+		cout << endl;
 	}
 }

@@ -33,7 +33,7 @@ Application::Application(std::string &filename)
 {
 	_filename = filename;
 	_geometry = Geometry::create(_filename);
-	//_surfaces = Surfaces::create(_geometry);
+	_surfaces = Surfaces::create(_geometry);
 	//_features = Features::create(_surface);
 }
 

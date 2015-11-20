@@ -24,26 +24,24 @@ class Facet
 private:
 	// Constructors
 	Facet(Point_ptr points[3], double normals[3]);
-	Facet(Point_ptr &point1, Point_ptr &point2, Point_ptr &point3);
-	Facet(Point_ptr &point1, Point_ptr &point2, Point_ptr &point3,
-		Edge_ptr &edge1, Edge_ptr &edge2, Edge_ptr &edge3);
-
-	Facet(Edge_ptr &edge1, Edge_ptr &edge2, Edge_ptr &edge3);
-	Facet(Edge_ptr &edge1, Edge_ptr &edge2, Edge_ptr &edge3, bool check);
+	Facet(Point_ptr points[3]);
 
 	// Member variables (private)
 	Point_ptr	_points[3];
 	Edge_ptr	_edges[3];
 	double		_normals[3];
 	double		_angles[3];
+	double		_area;
 	double		_maxZ;
 	double		_minZ;
 
 	// Member functions (private)
+	void	_init();
 	void	_calculateNormals();
 	void	_calculateAngles();
 	double	_calculateAngle(double d1, double d2);
 	void	_calculateZRange();
+	void	_calculateArea();
 
 	// Operator overloads
 	friend std::ostream &operator<<(std::ostream &strm, const Facet &f);
@@ -58,21 +56,9 @@ private:
 public:
 	// Factories
 	static Facet_ptr create(Point_ptr* points, double* normals);
-	static Facet_ptr create(Point_ptr &point1, Point_ptr &point2,
-		Point_ptr &point3);
-
-	static Facet_ptr create(Point_ptr &point1, Point_ptr &point2,
-		Point_ptr &point3, Edge_ptr &edge1, Edge_ptr &edge2,
-		Edge_ptr &edge3);
-
-	static Facet_ptr create(Edge_ptr &edge1, Edge_ptr &edge2,
-		Edge_ptr &edge3);
-
-	static Facet_ptr create(Edge_ptr &edge1, Edge_ptr &edge2,
-		Edge_ptr &edge3, bool check);
 
 	// Member functions (public)
-	bool		isVertical(double tol);
+	bool		isVertical();
 	bool		hasPoint(Point_ptr &point);
 	bool		hasEdge(Edge_ptr &edge);
 	Edge_ptr	getEdge(int i);
@@ -90,6 +76,7 @@ public:
 	Point_ptr*	getPoints();
 	Edge_ptr*	getEdges();
 	double*		getNormals();
+	double		getArea();
 	double		getMinZ();
 	double		getMaxZ();
 };

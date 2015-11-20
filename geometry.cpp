@@ -229,6 +229,10 @@ void Geometry::_buildFromSTL()
 		}
 	}
 
+	cout << "Facets: " << _facets->size() << endl;
+	cout << "Edges: " << _edges->size() << endl;
+	cout << "Points: " << _points->size() << endl;
+
 	file.close();
 }
 
@@ -279,7 +283,6 @@ void Geometry::add(Facet_ptr &facet)
 	for (int i = 0; i < 3; i++)
 	{
 		if (! has(edges[i])) add(edges[i]);
-		if (! has(points[i])) add(points[i]);
 	}
 }
 
@@ -316,7 +319,7 @@ void Geometry::add(Edge_ptr &edge)
 
 	Point_ptr* points = edge->getPoints();
 
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 2; i++)
 	{
 		if (! has(points[i])) add(points[i]);
 	}

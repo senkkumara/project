@@ -11,25 +11,21 @@
 using namespace std;
 
 #include <memory>
-#include <vector>
-#include "geometry.h"
+#include "surface.h"
+#include "facet.h"
 
 class Rise;
 typedef shared_ptr<Rise> Rise_ptr;
 
-class Rise
+class Rise : public Surface
 {
 private:
 	// Constructors
 	Rise();
-	Rise(Geometry_ptr &geometry);
+	Rise(Facet_ptr &facet);
 
-	// Member fields (private)
-	Geometry_ptr	_geometry;
-	Edge_ptr		_entry;
-	Edge_ptr		_exit;
-	Edges_ptr		_left;
-	Edges_ptr		_right;
+	// Member functions (private)
+	void _init();
 
 	// Operator overloads
 	friend std::ostream &operator<<(std::ostream &strm,
@@ -47,15 +43,6 @@ public:
 	// Factories
 	static Rise_ptr create();
 	static Rise_ptr create(Facet_ptr &facet);
-
-	// Member functions (public)
-	Edge_ptr		entry();
-	Edge_ptr		exit();
-	Edges_ptr		Left();
-	Edges_ptr		right();
-
-	// Getters
-	Geometry_ptr	getGeometry();
 
 };
 

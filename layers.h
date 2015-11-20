@@ -27,7 +27,7 @@ public:
 	static Layers_ptr create();
 
 	// Methods (public)
-	Layer_ptr	findLayer(Point_ptr &point);
+	Layer_ptr	findLayer(Facet_ptr &facet);
 	void		sort();
 	bool		hasOverlaps();
 };

@@ -32,6 +32,9 @@ public:
 	// Factories
 	static Rises_ptr create();
 
+	// Methods (public)
+	Rise_ptr findRise(Facet_ptr &facet);
+
 };
 
 #endif

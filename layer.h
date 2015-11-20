@@ -12,7 +12,6 @@
 using namespace std;
 
 #include <memory>
-#include <vector>
 #include "surface.h"
 #include "geometry.h"
 #include "facets.h"
@@ -42,9 +41,6 @@ private:
 	Layer(Facet_ptr &facet);
 
 	// Member variables (private)
-	double			_tol;
-	double			_minHeight;
-	double			_maxHeight;
 	LayerType		_type;
 
 	// Member functions (private)
@@ -75,24 +71,7 @@ public:
 	static Layer_ptr create();
 	static Layer_ptr create(Facet_ptr &facet);
 
-	// Member functions (public)
-	void		add(Facet_ptr &facet);
-	void		remove(Facet_ptr facet);
-	bool		onLayer(Facet_ptr &facet);
-	bool		has(Facet_ptr &facet);
-	void		add(Edge_ptr &edge);
-	void		remove(Edge_ptr edge);
-	bool		has(Edge_ptr &edge);
-	void		add(Point_ptr &point);
-	void		remove(Point_ptr point);
-	bool		onLayer(Point_ptr &point);
-	bool		has(Point_ptr &point);
-	bool		hasOverlap(Layer_ptr &layer);
-
 	// Getters
-	double			getHeightTol();
-	double			getMinHeight();
-	double			getMaxHeight();
 	LayerType		getType();
 
 	// Setters

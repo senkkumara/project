@@ -1,9 +1,14 @@
+#ifndef SURFACE_H
+#define SURFACE_H
+
 using namespace std;
 
 #include <memory>
 #include "geometry.h"
+#include "facet.h"
 #include "edges.h"
 #include "edge.h"
+#include "point.h"
 
 class Surface
 {
@@ -19,6 +24,9 @@ protected:
 	Edges_ptr		_left;
 	Edges_ptr		_right;
 	double			_ifcAngle;
+	double			_tol;
+	double			_minHeight;
+	double			_maxHeight;
 
 public:
 	// Methods (public)
@@ -29,13 +37,30 @@ public:
 	Edges_ptr	right();
 	void		invertEntry();
 	void		invertExit();
+	void		add(Facet_ptr &facet);
+	void		remove(Facet_ptr facet);
+	bool		has(Facet_ptr &facet);
+	void		add(Edge_ptr &edge);
+	void		remove(Edge_ptr edge);
+	bool		has(Edge_ptr &edge);
+	void		add(Point_ptr &point);
+	void		remove(Point_ptr point);
+	bool		has(Point_ptr &point);
+	bool		onSurface(Facet_ptr &facet);
+	bool		onSurface(Edge_ptr &edge);
+	bool		onSurface(Point_ptr &point);
 
 	// Getters
 	double			getIfcAngle();
 	Geometry_ptr	getGeometry();
+	double			getHeightTol();
+	double			getMinHeight();
+	double			getMaxHeight();
 
 	// Setters
 	void setEntry(Edge_ptr edge);
 	void setExit(Edge_ptr edge);
 
 };
+
+#endif

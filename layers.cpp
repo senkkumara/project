@@ -51,14 +51,14 @@ std::ostream &operator<<(std::ostream &strm, const Layers_ptr &ly)
 }
 
 /**
- *	Find the layer that contains the argument part.
+ *	Find the layer that contains the argument facet.
  */
-Layer_ptr Layers::findLayer(Point_ptr &point)
+Layer_ptr Layers::findLayer(Facet_ptr &facet)
 {
 	for (int j = _items.size() - 1; j >= 0; j--)
 	{
 		Layer_ptr lyr = _items.at(j);
-		if (lyr->has(point))
+		if (lyr->onSurface(facet))
 		{
 			return lyr;
 		}

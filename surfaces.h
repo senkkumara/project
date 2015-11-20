@@ -1,5 +1,5 @@
-#ifndef SURFACE_H
-#define SURFACE_H
+#ifndef SURFACES_H
+#define SURFACES_H
 
 using namespace std;
 

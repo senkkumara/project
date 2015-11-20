@@ -24,10 +24,18 @@ private:
 	// Member variables (private)
 	Point_ptr	_points[2];
 	double		_angles[3];
+	double		_length;
+	double		_dx;
+	double		_dy;
+	double		_dz;
+	double		_lengthXY;
+	double		_lengthXZ;
+	double		_lengthYZ;
 
 	// Member functions (private)
 	void		_calculateAngles();
 	double		_calculateAngle(double d1, double d2);
+	void		_calculateLengths();
 
 	// Operator overloads
 	friend std::ostream &operator<<(std::ostream &strm, const Edge &e);
@@ -47,6 +55,13 @@ public:
 	void		invert();
 	Point_ptr	left();
 	Point_ptr	right();
+	double		length();
+	double		dx();
+	double		dy();
+	double		dz();
+	double		lengthXY();
+	double		lengthXZ();
+	double		lengthYZ();
 	bool		hasPoint(Point_ptr &point);
 	double		getXAng();
 	double		getYAng();

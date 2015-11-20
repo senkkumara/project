@@ -44,3 +44,20 @@ Rises_ptr Rises::create()
 {
 	return Rises_ptr(new Rises());
 }
+
+/**
+ *	Find the rise that contains the argument facet.
+ */
+Rise_ptr Rises::findRise(Facet_ptr &facet)
+{
+	for (int j = _items.size() - 1; j >= 0; j--)
+	{
+		Rise_ptr rise = _items.at(j);
+		if (rise->onSurface(facet))
+		{
+			return rise;
+		}
+	}
+
+	return nullptr;
+}
