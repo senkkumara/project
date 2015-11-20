@@ -58,7 +58,7 @@ Layer_ptr Layers::findLayer(Point_ptr &point)
 	for (int j = _items.size() - 1; j >= 0; j--)
 	{
 		Layer_ptr lyr = _items.at(j);
-		if (lyr->hasPoint(point))
+		if (lyr->has(point))
 		{
 			return lyr;
 		}

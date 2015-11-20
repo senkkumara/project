@@ -267,6 +267,118 @@ Geometry_ptr Geometry::create(std::string &filename)
 }
 
 /**
+ *	Adds a facet to the geometry.
+ */
+void Geometry::add(Facet_ptr &facet)
+{
+	getFacets()->add(facet);
+
+	Edge_ptr* edges = facet->getEdges();
+	Point_ptr* points = facet->getPoints();
+
+	for (int i = 0; i < 3; i++)
+	{
+		if (! has(edges[i])) add(edges[i]);
+		if (! has(points[i])) add(points[i]);
+	}
+}
+
+/**
+ *	Removes a facet from the geometry.
+ */
+void Geometry::remove(Facet_ptr point)
+{
+	getFacets()->remove(point);
+}
+
+/**
+ *	Returns bool depending on whether a facet is in the geometry.
+ */
+bool Geometry::has(Facet_ptr &facet)
+{
+	for (int i = 0; i < getFacets()->size(); i++)
+	{
+		if (getFacets()->get(i) == facet)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
+ *	Adds a edge to the geometry.
+ */
+void Geometry::add(Edge_ptr &edge)
+{
+	getEdges()->add(edge);
+
+	Point_ptr* points = edge->getPoints();
+
+	for (int i = 0; i < 3; i++)
+	{
+		if (! has(points[i])) add(points[i]);
+	}
+}
+
+/**
+ *	Removes a edge from the geometry.
+ */
+void Geometry::remove(Edge_ptr edge)
+{
+	getEdges()->remove(edge);
+}
+
+/**
+ *	Returns bool depending on whether a edge is in the geometry.
+ */
+bool Geometry::has(Edge_ptr &edge)
+{
+	for (int i = 0; i < getEdges()->size(); i++)
+	{
+		if (getEdges()->get(i) == edge)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
+ *	Adds a point to the geometry.
+ */
+void Geometry::add(Point_ptr &point)
+{
+	getPoints()->add(point);
+}
+
+/**
+ *	Removes a point from the geometry.
+ */
+void Geometry::remove(Point_ptr point)
+{
+	getPoints()->remove(point);
+}
+
+/**
+ *	Returns bool depending on whether a point is in this geometry.
+ */
+bool Geometry::has(Point_ptr &point)
+{
+	for (int i = 0; i < getPoints()->size(); i++)
+	{
+		if (getPoints()->get(i) == point)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
  *	Get the facets the geometry comprises of.
  */
 Facets_ptr Geometry::getFacets()

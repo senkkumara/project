@@ -102,6 +102,9 @@
     <ClCompile Include="surfaces.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="surface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -195,6 +198,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="surfaces.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="surface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

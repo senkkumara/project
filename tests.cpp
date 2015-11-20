@@ -341,7 +341,7 @@ TestResult Tests::isEdgeAngleNotBetweenXAndYExclusive(Layer_ptr layer, double x,
 
 int TestHelper::getPointCount(Layer_ptr layer)
 {
-	return layer->getPoints()->size();
+	return layer->getGeometry()->getPoints()->size();
 }
 
 double TestHelper::getInterfaceAngle(Layer_ptr layer)

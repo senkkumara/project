@@ -49,6 +49,17 @@ public:
 	static Geometry_ptr create();
 	static Geometry_ptr create(std::string &filename);
 
+	// Methods (public)
+	void	add(Facet_ptr &facet);
+	void	remove(Facet_ptr facet);
+	bool	has(Facet_ptr &facet);
+	void	add(Edge_ptr &edge);
+	void	remove(Edge_ptr edge);
+	bool	has(Edge_ptr &edge);
+	void	add(Point_ptr &point);
+	void	remove(Point_ptr point);
+	bool	has(Point_ptr &point);
+
 	// Getters
 	Facets_ptr		getFacets();
 	Edges_ptr		getEdges();
