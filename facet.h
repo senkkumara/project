@@ -23,8 +23,7 @@ class Facet
 {
 private:
 	// Constructors
-	Facet(Point_ptr points[3], double normals[3]);
-	Facet(Point_ptr points[3]);
+	Facet(Point_ptr points[3], Edge_ptr edges[3], double normals[3]);
 
 	// Member variables (private)
 	Point_ptr	_points[3];
@@ -42,6 +41,8 @@ private:
 	double	_calculateAngle(double d1, double d2);
 	void	_calculateZRange();
 	void	_calculateArea();
+	double	_getNormal(int i);
+	double	_getAng(int i);
 
 	// Operator overloads
 	friend std::ostream &operator<<(std::ostream &strm, const Facet &f);
@@ -50,15 +51,14 @@ private:
 
 	friend bool operator==(Facet &cF1, Facet &cF2);
 	friend bool operator!=(Facet &cF1, Facet &cF2);
-	friend bool operator==(Facet_ptr &cF1, Facet_ptr &cF2);
-	friend bool operator!=(Facet_ptr &cF1, Facet_ptr &cF2);
 
 public:
 	// Factories
-	static Facet_ptr create(Point_ptr* points, double* normals);
+	static Facet_ptr create(Point_ptr* points, Edge_ptr* edges, double* normals);
 
 	// Member functions (public)
 	bool		isVertical();
+	bool		isHorizontal();
 	bool		hasPoint(Point_ptr &point);
 	bool		hasEdge(Edge_ptr &edge);
 	Edge_ptr	getEdge(int i);
@@ -66,11 +66,10 @@ public:
 	double		getXNormal();
 	double		getYNormal();
 	double		getZNormal();
-	double		getNormal(int i);
 	double		getXAng();
 	double		getYAng();
 	double		getZAng();
-	double		getAng(int i);
+	double		getAvgZ();
 
 	// Getters
 	Point_ptr*	getPoints();

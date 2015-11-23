@@ -13,12 +13,7 @@ using namespace std;
 
 #include <memory>
 #include "surface.h"
-#include "geometry.h"
-#include "facets.h"
-#include "facet.h"
-#include "edge.h"
-#include "points.h"
-#include "point.h"
+#include "rise.h"
 
 class Layer;	// Pre-declare class for shared pointer typedef
 typedef shared_ptr<Layer> Layer_ptr;
@@ -40,10 +35,12 @@ private:
 	Layer();
 	Layer(Facet_ptr &facet);
 
-	// Member variables (private)
-	LayerType		_type;
+	// Fields (private)
+	LayerType	_type;
+	Rise_ptr	_lower;
+	Rise_ptr	_upper;
 
-	// Member functions (private)
+	// Methods (private)
 	void _init();
 
 	// Operator overloads
@@ -71,11 +68,17 @@ public:
 	static Layer_ptr create();
 	static Layer_ptr create(Facet_ptr &facet);
 
+	// Methods (private)
+	Rise_ptr		lower();
+	Rise_ptr		upper();
+
 	// Getters
 	LayerType		getType();
 
 	// Setters
 	void setType(LayerType type);
+	void setLower(Rise_ptr &rise);
+	void setUpper(Rise_ptr &rise);
 };
 
 #endif

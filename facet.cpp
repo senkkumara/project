@@ -18,11 +18,12 @@ using namespace std;
  *
  *	Do not use this directly, use the provided factory method.
  */
-Facet::Facet(Point_ptr points[3], double normals[3])
+Facet::Facet(Point_ptr points[3], Edge_ptr edges[3], double normals[3])
 {
 	for (int i = 0; i < 3; i++)
 	{
 		_points[i] = points[i];
+		_edges[i] = edges[i];
 		_normals[i] = normals[i];
 	}
 
@@ -30,27 +31,11 @@ Facet::Facet(Point_ptr points[3], double normals[3])
 }
 
 /**
- *	(Private) Constructor taking an array of three points.
- *
- *	Do not use this directly, use the provided factory method.
+ *	(Private) Carries out functions that should be common to all
+ *	constructors.
  */
-Facet::Facet(Point_ptr points[3])
-{
-	for (int i = 0; i < 3; i++)
-	{
-		_points[i] = points[i];
-	}
-
-	_calculateNormals();
-	_init();
-}
-
 void Facet::_init()
 {
-	_edges[0] = Edge::create(_points[0], _points[1]);
-	_edges[1] = Edge::create(_points[1], _points[2]);
-	_edges[2] = Edge::create(_points[2], _points[0]);
-
 	_calculateAngles();
 	_calculateArea();
 	_calculateZRange();
@@ -115,10 +100,15 @@ void Facet::_calculateAngles()
 	_angles[2] = _calculateAngle(dx, dy);	// anti-clockwise from x;
 }
 
+/**
+ *	(Private) Calculates the area of the facet.
+ */
 void Facet::_calculateArea()
 {
 	Edge_ptr* edges = getEdges();
 	
+	// Look for the lowest product of two edge lengths -
+	// this will correspond to the shortest edges
 	double product, min;
 	min = edges[0]->length() * edges[1]->length();
 	product = edges[0]->length() * edges[2]->length();
@@ -128,6 +118,7 @@ void Facet::_calculateArea()
 
 	if (min > product) min = product;
 
+	// Divide by 2 to get the area
 	_area = product / 2;
 }
 
@@ -164,6 +155,23 @@ void Facet::_calculateZRange()
 			_maxZ = z;
 		}
 	}
+}
+
+/**
+ *	Get the unit normal at the argument index (X = 0, Y = 1, Z = 2).
+ */
+double Facet::_getNormal(int i)
+{
+	return _normals[i];
+}
+
+/**
+ *	Get the angle of the facet about the axis corresponding to the
+ *	argument index (X = 0, Y = 1, Z = 2).
+ */
+double Facet::_getAng(int i)
+{
+	return _angles[i];
 }
 
 /**
@@ -209,27 +217,11 @@ bool operator!=(Facet &f1, Facet &f2)
 }
 
 /**
- *	== operator overload.
- */
-bool operator==(Facet_ptr &f1, Facet_ptr &f2)
-{
-	return (*f1 == *f2);
-}
-
-/**
- *	!= operator overload.
- */
-bool operator!=(Facet_ptr &f1, Facet_ptr &f2)
-{
-	return !(*f1 == *f2);
-}
-
-/**
  *	Factory method using the points and normals constructor.
  */
-Facet_ptr Facet::create(Point_ptr points[3], double normals[3])
+Facet_ptr Facet::create(Point_ptr points[3], Edge_ptr edges[3], double normals[3])
 {
-	return Facet_ptr(new Facet(points, normals));
+	return Facet_ptr(new Facet(points, edges, normals));
 }
 
 /**
@@ -239,6 +231,15 @@ Facet_ptr Facet::create(Point_ptr points[3], double normals[3])
 bool Facet::isVertical()
 {
 	return ((getMaxZ() - getMinZ()) > 50);
+}
+
+/**
+ *	Returns a boolean depending on whether the surface is
+ *	approximately horizontal.
+ */
+bool Facet::isHorizontal()
+{
+	return ! isVertical();
 }
 
 /**
@@ -296,7 +297,7 @@ Point_ptr Facet::getPoint(int i)
  */
 double Facet::getXNormal()
 {
-	return getNormal(0);
+	return _getNormal(0);
 }
 
 /**
@@ -304,7 +305,7 @@ double Facet::getXNormal()
  */
 double Facet::getYNormal()
 {
-	return getNormal(1);
+	return _getNormal(1);
 }
 
 /**
@@ -312,15 +313,7 @@ double Facet::getYNormal()
  */
 double Facet::getZNormal()
 {
-	return getNormal(2);
-}
-
-/**
- *	Get the unit normal at the argument index (X = 0, Y = 1, Z = 2).
- */
-double Facet::getNormal(int i)
-{
-	return _normals[i];
+	return _getNormal(2);
 }
 
 /**
@@ -328,7 +321,7 @@ double Facet::getNormal(int i)
  */
 double Facet::getXAng()
 {
-	return getAng(0);
+	return _getAng(0);
 }
 
 /**
@@ -336,7 +329,7 @@ double Facet::getXAng()
  */
 double Facet::getYAng()
 {
-	return getAng(1);
+	return _getAng(1);
 }
 
 /**
@@ -344,16 +337,16 @@ double Facet::getYAng()
  */
 double Facet::getZAng()
 {
-	return getAng(2);
+	return _getAng(2);
 }
 
 /**
- *	Get the angle of the facet about the axis corresponding to the
- *	argument index (X = 0, Y = 1, Z = 2).
+ *	Return the average height of the facet - take as an average of the
+ *	height of each of the points.
  */
-double Facet::getAng(int i)
+double Facet::getAvgZ()
 {
-	return _angles[i];
+	return (_minZ + _maxZ) / 2;
 }
 
 /**

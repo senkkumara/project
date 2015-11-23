@@ -192,3 +192,13 @@ void Layer::setType(LayerType type)
 {
 	_type = type;
 }
+
+void Layer::setLower(Rise_ptr &rise)
+{
+	_lower = rise;
+}
+
+void Layer::setUpper(Rise_ptr &rise)
+{
+	_upper = rise;
+}

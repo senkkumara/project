@@ -35,8 +35,6 @@ private:
 
 	friend bool operator==(Point &cP1, Point &cP2);
 	friend bool operator!=(Point &cP1, Point &cP2);
-	friend bool operator==(Point_ptr &cP1, Point_ptr &cP2);
-	friend bool operator!=(Point_ptr &cP1, Point_ptr &cP2);
 
 public:
 	// Factories

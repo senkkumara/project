@@ -61,3 +61,23 @@ Rise_ptr Rises::findRise(Facet_ptr &facet)
 
 	return nullptr;
 }
+
+/**
+ *	Order the layers by Z distance.
+ */
+void Rises::sort()
+{
+	Rise_ptr rise1, rise2, temp;
+	for (unsigned int i = 0; i < _items.size() - 1; i++)
+	{
+		rise1 = get(i);
+		for (unsigned int j = i + 1; j < _items.size(); j++)
+		{
+			rise2 = get(j);
+			if (rise1->getMaxHeight() > rise2->getMaxHeight())
+			{
+				std::iter_swap(_items.begin() + i, _items.begin() + j);
+			}
+		}
+	}
+}

@@ -33,7 +33,8 @@ public:
 	static Rises_ptr create();
 
 	// Methods (public)
-	Rise_ptr findRise(Facet_ptr &facet);
+	Rise_ptr	findRise(Facet_ptr &facet);
+	void		sort();
 
 };
 

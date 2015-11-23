@@ -72,8 +72,19 @@ Layer_ptr Layers::findLayer(Facet_ptr &facet)
  */
 void Layers::sort()
 {
-	//TODO: implement method.
-	throw MethodNotImplementedException("Layers::sort");
+	Layer_ptr layer1, layer2, temp;
+	for (unsigned int i = 0; i < _items.size() - 1; i++)
+	{
+		layer1 = get(i);
+		for (unsigned int j = i + 1; j < _items.size(); j++)
+		{
+			layer2 = get(j);
+			if (layer1->getMaxHeight() > layer2->getMaxHeight())
+			{
+				std::iter_swap(_items.begin() + i, _items.begin() + j);
+			}
+		}
+	}
 }
 
 /**

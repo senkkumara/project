@@ -122,8 +122,11 @@ void Geometry::_buildFromSTL()
 	}
 
 	Facet_ptr facet;
+	Edge_ptr tempEdge;
 	Point_ptr point;
+	Point_ptr tempPoint;
 	Point_ptr points[3];
+	Edge_ptr edges[3];
 	double normals[3];
 	std::string facetPrefix = "facet normal ";
 	std::string vertexPrefix = "vertex ";
@@ -199,7 +202,18 @@ void Geometry::_buildFromSTL()
 			}
 
 			point = Point::create(coords);
-			_points->add(point);
+
+			// Ensure no duplicate points
+			tempPoint = getPoints()->get(point);
+			if (tempPoint)
+			{
+				point = tempPoint;
+			}
+			else
+			{
+				_points->add(point);
+			}
+
 			points[row] = point;
 
 			getline(file, line);	// Get next line
@@ -216,16 +230,24 @@ void Geometry::_buildFromSTL()
 		getline(file, line);
 		if (line.find("endfacet") != std::string::npos)
 		{
-			_facets->add(Facet::create(points, normals));
-		}
-	}
+			edges[0] = Edge::create(points[0], points[1]);
+			edges[1] = Edge::create(points[1], points[2]);
+			edges[2] = Edge::create(points[2], points[0]);
 
-	// Extract edges from facets
-	for (int i = 0; i < _facets->size(); i++)
-	{
-		for (int j = 0; j < 3; j++)
-		{
-			_edges->add(_facets->get(i)->getEdges()[j]);
+			for (int i = 0; i < 3; i++)
+			{
+				tempEdge = getEdges()->get(edges[i]);
+				if (tempEdge)
+				{
+					edges[i] = tempEdge;
+				}
+				else
+				{
+					_edges->add(edges[i]);
+				}
+			}
+
+			_facets->add(Facet::create(points, edges, normals));
 		}
 	}
 
@@ -282,7 +304,7 @@ void Geometry::add(Facet_ptr &facet)
 
 	for (int i = 0; i < 3; i++)
 	{
-		if (! has(edges[i])) add(edges[i]);
+		if (! getEdges()->contains(edges[i])) add(edges[i]);
 	}
 }
 
@@ -292,22 +314,6 @@ void Geometry::add(Facet_ptr &facet)
 void Geometry::remove(Facet_ptr point)
 {
 	getFacets()->remove(point);
-}
-
-/**
- *	Returns bool depending on whether a facet is in the geometry.
- */
-bool Geometry::has(Facet_ptr &facet)
-{
-	for (int i = 0; i < getFacets()->size(); i++)
-	{
-		if (getFacets()->get(i) == facet)
-		{
-			return true;
-		}
-	}
-
-	return false;
 }
 
 /**
@@ -321,7 +327,7 @@ void Geometry::add(Edge_ptr &edge)
 
 	for (int i = 0; i < 2; i++)
 	{
-		if (! has(points[i])) add(points[i]);
+		if (! getPoints()->contains(points[i])) add(points[i]);
 	}
 }
 
@@ -331,22 +337,6 @@ void Geometry::add(Edge_ptr &edge)
 void Geometry::remove(Edge_ptr edge)
 {
 	getEdges()->remove(edge);
-}
-
-/**
- *	Returns bool depending on whether a edge is in the geometry.
- */
-bool Geometry::has(Edge_ptr &edge)
-{
-	for (int i = 0; i < getEdges()->size(); i++)
-	{
-		if (getEdges()->get(i) == edge)
-		{
-			return true;
-		}
-	}
-
-	return false;
 }
 
 /**
@@ -363,22 +353,6 @@ void Geometry::add(Point_ptr &point)
 void Geometry::remove(Point_ptr point)
 {
 	getPoints()->remove(point);
-}
-
-/**
- *	Returns bool depending on whether a point is in this geometry.
- */
-bool Geometry::has(Point_ptr &point)
-{
-	for (int i = 0; i < getPoints()->size(); i++)
-	{
-		if (getPoints()->get(i) == point)
-		{
-			return true;
-		}
-	}
-
-	return false;
 }
 
 /**

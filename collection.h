@@ -21,6 +21,7 @@ public:
 	T		last();
 	int		size();
 	bool	contains(T item);
+	T		get(T item);
 
 	// Getters
 	std::vector<T> getItems();
@@ -67,10 +68,20 @@ template<class T> bool Collection<T>::contains(T item)
 {
 	for (int i = 0; i < size(); i++)
 	{
-		if (get(i) == item) return true;
+		if (*get(i) == *item) return true;
 	}
 
 	return false;
+}
+
+template<class T> T Collection<T>::get(T item)
+{
+	for (int i = 0; i < size(); i++)
+	{
+		if (*get(i) == *item) return get(i);
+	}
+
+	return nullptr;
 }
 
 #endif

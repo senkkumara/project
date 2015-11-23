@@ -137,7 +137,7 @@ void Surface::remove(Facet_ptr facet)
  */
 bool Surface::has(Facet_ptr &facet)
 {
-	return _geometry->has(facet);
+	return _geometry->getFacets()->contains(facet);
 }
 
 /**
@@ -162,7 +162,7 @@ void Surface::remove(Edge_ptr edge)
  */
 bool Surface::has(Edge_ptr &edge)
 {
-	return _geometry->has(edge);
+	return _geometry->getEdges()->contains(edge);
 }
 
 /**
@@ -187,7 +187,7 @@ void Surface::remove(Point_ptr point)
  */
 bool Surface::has(Point_ptr &point)
 {
-	return _geometry->has(point);
+	return _geometry->getPoints()->contains(point);
 }
 
 /**
@@ -259,6 +259,11 @@ double Surface::getMinHeight()
 double Surface::getMaxHeight()
 {
 	return _maxHeight;
+}
+
+double Surface::getAvgHeight()
+{
+	return (_minHeight + _maxHeight) / 2;
 }
 
 /** 

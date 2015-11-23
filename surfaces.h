@@ -5,7 +5,9 @@ using namespace std;
 
 #include <memory>
 #include "rises.h"
+#include "rise.h"
 #include "layers.h"
+#include "layer.h"
 
 class Surfaces;
 typedef shared_ptr<Surfaces> Surfaces_ptr;
@@ -24,8 +26,14 @@ private:
 	// Methods (private)
 	void	_init();
 	void	_build(Geometry_ptr &geometry);
+	void	_checkBuild();
 	void	_findInterfaces();
-	void	_findInterface(Layer_ptr &layer1, Layer_ptr &layer2);
+	void	_findInterface(Rise_ptr &rise);
+	void	_checkInterfaces();
+	void	_findBoundaries();
+	void	_findBoundary(Rise_ptr &rise);
+	void	_findBoundary(Layer_ptr &layer);
+	void	_checkBoundaries();
 	void	_categorise();
 
 	// Operator overloads

@@ -56,6 +56,7 @@ public:
 	double			getHeightTol();
 	double			getMinHeight();
 	double			getMaxHeight();
+	double			getAvgHeight();
 
 	// Setters
 	void setEntry(Edge_ptr edge);

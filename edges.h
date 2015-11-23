@@ -31,7 +31,6 @@ private:
 public:
 	// Factories
 	static Edges_ptr create();
-
 };
 
 #endif
