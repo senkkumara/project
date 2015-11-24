@@ -11,7 +11,7 @@ using namespace std;
 class Layers;	// Pre-declare class for shared pointer typedef
 typedef shared_ptr<Layers> Layers_ptr;
 
-class Layers : public Collection<Layer_ptr>
+class Layers : public Collection<Layer_ptr, Layers_ptr>
 {
 private:
 	// Constructors

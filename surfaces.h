@@ -22,6 +22,8 @@ private:
 	// Fields (private)
 	Layers_ptr	_layers;
 	Rises_ptr	_rises;
+	Edges_ptr	_left;
+	Edges_ptr	_right;
 
 	// Methods (private)
 	void		_init();
@@ -36,6 +38,7 @@ private:
 	Edge_ptr	_findShortestConnected(Rise_ptr &rise, Point_ptr &point);
 	Edges_ptr	_findInboundConnections(Edges_ptr &edges, Point_ptr &point);
 	void		_checkBoundaries();
+	void		_collectBoundaries();
 	void		_categorise();
 
 	// Operator overloads
@@ -47,6 +50,10 @@ public:
 	// Factories
 	static Surfaces_ptr create();
 	static Surfaces_ptr create(Geometry_ptr &geometry);
+
+	// methods (public)
+	Edges_ptr	left();
+	Edges_ptr	right();
 
 	// Getters
 	Layers_ptr	getLayers();

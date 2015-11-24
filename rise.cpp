@@ -20,6 +20,9 @@ void Rise::_init()
 {
 	_tol = 35.0;
 	_geometry = Geometry::create();
+	_left = Edges::create();
+	_right = Edges::create();
+
 	recalculateIfcAngle();
 }
 

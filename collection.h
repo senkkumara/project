@@ -5,7 +5,7 @@ using namespace std;
 
 #include <vector>
 
-template<typename T>
+template<typename T, class V>
 class Collection
 {
 protected:
@@ -15,6 +15,7 @@ protected:
 public:
 	// Methods (public)
 	void	add(T &item);
+	void	add(V &items);
 	void	remove(T item);
 	T		get(int index);
 	T		first();
@@ -27,12 +28,20 @@ public:
 	std::vector<T> getItems();
 };
 
-template<class T> void Collection<T>::add(T &item)
+template<class T, class V> void Collection<T, V>::add(T &item)
 {
 	_items.push_back(item);
 }
 
-template<class T> void Collection<T>::remove(T item)
+template<class T, class V> void Collection<T, V>::add(V &items)
+{
+	for (int i = 0; i < items->size(); i++)
+	{
+		add(items->get(i));
+	}
+}
+
+template<class T, class V> void Collection<T, V>::remove(T item)
 {
 	for (unsigned int i = 0; i < _items.size(); i++)
 	{
@@ -44,27 +53,27 @@ template<class T> void Collection<T>::remove(T item)
 	}
 }
 
-template<class T> T Collection<T>::get(int index)
+template<class T, class V> T Collection<T, V>::get(int index)
 {
 	return _items.at(index);
 }
 
-template<class T> T Collection<T>::first()
+template<class T, class V> T Collection<T, V>::first()
 {
 	return get(0);
 }
 
-template<class T> T Collection<T>::last()
+template<class T, class V> T Collection<T, V>::last()
 {
 	return get(size() - 1);
 }
 
-template<class T> int Collection<T>::size()
+template<class T, class V> int Collection<T, V>::size()
 {
 	return _items.size();
 }
 
-template<class T> bool Collection<T>::contains(T item)
+template<class T, class V> bool Collection<T, V>::contains(T item)
 {
 	for (int i = 0; i < size(); i++)
 	{
@@ -74,7 +83,7 @@ template<class T> bool Collection<T>::contains(T item)
 	return false;
 }
 
-template<class T> T Collection<T>::get(T item)
+template<class T, class V> T Collection<T, V>::get(T item)
 {
 	for (int i = 0; i < size(); i++)
 	{

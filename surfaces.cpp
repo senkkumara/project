@@ -24,47 +24,16 @@ Surfaces::Surfaces(Geometry_ptr &geometry)
 	_checkInterfaces();
 	_findBoundaries();
 	_checkBoundaries();
+	_collectBoundaries();
 	_categorise();
-
-	/*
-	cout << "Layer Boundaries" << endl;
-	for (int i = 0; i < _layers->size() - 1; i++)
-	{
-		cout << "Left: " << _layers->get(i)->left()->size() << " Right: " << _layers->get(i)->right()->size() << endl;
-		cout << "Left: " << endl;
-		for (int j = 0; j < _layers->get(i)->left()->size(); j++)
-		{
-			cout << _layers->get(i)->left()->get(j) << endl;
-		}
-		cout << "Right: " << endl;
-		for (int j = 0; j < _layers->get(i)->right()->size(); j++)
-		{
-			cout << _layers->get(i)->right()->get(j) << endl;
-		}
-	}
-
-	cout << "Rise Boundaries" << endl;
-	for (int i = 0; i < _rises->size() - 1; i++)
-	{
-		cout << "Left: " << _rises->get(i)->left()->size() << " Right: " << _rises->get(i)->right()->size() << endl;
-		cout << "Left: " << endl;
-		for (int j = 0; j < _rises->get(i)->left()->size(); j++)
-		{
-			cout << _rises->get(i)->left()->get(j) << endl;
-		}
-		cout << "Right: " << endl;
-		for (int j = 0; j < _rises->get(i)->right()->size(); j++)
-		{
-			cout << _rises->get(i)->right()->get(j) << endl;
-		}
-	}
-	*/
 }
 
 void Surfaces::_init()
 {
 	_layers = Layers::create();
 	_rises = Rises::create();
+	_left = Edges::create();
+	_right = Edges::create();
 }
 
 void Surfaces::_build(Geometry_ptr &geometry)
@@ -145,7 +114,9 @@ void Surfaces::_findInterfaces()
 	}
 	
 	// Layers
-	int j = 0;	// Keep track of point within rises collection
+	int j = 0;	// Record position in rises collection -
+				// reduce number of iterations
+
 	Layer_ptr layer1, layer2;
 	Rise_ptr rise;
 	double layer1Z, layer2Z, riseZ;
@@ -271,7 +242,7 @@ void Surfaces::_findBoundaries()
 	// Find topmost rise boundary if final surface is a rise -
 	// previous loop is backwards looking, only creating boundaries
 	// for lower rise
-	if (! layer->upper())
+	if (layer->upper()->getGeometry()->size() != 0)
 	{
 		_findBoundary(layer->upper());
 	}
@@ -307,7 +278,7 @@ void Surfaces::_findBoundary(Layer_ptr &layer)
 		}
 	}
 
-	// Clone points
+	// Clone points - remove
 	for (int i = 0; i < geometry->getPoints()->size(); i++)
 	{
 		point = geometry->getPoints()->get(i);
@@ -325,6 +296,9 @@ void Surfaces::_findBoundary(Layer_ptr &layer)
 
 		inCount1 = inbound1->size();
 		inCount2 = inbound2->size();
+
+		if (exit->hasPoint(left)) inCount1 = 0;
+		if (exit->hasPoint(right)) inCount2 = 0;
 
 		if (inCount1 >= 1 && inCount2 == 0)
 		{
@@ -363,11 +337,21 @@ void Surfaces::_findBoundary(Layer_ptr &layer)
 		}
 		else
 		{
+			// TODO: build in a "back step"
 			throw GeometryBuildException();
 		}
 
+		if ((exit->hasPoint(left) && *exit->left() != *left) ||
+			(exit->hasPoint(right) && *exit->right() != *right))
+		{
+			exit->invert();
+		}
+
+		// Remove point from pool - must be *before* edges
 		points->remove(point);
 
+		// Remove edges from "edges" collection where neither end
+		// point is in the "points" collection
 		for (int i = edges->size() - 1; i > -1; i--)
 		{
 			edge = edges->get(i);
@@ -380,6 +364,7 @@ void Surfaces::_findBoundary(Layer_ptr &layer)
 		}
 	}
 
+	// Set boundaries
 	layer->setLeft(boundary1);
 	layer->setRight(boundary2);
 }
@@ -476,6 +461,48 @@ void Surfaces::_checkBoundaries()
 	// do nothing...
 }
 
+void Surfaces::_collectBoundaries()
+{
+	Layers_ptr layers = getLayers();
+	Layer_ptr layer;
+
+	// First layer
+	layer = layers->first();
+	int i = 0;
+	if (layer->lower()->getGeometry()->size() == 0)
+	{
+		cout << "Layer 1: ";
+		cout << layer->left()->size() << ", " << layer->right()->size() << endl;
+		_left->add(layer->left());
+		_right->add(layer->right());
+		i++;
+	}
+
+	
+	for (; i < layers->size(); i++)
+	{
+		layer = layers->get(i);
+
+		cout << "Rise " << (i + 1) << ": ";
+		cout << layer->lower()->left()->size() << ", " << layer->lower()->right()->size() << endl;
+		cout << "Layer " << (i + 1) << ": ";
+		cout << layer->left()->size() << ", " << layer->right()->size() << endl;
+		_left->add(layer->lower()->left());
+		_right->add(layer->lower()->right());
+		_left->add(layer->left());
+		_right->add(layer->right());
+	}
+
+	// Add boundary for rise from last layer if it exists
+	if (layer->upper()->getGeometry()->size() > 0)
+	{
+		cout << "Rise " << _rises->size() << ": ";
+		cout << layer->upper()->left()->size() << ", " << layer->upper()->right()->size() << endl;
+		_left->add(layer->upper()->left());
+		_right->add(layer->upper()->right());
+	}
+}
+
 void Surfaces::_categorise()
 {
 	// do nothing...
@@ -489,6 +516,16 @@ Surfaces_ptr Surfaces::create()
 Surfaces_ptr Surfaces::create(Geometry_ptr &geometry)
 {
 	return Surfaces_ptr(new Surfaces(geometry));
+}
+
+Edges_ptr Surfaces::left()
+{
+	return _left;
+}
+
+Edges_ptr Surfaces::right()
+{
+	return _right;
 }
 
 Layers_ptr Surfaces::getLayers()

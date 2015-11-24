@@ -11,7 +11,7 @@ using namespace std;
 class Features;	// Pre-declare class for shared pointer typedef
 typedef shared_ptr<Features> Features_ptr;
 
-class Features : public Collection<Feature_ptr>
+class Features : public Collection<Feature_ptr, Features_ptr>
 {
 private:
 	// Constructors

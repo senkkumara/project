@@ -17,7 +17,7 @@ using namespace std;
 class Facets;	// Pre-declare class for shared pointer typedef
 typedef shared_ptr<Facets> Facets_ptr;
 
-class Facets : public Collection<Facet_ptr>
+class Facets : public Collection<Facet_ptr, Facets_ptr>
 {
 private:
 	// Constructors

@@ -18,7 +18,7 @@ using namespace std;
 class Points;
 typedef shared_ptr<Points> Points_ptr;
 
-class Points : public Collection<Point_ptr>
+class Points : public Collection<Point_ptr, Points_ptr>
 {
 private:
 	// Constructors

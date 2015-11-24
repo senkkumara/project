@@ -17,7 +17,7 @@ using namespace std;
 class Edges;	// Pre-declare class for shared pointer typedef
 typedef shared_ptr<Edges> Edges_ptr;
 
-class Edges : public Collection<Edge_ptr>
+class Edges : public Collection<Edge_ptr, Edges_ptr>
 {
 private:
 	// Constructors

@@ -17,7 +17,7 @@ using namespace std;
 class Rises;	// Pre-declare class for shared pointer typedef
 typedef shared_ptr<Rises> Rises_ptr;
 
-class Rises : public Collection<Rise_ptr>
+class Rises : public Collection<Rise_ptr, Rises_ptr>
 {
 private:
 	// Constructors
