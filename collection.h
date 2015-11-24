@@ -6,42 +6,52 @@ using namespace std;
 #include <vector>
 #include "exceptions.h"
 
-template<typename T, class V>
+/**
+ *	"C" is the container type - e.g. "Points_ptr" (required for clone)
+ *	"V" is the value type - e.g. "Point_ptr"
+ */
+template<typename V, class C>
 class Collection
 {
 protected:
 	// Fields (protected)
-	std::vector<T>	_items;
+	std::vector<V>	_items;
 
 public:
 	// Methods (public)
-	V		clone(V &donor);
-	void	add(T &item);
-	void	add(V &items);
-	void	remove(T item);
-	T		get(int index);
-	T		first();
-	T		last();
+	C		clone(C &donor);
+	void	add(V &item);
+	void	add(C &items);
+	void	remove(V item);
+	V		get(int index);
+	V		first();
+	V		last();
 	int		size();
-	bool	contains(T item);
-	T		get(T item);
+	bool	contains(V item);
+	V		get(V item);
 
 	// Getters
-	std::vector<T> getItems();
+	std::vector<V> getItems();
 };
 
-template<class T, class V> V Collection<T, V>::clone(V &donor)
+template<class V, class C> C Collection<V, C>::clone(C &donor)
 {
-	throw MethodNotImplementedException("Collection<T, V>::clone");
-	return nullptr;
+	C clone = C::create();
+
+	for (int i = 0; i < size(); i++)
+	{
+		clone->add(get(i));
+	}
+
+	return clone;
 }
 
-template<class T, class V> void Collection<T, V>::add(T &item)
+template<class V, class C> void Collection<V, C>::add(V &item)
 {
 	_items.push_back(item);
 }
 
-template<class T, class V> void Collection<T, V>::add(V &items)
+template<class V, class C> void Collection<V, C>::add(C &items)
 {
 	for (int i = 0; i < items->size(); i++)
 	{
@@ -49,7 +59,7 @@ template<class T, class V> void Collection<T, V>::add(V &items)
 	}
 }
 
-template<class T, class V> void Collection<T, V>::remove(T item)
+template<class V, class C> void Collection<V, C>::remove(V item)
 {
 	for (unsigned int i = 0; i < _items.size(); i++)
 	{
@@ -61,27 +71,27 @@ template<class T, class V> void Collection<T, V>::remove(T item)
 	}
 }
 
-template<class T, class V> T Collection<T, V>::get(int index)
+template<class V, class C> V Collection<V, C>::get(int index)
 {
 	return _items.at(index);
 }
 
-template<class T, class V> T Collection<T, V>::first()
+template<class V, class C> V Collection<V, C>::first()
 {
 	return get(0);
 }
 
-template<class T, class V> T Collection<T, V>::last()
+template<class V, class C> V Collection<V, C>::last()
 {
 	return get(size() - 1);
 }
 
-template<class T, class V> int Collection<T, V>::size()
+template<class V, class C> int Collection<V, C>::size()
 {
 	return _items.size();
 }
 
-template<class T, class V> bool Collection<T, V>::contains(T item)
+template<class V, class C> bool Collection<V, C>::contains(V item)
 {
 	for (int i = 0; i < size(); i++)
 	{
@@ -91,7 +101,7 @@ template<class T, class V> bool Collection<T, V>::contains(T item)
 	return false;
 }
 
-template<class T, class V> T Collection<T, V>::get(T item)
+template<class V, class C> V Collection<V, C>::get(V item)
 {
 	for (int i = 0; i < size(); i++)
 	{

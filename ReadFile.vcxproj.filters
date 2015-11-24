@@ -99,6 +99,9 @@
     <ClCompile Include="rails.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="equation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -198,6 +201,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="rails.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="equation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
