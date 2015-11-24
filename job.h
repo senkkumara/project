@@ -7,12 +7,7 @@ using namespace std;
 #include <string>
 #include "application.h"
 #include "solution.h"
-
-enum Mode
-{
-	MODE_CLEAN,			// No application, use text file
-	MODE_ITERATE		// Solution started, use CAD
-};
+#include "specification.h"
 
 class Job;
 typedef shared_ptr<Job> Job_ptr;
@@ -21,22 +16,20 @@ class Job
 {
 private:
 	// Constructors
-	Job();						// "Iterate" mode
-	Job(std::string &filename);	// "Clean" mode
+	Job(Specification &spec);
 
 	// Member variables (private)
-	Mode				_mode;
-	Application_ptr		_application;
+	Specification	_spec;
+	Application_ptr	_application;
 	Solution_ptr	_solution;
 
 public:
 	// Factories
-	static Job_ptr create();
-	static Job_ptr create(std::string &filename);
+	static Job_ptr create(Specification &spec);
 
 	// Getters
-	Mode				getMode();
-	Application_ptr		getApplication();
+	Specification	getSpec();
+	Application_ptr	getApplication();
 	Solution_ptr	getSolution();
 };
 

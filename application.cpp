@@ -13,25 +13,14 @@ using namespace std;
 #include "exceptions.h"
 
 /**
- *	(Private) Constructs a application from the file currently
- *	in session.
- *
- *	Do not use this directly, use the provided factory method.
- */
-Application::Application()
-{
-	// do nothing...
-}
-
-/**
  *	(Private) Constructs a application from facets retrieved from
  *	a text file argument.
  *
  *	Do not use this directly, use the provided factory method.
  */
-Application::Application(std::string &filename)
+Application::Application(Specification &spec)
 {
-	_filename = filename;
+	_filename = spec.Filename;
 	_geometry = Geometry::create(_filename);
 	_surfaces = Surfaces::create(_geometry);
 	_features = Features::create(_surfaces);
@@ -56,20 +45,12 @@ std::ostream &operator<<(std::ostream &strm, const Application_ptr &s)
 }
 
 /**
- *	Factory method using the default constructor
- */
-Application_ptr Application::create()
-{
-	return Application_ptr(new Application());
-}
-
-/**
  *	Factory method using constructor that takes a filename as
  *	an argument.
  */
-Application_ptr Application::create(string &filename)
+Application_ptr Application::create(Specification &spec)
 {
-	return Application_ptr(new Application(filename));
+	return Application_ptr(new Application(spec));
 }
 
 /**

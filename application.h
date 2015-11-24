@@ -15,6 +15,7 @@ using namespace std;
 #include <string>
 #include <vector>
 #include <memory>
+#include "specification.h"
 #include "features.h"
 #include "surfaces.h"
 #include "geometry.h"
@@ -27,8 +28,7 @@ class Application
 {
 private:
 	// Constructors
-	Application();
-	Application(std::string &filename);	// "Clean" Mode
+	Application(Specification &spec);
 
 	// Member variables (private)
 	std::string		_filename;
@@ -47,8 +47,7 @@ private:
 
 public:
 	// Factories
-	static Application_ptr create();
-	static Application_ptr create(std::string &filename);
+	static Application_ptr create(Specification &spec);
 
 	// Getters
 	std::string		getFilename();

@@ -5,35 +5,42 @@ using namespace std;
 /**
  *	
  */
-Job::Job()
+Job::Job(Specification &spec)
 {
-	_mode = MODE_ITERATE;
-	_application = Application::create();
-	// _solution = Solution::create(_application);
+	_spec = spec;
+	_application = Application::create(spec);
+	//_solution = Solution::create(spec, _application);
 }
 
 /**
- *
+ *	
  */
-Job::Job(std::string &filename)
+Job_ptr Job::create(Specification &spec)
 {
-	_mode = MODE_CLEAN;
-	_application = Application::create(filename);
-	// _solution = Solution::create(_application);
+	return Job_ptr(new Job(spec));
 }
 
 /**
- *
+ *	
  */
-Job_ptr Job::create()
+Specification Job::getSpec()
 {
-	return Job_ptr(new Job());
+	return _spec;
 }
 
 /**
- *
+ *	
  */
-Job_ptr Job::create(std::string &filename)
+Application_ptr Job::getApplication()
 {
-	return Job_ptr(new Job(filename));
+	return _application;
+}
+
+/**
+ *	
+ */
+
+Solution_ptr Job::getSolution()
+{
+	return _solution;
 }
