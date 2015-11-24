@@ -1,6 +1,8 @@
 #ifndef SPECIFICATION_H
 #define SPECIFICATION_H
 
+#include <string>
+
 enum Mode
 {
 	MODE_CLEAN,			// No application, use text file

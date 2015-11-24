@@ -4,6 +4,7 @@
 using namespace std;
 
 #include <vector>
+#include "exceptions.h"
 
 template<typename T, class V>
 class Collection
@@ -14,6 +15,7 @@ protected:
 
 public:
 	// Methods (public)
+	V		clone(V &donor);
 	void	add(T &item);
 	void	add(V &items);
 	void	remove(T item);
@@ -27,6 +29,12 @@ public:
 	// Getters
 	std::vector<T> getItems();
 };
+
+template<class T, class V> V Collection<T, V>::clone(V &donor)
+{
+	throw MethodNotImplementedException("Collection<T, V>::clone");
+	return nullptr;
+}
 
 template<class T, class V> void Collection<T, V>::add(T &item)
 {

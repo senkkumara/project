@@ -8,19 +8,39 @@ using namespace std;
  *
  *	Do not use this directly, use the provided factory method.
  */
-Solution::Solution(Application_ptr &application)
+Solution::Solution(Specification &spec, Application_ptr &application)
 {
+	_spec = spec;
 	_application = application;
-	//TODO:: Implement...
+
+	do
+	{
+		_plan = Plan::create(_application);
+		_supports = Supports::create(_plan);
+		_rails = Rails::create(_plan);
+	}
+	while (! _isValid());
+}
+
+bool Solution::_isValid()
+{
+	//TODO: Implement...
+	return true;
 }
 
 /**
  *	Factory method using the constructor with a application 
  *	argument.
  */
-Solution_ptr Solution::create(Application_ptr &application)
+Solution_ptr Solution::create(Specification &spec,
+							  Application_ptr &application)
 {
-	return Solution_ptr(new Solution(application));
+	return Solution_ptr(new Solution(spec, application));
+}
+
+Specification Solution::getSpec()
+{
+	return _spec;
 }
 
 /**
@@ -29,4 +49,18 @@ Solution_ptr Solution::create(Application_ptr &application)
 Application_ptr Solution::getApplication()
 {
 	return _application;
+}
+
+Plan_ptr Solution::getPlan()
+{
+	return _plan;
+}
+
+Supports_ptr Solution::getSupports()
+{
+	return _supports;
+}
+Rails_ptr Solution::getRails()
+{
+	return _rails;
 }

@@ -71,8 +71,6 @@
     <ClCompile Include="edges.cpp" />
     <ClCompile Include="facet.cpp" />
     <ClCompile Include="facets.cpp" />
-    <ClCompile Include="feature.cpp" />
-    <ClCompile Include="features.cpp" />
     <ClCompile Include="geometry.cpp" />
     <ClCompile Include="rise.cpp" />
     <ClCompile Include="rises.cpp" />
@@ -84,7 +82,7 @@
     <ClCompile Include="plan.cpp" />
     <ClCompile Include="point.cpp" />
     <ClCompile Include="points.cpp" />
-    <ClCompile Include="rail.cpp" />
+    <ClCompile Include="rails.cpp" />
     <ClCompile Include="section.cpp" />
     <ClCompile Include="application.cpp" />
     <ClCompile Include="support.cpp" />
@@ -118,9 +116,10 @@
     <ClInclude Include="plan.h" />
     <ClInclude Include="point.h" />
     <ClInclude Include="points.h" />
-    <ClInclude Include="rail.h" />
+    <ClInclude Include="rails.h" />
     <ClInclude Include="section.h" />
     <ClInclude Include="application.h" />
+    <ClInclude Include="specification.h" />
     <ClInclude Include="support.h" />
     <ClInclude Include="supports.h" />
     <ClInclude Include="surface.h" />

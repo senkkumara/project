@@ -21,9 +21,6 @@
     <ClCompile Include="point.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="feature.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="layer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -34,9 +31,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="tester.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="features.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="layers.cpp">
@@ -52,9 +46,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="block.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="rail.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="job.cpp">
@@ -105,6 +96,9 @@
     <ClCompile Include="surface.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="rails.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -147,9 +141,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="block.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="rail.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="job.h">
@@ -201,6 +192,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="surface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="specification.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="rails.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -16,11 +16,11 @@ private:
 	Supports(Plan_ptr &plan);
 
 	// Member variables (private)
-	Supports_ptr _plan;
+	Plan_ptr _plan;
 
 public:
 	// Factories
-	Supports_ptr create(Plan_ptr &plan);
+	static Supports_ptr create(Plan_ptr &plan);
 
 	// Getters
 	Plan_ptr getPlan();

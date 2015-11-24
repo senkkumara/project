@@ -9,7 +9,7 @@ Job::Job(Specification &spec)
 {
 	_spec = spec;
 	_application = Application::create(spec);
-	//_solution = Solution::create(spec, _application);
+	_solution = Solution::create(spec, _application);
 }
 
 /**

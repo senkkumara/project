@@ -23,7 +23,6 @@ Application::Application(Specification &spec)
 	_filename = spec.Filename;
 	_geometry = Geometry::create(_filename);
 	_surfaces = Surfaces::create(_geometry);
-	_features = Features::create(_surfaces);
 }
 
 /**
@@ -59,14 +58,6 @@ Application_ptr Application::create(Specification &spec)
 std::string Application::getFilename()
 {
 	return _filename;
-}
-
-/**
- *	Get the features the application comprises of.
- */
-Features_ptr Application::getFeatures()
-{
-	return _features;
 }
 
 /**

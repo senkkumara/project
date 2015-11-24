@@ -53,10 +53,10 @@ void Edges::sort()
 	if (size() < 2) return;
 
 	Edge_ptr edge1, edge2, temp;
-	for (unsigned int i = 0; i < size() - 1; i++)
+	for (int i = 0; i < size() - 1; i++)
 	{
 		edge1 = get(i);
-		for (unsigned int j = i + 1; j < size(); j++)
+		for (int j = i + 1; j < size(); j++)
 		{
 			edge2 = get(j);
 			if (edge1->length() > edge2->length())
