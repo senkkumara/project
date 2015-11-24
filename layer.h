@@ -56,12 +56,6 @@ private:
 	friend bool operator!=(Layer &layer1, Layer &layer2);
 	friend bool operator>=(Layer &layer1, Layer &layer2);
 	friend bool operator>(Layer &layer1, Layer &layer2);
-	friend bool operator<(Layer_ptr &layer1, Layer_ptr &layer2);
-	friend bool operator<=(Layer_ptr &layer1, Layer_ptr &layer2);
-	friend bool operator==(Layer_ptr &layer1, Layer_ptr &layer2);
-	friend bool operator!=(Layer_ptr &layer1, Layer_ptr &layer2);
-	friend bool operator>=(Layer_ptr &layer1, Layer_ptr &layer2);
-	friend bool operator>(Layer_ptr &layer1, Layer_ptr &layer2);
 
 public:
 	// Factories

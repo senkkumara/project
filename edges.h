@@ -31,6 +31,9 @@ private:
 public:
 	// Factories
 	static Edges_ptr create();
+
+	// Methods (public)
+	void sort();
 };
 
 #endif

@@ -44,3 +44,25 @@ Edges_ptr Edges::create()
 {
 	return Edges_ptr(new Edges());
 }
+
+/**
+ *	Order the edges by length using the "bubble sort" method.
+ */
+void Edges::sort()
+{
+	if (size() < 2) return;
+
+	Edge_ptr edge1, edge2, temp;
+	for (unsigned int i = 0; i < size() - 1; i++)
+	{
+		edge1 = get(i);
+		for (unsigned int j = i + 1; j < size(); j++)
+		{
+			edge2 = get(j);
+			if (edge1->length() > edge2->length())
+			{
+				std::iter_swap(_items.begin() + i, _items.begin() + j);
+			}
+		}
+	}
+}

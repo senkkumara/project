@@ -269,7 +269,7 @@ double Surface::getAvgHeight()
 /** 
  *	Set the entry edge of the surface.
  */
-void Surface::setEntry(Edge_ptr edge)
+void Surface::setEntry(Edge_ptr &edge)
 {
 	_entry = edge;
 	recalculateIfcAngle();
@@ -278,8 +278,23 @@ void Surface::setEntry(Edge_ptr edge)
 /**
  *	Set the exit edge of the surface.
  */
-void Surface::setExit(Edge_ptr edge)
+void Surface::setExit(Edge_ptr &edge)
 {
 	_exit = edge;
 	recalculateIfcAngle();
+}
+/**
+ *	Set the left boundary.
+ */
+void Surface::setLeft(Edges_ptr &edges)
+{
+	_left = edges;
+}
+
+/**
+ *	Set the right boundary.
+ */
+void Surface::setRight(Edges_ptr &edges)
+{
+	_right = edges;
 }

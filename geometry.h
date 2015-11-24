@@ -56,6 +56,7 @@ public:
 	void		remove(Edge_ptr edge);
 	void		add(Point_ptr &point);
 	void		remove(Point_ptr point);
+	int			size();
 
 	// Getters
 	Facets_ptr		getFacets();

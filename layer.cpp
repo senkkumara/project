@@ -45,7 +45,13 @@ Layer::Layer(Facet_ptr &facet)
 void Layer::_init()
 {
 	_tol = 35.0;
+
 	_geometry = Geometry::create();
+	_upper = Rise::create();
+	_lower = Rise::create();
+	_left = Edges::create();
+	_right = Edges::create();
+
 	recalculateIfcAngle();
 }
 
@@ -114,54 +120,6 @@ bool operator>(Layer &layer1, Layer &layer2)
 }
 
 /**
- *	< operator overload.
- */
-bool operator<(Layer_ptr &layer1, Layer_ptr &layer2)
-{
-	return (*layer1 < *layer2);
-}
-
-/**
- *	<= operator overload.
- */
-bool operator<=(Layer_ptr &layer1, Layer_ptr &layer2)
-{
-	return (*layer1 <= *layer2);
-}
-
-/**
- *	== operator overload.
- */
-bool operator==(Layer_ptr &layer1, Layer_ptr &layer2)
-{
-	return (*layer1 == *layer2);
-}
-
-/**
- *	!= operator overload.
- */
-bool operator!=(Layer_ptr &layer1, Layer_ptr &layer2)
-{
-	return (*layer1 != *layer2);
-}
-
-/**
- *	>= operator overload.
- */
-bool operator>=(Layer_ptr &layer1, Layer_ptr &layer2)
-{
-	return (*layer1 >= *layer2);
-}
-
-/**
- *	> operator overload.
- */
-bool operator>(Layer_ptr &layer1, Layer_ptr &layer2)
-{
-	return (*layer1 > *layer2);
-}
-
-/**
  *	Factory method using default constructor.
  */
 Layer_ptr Layer::create()
@@ -175,6 +133,16 @@ Layer_ptr Layer::create()
 Layer_ptr Layer::create(Facet_ptr &facet)
 {
 	return Layer_ptr(new Layer(facet));
+}
+
+Rise_ptr Layer::lower()
+{
+	return _lower;
+}
+
+Rise_ptr Layer::upper()
+{
+	return _upper;
 }
 
 /**

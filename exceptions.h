@@ -67,4 +67,12 @@ public:
 	}
 };
 
+class GeometryBuildException : public exception
+{
+	virtual const char* what() const throw()
+	{
+		return "Exception occurred during the build of the geoemtry...";
+	}
+};
+
 #endif

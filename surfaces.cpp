@@ -19,7 +19,46 @@ Surfaces::Surfaces(Geometry_ptr &geometry)
 {
 	_init();
 	_build(geometry);
+	_checkBuild();
 	_findInterfaces();
+	_checkInterfaces();
+	_findBoundaries();
+	_checkBoundaries();
+	_categorise();
+
+	/*
+	cout << "Layer Boundaries" << endl;
+	for (int i = 0; i < _layers->size() - 1; i++)
+	{
+		cout << "Left: " << _layers->get(i)->left()->size() << " Right: " << _layers->get(i)->right()->size() << endl;
+		cout << "Left: " << endl;
+		for (int j = 0; j < _layers->get(i)->left()->size(); j++)
+		{
+			cout << _layers->get(i)->left()->get(j) << endl;
+		}
+		cout << "Right: " << endl;
+		for (int j = 0; j < _layers->get(i)->right()->size(); j++)
+		{
+			cout << _layers->get(i)->right()->get(j) << endl;
+		}
+	}
+
+	cout << "Rise Boundaries" << endl;
+	for (int i = 0; i < _rises->size() - 1; i++)
+	{
+		cout << "Left: " << _rises->get(i)->left()->size() << " Right: " << _rises->get(i)->right()->size() << endl;
+		cout << "Left: " << endl;
+		for (int j = 0; j < _rises->get(i)->left()->size(); j++)
+		{
+			cout << _rises->get(i)->left()->get(j) << endl;
+		}
+		cout << "Right: " << endl;
+		for (int j = 0; j < _rises->get(i)->right()->size(); j++)
+		{
+			cout << _rises->get(i)->right()->get(j) << endl;
+		}
+	}
+	*/
 }
 
 void Surfaces::_init()
@@ -84,14 +123,14 @@ void Surfaces::_build(Geometry_ptr &geometry)
 
 	layers->sort();
 	rises->sort();
-
-	cout << "Layers: " << layers->size() << endl;
-	cout << "Rises: " << rises->size() << endl;
 }
 
 void Surfaces::_checkBuild()
 {
-
+	if (getLayers()->hasOverlaps())
+	{
+		throw GeometryBuildException();
+	}
 }
 
 void Surfaces::_findInterfaces()
@@ -106,7 +145,7 @@ void Surfaces::_findInterfaces()
 	}
 	
 	// Layers
-	int j = 0;
+	int j = 0;	// Keep track of point within rises collection
 	Layer_ptr layer1, layer2;
 	Rise_ptr rise;
 	double layer1Z, layer2Z, riseZ;
@@ -194,22 +233,252 @@ void Surfaces::_findInterface(Rise_ptr &rise)
 
 void Surfaces::_checkInterfaces()
 {
-
+	// do nothing...
 }
 
 void Surfaces::_findBoundaries()
 {
+	Rises_ptr rises = getRises();
+	Rise_ptr rise;
+	Layers_ptr layers = getLayers();
+	Layer_ptr layer;
+	Edge_ptr edge;
 
-}
+	// Ensure first edge is not inverted
+	int i = 0;
+	layer = layers->get(i);
+	if (! layer->lower()->getGeometry()->size())
+	{
+		i++;
+		layer = layers->get(i);
+	}
 
-void Surfaces::_findBoundary(Rise_ptr &rise)
-{
+	edge = layer->lower()->entry();
+	if (edge->left()->getX() > edge->right()->getX())
+	{
+		edge->invert();
+	}
 
+	// Find layer boundaries
+	int end = layers->size();
+	if (! layers->last()->upper()->getGeometry()->size()) end--;
+	for (; i < end; i++)
+	{
+		layer = layers->get(i);
+		_findBoundary(layer);
+	}
+	
+	// Find topmost rise boundary if final surface is a rise -
+	// previous loop is backwards looking, only creating boundaries
+	// for lower rise
+	if (! layer->upper())
+	{
+		_findBoundary(layer->upper());
+	}
 }
 
 void Surfaces::_findBoundary(Layer_ptr &layer)
 {
+	_findBoundary(layer->lower());
 
+	Geometry_ptr geometry = layer->getGeometry();
+	Edges_ptr edges = Edges::create();
+	Edges_ptr boundary1 = Edges::create();
+	Edges_ptr boundary2 = Edges::create();
+	Edges_ptr inbound1, inbound2;
+	Edge_ptr entry = layer->entry();
+	Edge_ptr exit = layer->exit();
+	Edge_ptr edge;
+	Points_ptr points = Points::create();
+	Point_ptr left = entry->left();
+	Point_ptr right = entry->right();
+	Point_ptr point;
+	int inCount1, inCount2;
+
+	// Clone edges - remove entry and exit
+	for (int i = 0; i < geometry->getEdges()->size(); i++)
+	{
+		edge = geometry->getEdges()->get(i);
+
+		// do not add entry and exit edges
+		if (*edge != *entry && *edge != *exit)
+		{
+			edges->add(edge);
+		}
+	}
+
+	// Clone points
+	for (int i = 0; i < geometry->getPoints()->size(); i++)
+	{
+		point = geometry->getPoints()->get(i);
+		if (*point != *left && *point != *right)
+		{
+			points->add(point);
+		}
+		
+	}
+	
+	while (points->size() > 0)
+	{
+		inbound1 = _findInboundConnections(edges, left);
+		inbound2 = _findInboundConnections(edges, right);
+
+		inCount1 = inbound1->size();
+		inCount2 = inbound2->size();
+
+		if (inCount1 >= 1 && inCount2 == 0)
+		{
+			edge = inbound1->get(0);
+			if (*left != *(edge->left())) edge->invert();
+			boundary1->add(edge);
+			left = edge->right();
+			point = left;
+		}
+		else if (inCount1 == 0 && inCount2 >= 1)
+		{
+			edge = inbound2->get(0);
+			if (*right != *(edge->left())) edge->invert();
+			boundary2->add(edge);
+			right = edge->right();
+			point = right;
+		}
+		else if (inCount1 >= 1 && inCount2 >= 1)
+		{
+			if (inbound1->get(0)->length() < inbound2->get(0)->length())
+			{
+				edge = inbound1->get(0);
+				if (*left != *(edge->left())) edge->invert();
+				boundary1->add(edge);
+				left = edge->right();
+				point = left;
+			}
+			else
+			{
+				edge = inbound2->get(0);
+				if (*right != *(edge->left())) edge->invert();
+				boundary2->add(edge);
+				right = edge->right();
+				point = right;
+			}
+		}
+		else
+		{
+			throw GeometryBuildException();
+		}
+
+		points->remove(point);
+
+		for (int i = edges->size() - 1; i > -1; i--)
+		{
+			edge = edges->get(i);
+			if (edge->hasPoint(point)
+				&& (!points->contains(edge->left()))
+				&& (!points->contains(edge->right())))
+			{
+				edges->remove(edge);
+			}
+		}
+	}
+
+	layer->setLeft(boundary1);
+	layer->setRight(boundary2);
+}
+
+void Surfaces::_findBoundary(Rise_ptr &rise)
+{
+	Edges_ptr edges = rise->getGeometry()->getEdges();
+	Edge_ptr edge;
+	Edges_ptr boundary;
+	Edge_ptr entry = rise->entry();
+	Edge_ptr exit = rise->exit();
+	Point_ptr point;
+	
+	// Left boundary
+	boundary = Edges::create();
+	edge = _findShortestConnected(rise, entry->left());
+	if (edge->left()->getZ() > edge->right()->getZ()) edge->invert();
+	boundary->add(edge);
+	rise->setLeft(boundary);
+
+	// Right boundary
+	boundary = Edges::create();
+	edge = _findShortestConnected(rise, entry->right());
+	if (edge->left()->getZ() > edge->right()->getZ()) edge->invert();
+	boundary->add(edge);
+	rise->setRight(boundary);
+
+	// Check upper boundary
+	point = rise->left()->get(0)->right();
+	if (! exit->hasPoint(point))
+	{
+		throw GeometryBuildException();
+	}
+
+	if (*point != *exit->left())
+	{
+		exit->invert();
+	}
+}
+
+Edge_ptr Surfaces::_findShortestConnected(Rise_ptr &rise, Point_ptr &point)
+{
+	Edges_ptr edges = rise->getGeometry()->getEdges();
+	Edge_ptr entry = rise->entry();
+	Edge_ptr exit = rise->exit();
+	Edge_ptr edge;
+	Edge_ptr tempEdge;
+
+	for (int i = 0; i < edges->size(); i++)
+	{
+		tempEdge = edges->get(i);
+		if (tempEdge == entry || tempEdge == exit)
+		{
+			continue;
+		}
+
+		if (tempEdge->hasPoint(point))
+		{
+			if (edge)
+			{
+				if (edge->length() > tempEdge->length())
+				{
+					edge = tempEdge;
+				}
+			}
+			else
+			{
+				edge = tempEdge;
+			}
+		}
+	}
+
+	return edge;
+}
+
+Edges_ptr Surfaces::_findInboundConnections(Edges_ptr &edges,
+											Point_ptr &point)
+{
+	Edges_ptr connections = Edges::create();
+	Edge_ptr edge;
+	
+	for (int i = 0; i < edges->size(); i++)
+	{
+		edge = edges->get(i);
+		if (edge->hasPoint(point)) connections->add(edge);
+	}
+
+	connections->sort();
+	return connections;
+}
+
+void Surfaces::_checkBoundaries()
+{
+	// do nothing...
+}
+
+void Surfaces::_categorise()
+{
+	// do nothing...
 }
 
 Surfaces_ptr Surfaces::create()

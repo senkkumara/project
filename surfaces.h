@@ -24,17 +24,19 @@ private:
 	Rises_ptr	_rises;
 
 	// Methods (private)
-	void	_init();
-	void	_build(Geometry_ptr &geometry);
-	void	_checkBuild();
-	void	_findInterfaces();
-	void	_findInterface(Rise_ptr &rise);
-	void	_checkInterfaces();
-	void	_findBoundaries();
-	void	_findBoundary(Rise_ptr &rise);
-	void	_findBoundary(Layer_ptr &layer);
-	void	_checkBoundaries();
-	void	_categorise();
+	void		_init();
+	void		_build(Geometry_ptr &geometry);
+	void		_checkBuild();
+	void		_findInterfaces();
+	void		_findInterface(Rise_ptr &rise);
+	void		_checkInterfaces();
+	void		_findBoundaries();
+	void		_findBoundary(Layer_ptr &layer);
+	void		_findBoundary(Rise_ptr &rise);
+	Edge_ptr	_findShortestConnected(Rise_ptr &rise, Point_ptr &point);
+	Edges_ptr	_findInboundConnections(Edges_ptr &edges, Point_ptr &point);
+	void		_checkBoundaries();
+	void		_categorise();
 
 	// Operator overloads
 	friend std::ostream &operator<<(std::ostream &strm, const Surfaces &s);

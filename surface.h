@@ -59,8 +59,10 @@ public:
 	double			getAvgHeight();
 
 	// Setters
-	void setEntry(Edge_ptr edge);
-	void setExit(Edge_ptr edge);
+	void setEntry(Edge_ptr &edge);
+	void setExit(Edge_ptr &edge);
+	void setLeft(Edges_ptr &edges);
+	void setRight(Edges_ptr &edges);
 
 };
 

@@ -68,10 +68,12 @@ Layer_ptr Layers::findLayer(Facet_ptr &facet)
 }
 
 /**
- *	Order the layers by Z distance.
+ *	Order the layers by Z distance using the "bubble sort" method.
  */
 void Layers::sort()
 {
+	if (size() < 2) return;
+
 	Layer_ptr layer1, layer2, temp;
 	for (unsigned int i = 0; i < _items.size() - 1; i++)
 	{

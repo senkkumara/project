@@ -203,7 +203,7 @@ void Geometry::_buildFromSTL()
 
 			point = Point::create(coords);
 
-			// Ensure no duplicate points
+			// Check points do not already exist - if so, reuse!
 			tempPoint = getPoints()->get(point);
 			if (tempPoint)
 			{
@@ -234,6 +234,7 @@ void Geometry::_buildFromSTL()
 			edges[1] = Edge::create(points[1], points[2]);
 			edges[2] = Edge::create(points[2], points[0]);
 
+			// Check edges do not already exist - if so, reuse!
 			for (int i = 0; i < 3; i++)
 			{
 				tempEdge = getEdges()->get(edges[i]);
@@ -250,10 +251,6 @@ void Geometry::_buildFromSTL()
 			_facets->add(Facet::create(points, edges, normals));
 		}
 	}
-
-	cout << "Facets: " << _facets->size() << endl;
-	cout << "Edges: " << _edges->size() << endl;
-	cout << "Points: " << _points->size() << endl;
 
 	file.close();
 }
@@ -353,6 +350,14 @@ void Geometry::add(Point_ptr &point)
 void Geometry::remove(Point_ptr point)
 {
 	getPoints()->remove(point);
+}
+
+/**
+ *	Return the cumulative size of all the geometry types.
+ */
+int Geometry::size()
+{
+	return _facets->size() + _edges->size() + _points->size();
 }
 
 /**
