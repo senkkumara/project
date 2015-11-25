@@ -41,11 +41,4 @@ public:
 	void		mirrorComponent(int index);
 };
 
-struct PointPair
-{
-	Point_ptr	point1;
-	Point_ptr	point2;
-	double		dist;
-};
-
 #endif
