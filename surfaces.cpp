@@ -257,7 +257,6 @@ void Surfaces::_findBoundaries()
 	for (; i < end; i++)
 	{
 		layer = layers->get(i);
-		cout << (i + 1) << endl;
 		_findBoundary(layer);
 	}
 	
@@ -595,7 +594,23 @@ void Surfaces::_collectBoundaries()
 void Surfaces::_categorise()
 {
 	Layer_ptr layer;
-	for (int i = 0; i < _layers->size(); i++)
+	int i = 0;
+	int end = _layers->size();
+
+	layer = _layers->get(i);
+	if (Tests::hasNoLowerRise(layer).result)
+	{
+		layer->setType(LT_START);
+		i++;
+	}
+	layer = _layers->get(end - 1);
+	if (Tests::hasNoUpperRise(layer).result)
+	{
+		layer->setType(LT_END);
+		end--;
+	}
+
+	for (; i < end; i++)
 	{
 		layer = _layers->get(i);
 		if (Tests::isPointCountEqualTo4(layer).result)
@@ -657,6 +672,21 @@ void Surfaces::_categorise()
 		// Default layer type
 		layer->setType(LT_UNKNOWN);
 	}
+
+	for (int i = 0; i < _layers->size(); i++)
+	{
+		cout << _layers->get(i)->getType() << endl;
+	}
+}
+
+Layers_ptr Surfaces::getLayers()
+{
+	return _layers;
+}
+
+Rises_ptr Surfaces::getRises()
+{
+	return _rises;
 }
 
 /**

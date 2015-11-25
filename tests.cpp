@@ -7,6 +7,26 @@ using namespace std;
 
 const double angTol = 5 * M_PI / 180;	// 5 degrees
 
+TestResult Tests::hasLowerRise(Layer_ptr &layer)
+{
+	return TestResult(layer->lower()->getGeometry()->size() > 0);
+}
+
+TestResult Tests::hasUpperRise(Layer_ptr &layer)
+{
+	return TestResult(layer->upper()->getGeometry()->size() > 0);
+}
+
+TestResult Tests::hasNoLowerRise(Layer_ptr &layer)
+{
+	return TestResult(layer->lower()->getGeometry()->size() == 0);
+}
+
+TestResult Tests::hasNoUpperRise(Layer_ptr &layer)
+{
+	return TestResult(layer->upper()->getGeometry()->size() == 0);
+}
+
 TestResult Tests::isPointCountLessThanX(Layer_ptr &layer, int count)
 {
 	if (TestHelper::getPointCount(layer) < count)

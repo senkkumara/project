@@ -115,6 +115,8 @@ public:
 	// methods (public)
 	Edges_ptr	left();
 	Edges_ptr	right();
+	Layers_ptr	getLayers();
+	Rises_ptr	getRises();
 };
 
 #endif

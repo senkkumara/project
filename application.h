@@ -18,6 +18,7 @@ using namespace std;
 #include "specification.h"
 #include "surfaces.h"
 #include "geometry.h"
+#include "features.h"
 #include "edges.h"
 
 class Application;	// Pre-declare class for shared pointer typedef
@@ -33,6 +34,7 @@ private:
 	std::string		_filename;
 	Surfaces_ptr	_surfaces;
 	Geometry_ptr	_geometry;
+	Features_ptr	_features;
 	Edges_ptr		_leftBoundary;
 	Edges_ptr		_rightBoundary;
 

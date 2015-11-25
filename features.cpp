@@ -4,6 +4,7 @@ using namespace std;
 #include <iostream>
 #include "exceptions.h"
 #include "feature.h"
+#include "surfaces.h"
 
 /**
  *	(Private) Default constructor.
@@ -15,28 +16,25 @@ Features::Features()
 	// do nothing...
 }
 
-Features::Features(Surfaces_ptr &surfaces)
-{
-
-}
-
 /**
  *	(Private) Constructs a vector of features from a vector
  *	containing layers.
  *
  *	Do not use this directly, use the provided factory method.
- *//*
-Features::Features(Layers_ptr &layers)
+ */
+Features::Features(Surfaces_ptr &surfaces)
 {
-	// Build first two features
+	Layers_ptr layers = surfaces->getLayers();
+
+	// Build first feature
 	add(Feature::create(layers->first()));
-	add(Feature::create(layers->get(1)));
+
 	// Build intermediate features
 	Layer_ptr layer;
 	FeatureType prevType;
 	LayerType type;
 	bool create;
-	for (int i = 2; i < layers->size() -1; i++)
+	for (int i = 2; i < layers->size(); i++)
 	{
 		create = true;
 		layer = layers->get(i);
@@ -62,21 +60,29 @@ Features::Features(Layers_ptr &layers)
 				create = false;
 			}
 			break;
-		case LT_LANDING_FLAT:
+		case LT_LANDING_FLAT_UNKNOWN:
+		case LT_LANDING_FLAT_180:
+		case LT_LANDING_FLAT_90:
 			break;
 		}
 		if (create)
 		{
+			cout << "Creating new..." <<  layer->getType() << endl;
 			add(Feature::create(layer));
 		}
 		else
 		{
-			get(size() -1)->add(layer);
+			cout << "Adding to exiting..." << endl;
+			get(size() - 1)->add(layer);
 		}
 	}
-	// Build end feature
-	add(Feature::create(layers->last()));
-}*/
+
+	cout << "Features: " << endl;
+	for (int i = 0; i < size(); i++)
+	{
+		cout << get(i)->getType() << endl;
+	}
+}
 
 /**
  *	<< operator overload.

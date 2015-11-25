@@ -6,6 +6,12 @@
 
 namespace Tests
 {
+	// Generic properties
+	TestResult hasLowerRise(Layer_ptr &layer);
+	TestResult hasUpperRise(Layer_ptr &layer);
+	TestResult hasNoLowerRise(Layer_ptr &layer);
+	TestResult hasNoUpperRise(Layer_ptr &layer);
+
 	// Points - non-specific
 	TestResult isPointCountLessThanX(Layer_ptr &layer, int count);
 	TestResult isPointCountLessThanOrEqualToX(Layer_ptr &layer, int count);
@@ -75,6 +81,9 @@ namespace Tests
 
 	// Interface Positions - non-specfic
 	// ..
+
+	// Direct Tests
+	TestResult isStraightStep(Layer_ptr &layer);
 };
 
 namespace TestHelper

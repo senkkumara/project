@@ -11,6 +11,7 @@ int main()
 		std::string filename;
 		cout << "Please enter a filename: " << endl;
 		cin >> filename;
+		cout << endl;
 
 		// Clean filename
 		if (filename.length() < 1)
@@ -32,6 +33,7 @@ int main()
 		{
 			cout << "Please choose a side for the rail (l/r): " << endl;
 			cin >> side;
+			cout << endl;
 
 			if (side == "l" || side == "L")
 			{
