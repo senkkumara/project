@@ -19,7 +19,6 @@ protected:
 
 public:
 	// Methods (public)
-	C		clone(C &donor);
 	void	add(V &item);
 	void	add(C &items);
 	void	remove(V item);
@@ -33,18 +32,6 @@ public:
 	// Getters
 	std::vector<V> getItems();
 };
-
-template<class V, class C> C Collection<V, C>::clone(C &donor)
-{
-	C clone = C::create();
-
-	for (int i = 0; i < size(); i++)
-	{
-		clone->add(get(i));
-	}
-
-	return clone;
-}
 
 template<class V, class C> void Collection<V, C>::add(V &item)
 {

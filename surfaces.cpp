@@ -315,12 +315,16 @@ void Surfaces::_findBoundary(Layer_ptr &layer)
 		
 	}
 	
+	// Keep trying until all of the points have been allocated -
+	// assumes that points are only located on the boundary.
 	while (points->size() > 0)
 	{
 		BoundaryBuilderSnapshot_ptr snapshot = _findNextBoundaryEdge(
 			Surfaces::BoundaryBuilderSnapshot::create(), edges, points,
 			entry, exit, current, boundaries);
 
+		// Empty snapshot = failed attempt, back-steps through snapshot
+		// stack trying until it finds a route.
 		while (snapshot->isEmpty())
 		{
 			if (snapshots.size() == 0)
@@ -333,6 +337,7 @@ void Surfaces::_findBoundary(Layer_ptr &layer)
 			snapshots.pop_back();
 		}
 
+		// Add successful snapshot to stack
 		snapshots.push_back(snapshot);
 	}
 
@@ -383,35 +388,37 @@ Surfaces::BoundaryBuilderSnapshot_ptr Surfaces::_findNextBoundaryEdge(
 
 	if (inCount[0] >= 1 && inCount[1] == 0)
 	{
-		side = 0;
+		side = 0;	// Follow left
 	}
 	else if (inCount[0] == 0 && inCount[1] >= 1)
 	{
-		side = 1;
+		side = 1;	// Follow right
 	}
 	else if (inCount[0] >=1 && inCount[1] >= 1)
 	{
 		if (in[0]->get(0)->length() < in[1]->get(0)->length())
 		{
-			side = 0;
+			side = 0;	// Follow left
 		}
 		else
 		{
-			side = 1;
+			side = 1;	// Follow right
 		}
 	}
 	else
 	{
-		// Iteration failed, back-track
+		// Iteration failed, return empty snapshot to initiate back-track
 		return BoundaryBuilderSnapshot::create();
 	}
 
+	// Get boundary, check for inversion and progress current point
 	edge = in[side]->get(0);
 	if (*current[side] != *(edge->left())) edge->invert();
 	boundaries[side]->add(edge);
 	current[side] = edge->right();
 
-	in[side]->remove(edge);
+	in[side]->remove(edge);	// Remove route followed from in pool -
+							// important back-tracking
 
 	// Check for exit inversion
 	if ((exit->hasPoint(current[0]) && *exit->left() != *current[0]) ||
@@ -438,6 +445,7 @@ Surfaces::BoundaryBuilderSnapshot_ptr Surfaces::_findNextBoundaryEdge(
 		}
 	}
 
+	// Return successful snapshot!
 	return BoundaryBuilderSnapshot::create(previous[0], previous[1],
 		removedPoint, removedEdges, in[0], in[1]);
 }
@@ -480,6 +488,9 @@ void Surfaces::_findBoundary(Rise_ptr &rise)
 	}
 }
 
+/**
+ *	(Private) Returns on the shortest edge going into a point.
+ */
 Edge_ptr Surfaces::_findShortestInboundConnection(Rise_ptr &rise,
 												  Point_ptr &point)
 {
@@ -516,6 +527,9 @@ Edge_ptr Surfaces::_findShortestInboundConnection(Rise_ptr &rise,
 	return edge;
 }
 
+/**
+ *	Finds all of the inbound edges to a point in a pool of edges.
+ */
 Edges_ptr Surfaces::_findInboundConnections(Edges_ptr &edges,
 											Point_ptr &point)
 {
@@ -537,6 +551,9 @@ void Surfaces::_checkBoundaries()
 	// do nothing...
 }
 
+/**
+ *	
+ */
 void Surfaces::_collectBoundaries()
 {
 	Layers_ptr layers = _layers;
@@ -572,6 +589,9 @@ void Surfaces::_collectBoundaries()
 	}
 }
 
+/**
+ *	
+ */
 void Surfaces::_categorise()
 {
 	Layer_ptr layer;
@@ -639,31 +659,49 @@ void Surfaces::_categorise()
 	}
 }
 
+/**
+ *	
+ */
 Surfaces_ptr Surfaces::create()
 {
 	return Surfaces_ptr(new Surfaces());
 }
 
+/**
+ *	
+ */
 Surfaces_ptr Surfaces::create(Geometry_ptr &geometry)
 {
 	return Surfaces_ptr(new Surfaces(geometry));
 }
 
+/**
+ *	
+ */
 Edges_ptr Surfaces::left()
 {
 	return _left;
 }
 
+/**
+ *	
+ */
 Edges_ptr Surfaces::right()
 {
 	return _right;
 }
 
+/**
+ *	
+ */
 Surfaces::BoundaryBuilderSnapshot::BoundaryBuilderSnapshot()
 {
 	_empty = true;
 }
 
+/**
+ *	
+ */
 Surfaces::BoundaryBuilderSnapshot::BoundaryBuilderSnapshot(
 	Point_ptr &left, Point_ptr &right,
 	Point_ptr &removedPoint, Edges_ptr &removedEdges,
@@ -678,6 +716,9 @@ Surfaces::BoundaryBuilderSnapshot::BoundaryBuilderSnapshot(
 	_connections[1] = connectionsRight;
 }
 
+/**
+ *	
+ */
 Surfaces::BoundaryBuilderSnapshot_ptr 
 	Surfaces::BoundaryBuilderSnapshot::create()
 {
@@ -685,6 +726,9 @@ Surfaces::BoundaryBuilderSnapshot_ptr
 		BoundaryBuilderSnapshot());
 }
 
+/**
+ *	
+ */
 Surfaces::BoundaryBuilderSnapshot_ptr 
 	Surfaces::BoundaryBuilderSnapshot::create(
 			Point_ptr &left, Point_ptr &right,
@@ -696,46 +740,73 @@ Surfaces::BoundaryBuilderSnapshot_ptr
 		connectionsLeft, connectionsRight));
 }
 
+/**
+ *	
+ */
 bool Surfaces::BoundaryBuilderSnapshot::isEmpty()
 {
 	return _empty;
 }
 
+/**
+ *	
+ */
 Point_ptr* Surfaces::BoundaryBuilderSnapshot::getPrevious()
 {
 	return _previous;
 }
 
+/**
+ *	
+ */
 Point_ptr Surfaces::BoundaryBuilderSnapshot::getPreviousLeft()
 {
 	return _previous[0];
 }
 
+/**
+ *	
+ */
 Point_ptr Surfaces::BoundaryBuilderSnapshot::getPreviousRight()
 {
 	return _previous[1];
 }
 
+/**
+ *	
+ */
 Point_ptr Surfaces::BoundaryBuilderSnapshot::getRemovedPoint()
 {
 	return _removedPoint;
 }
 
+/**
+ *	
+ */
 Edges_ptr Surfaces::BoundaryBuilderSnapshot::getRemovedEdges()
 {
 	return _removedEdges;
 }
 
+/**
+ *	
+ */
 Edges_ptr* Surfaces::BoundaryBuilderSnapshot::getConnections()
 {
 	return _connections;
 }
 
+/**
+ *	
+ */
 Edges_ptr Surfaces::BoundaryBuilderSnapshot::getConnectionsLeft()
 {
 	return _connections[0];
 }
 
+/**
+ *	
+ */
 Edges_ptr Surfaces::BoundaryBuilderSnapshot::getConnectionsRight()
 {
 	return _connections[1];
