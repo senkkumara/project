@@ -72,6 +72,8 @@
     <ClCompile Include="equation.cpp" />
     <ClCompile Include="facet.cpp" />
     <ClCompile Include="facets.cpp" />
+    <ClCompile Include="feature.cpp" />
+    <ClCompile Include="features.cpp" />
     <ClCompile Include="geometry.cpp" />
     <ClCompile Include="rise.cpp" />
     <ClCompile Include="rises.cpp" />

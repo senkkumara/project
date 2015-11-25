@@ -8,6 +8,8 @@ using namespace std;
 
 #include "surfaces.h"
 #include <iostream>
+#include <vector>
+#include "tests.h"
 #include "exceptions.h"
 
 Surfaces::Surfaces()
@@ -40,23 +42,25 @@ void Surfaces::_build(Geometry_ptr &geometry)
 {
 	Facets_ptr facets = geometry->getFacets();
 	Facet_ptr facet;
-	Layers_ptr layers = getLayers();
+	Layers_ptr layers = _layers;
 	Layer_ptr layer;
-	Rises_ptr rises = getRises();
+	Rises_ptr rises = _rises;
 	Rise_ptr rise;
 
 	for (int i = 0; i < facets->size(); i++)
 	{
 		facet = facets->get(i);
-		if (! facet->isVertical())
+		if (facet->isHorizontal())
 		{
 			// Facet belongs to a layer
 			if (layers->size() == 0)
 			{
+				// No layers in collection - create new layer
 				layers->add(Layer::create(facet));
 			}
 			else
 			{
+				// Layers in collection - find appropriate layer for facet
 				layer = layers->findLayer(facet);
 				if (layer)
 				{
@@ -73,10 +77,12 @@ void Surfaces::_build(Geometry_ptr &geometry)
 			// Facet belongs to a riser
 			if (rises->size() == 0)
 			{
+				// No rises in collection - create new rise
 				rises->add(Rise::create(facet));
 			}
 			else
 			{
+				// Rises in collection - find appropriate rise for facet
 				rise = rises->findRise(facet);
 				if (rise)
 				{
@@ -90,13 +96,14 @@ void Surfaces::_build(Geometry_ptr &geometry)
 		}
 	}
 
+	// Order surfaces by Z-distance
 	layers->sort();
 	rises->sort();
 }
 
 void Surfaces::_checkBuild()
 {
-	if (getLayers()->hasOverlaps())
+	if (_layers->hasOverlaps())
 	{
 		throw GeometryBuildException();
 	}
@@ -104,8 +111,8 @@ void Surfaces::_checkBuild()
 
 void Surfaces::_findInterfaces()
 {
-	Layers_ptr layers = getLayers();
-	Rises_ptr rises = getRises();
+	Layers_ptr layers = _layers;
+	Rises_ptr rises = _rises;
 
 	// Rises
 	for (int i = 0; i < rises->size(); i++)
@@ -130,7 +137,7 @@ void Surfaces::_findInterfaces()
 		layer1->setEntry(rise->exit());
 	}
 
-
+	// Search for rise between each layer pair
 	for (int i = 0; i < layers->size() - 1; i++)
 	{
 		layer1 = layers->get(i);
@@ -138,6 +145,8 @@ void Surfaces::_findInterfaces()
 		layer1Z = layer1->getAvgHeight();
 		layer2Z = layer2->getAvgHeight();
 
+		// Do not reset counter - surfaces are ordered by height
+		// so connecting rise cannot be lower in the stack
 		for (; j < rises->size(); j++)
 		{
 			rise = rises->get(j);
@@ -154,6 +163,7 @@ void Surfaces::_findInterfaces()
 		}
 	}
 
+	// Check if last rise is exit for last layer
 	layer1 = layers->last();
 	rise = rises->last();
 
@@ -209,21 +219,32 @@ void Surfaces::_checkInterfaces()
 
 void Surfaces::_findBoundaries()
 {
-	Rises_ptr rises = getRises();
+	Rises_ptr rises = _rises;
 	Rise_ptr rise;
-	Layers_ptr layers = getLayers();
+	Layers_ptr layers = _layers;
 	Layer_ptr layer;
 	Edge_ptr edge;
 
-	// Ensure first edge is not inverted
+	// Ensure first edge is not inverted - relies on staircase being 
+	// oriented such that:
+	//		X: across the first step
+	//		Y: along "going" of first step
+	//		Z: direct of "ris" of first step
+	//
 	int i = 0;
+
+	// Get first STEP - not floor - since boundaries are built in
+	// lower rise + step pairs
 	layer = layers->get(i);
 	if (! layer->lower()->getGeometry()->size())
 	{
+		// First layer is the floor, not a step - want first step
 		i++;
 		layer = layers->get(i);
 	}
 
+	// Check step is not inverted - left should be left and right should
+	// be right
 	edge = layer->lower()->entry();
 	if (edge->left()->getX() > edge->right()->getX())
 	{
@@ -236,6 +257,7 @@ void Surfaces::_findBoundaries()
 	for (; i < end; i++)
 	{
 		layer = layers->get(i);
+		cout << (i + 1) << endl;
 		_findBoundary(layer);
 	}
 	
@@ -250,21 +272,25 @@ void Surfaces::_findBoundaries()
 
 void Surfaces::_findBoundary(Layer_ptr &layer)
 {
+	// Find boundary for lower rise
 	_findBoundary(layer->lower());
 
+	vector<BoundaryBuilderSnapshot_ptr> snapshots;
 	Geometry_ptr geometry = layer->getGeometry();
 	Edges_ptr edges = Edges::create();
-	Edges_ptr boundary1 = Edges::create();
-	Edges_ptr boundary2 = Edges::create();
-	Edges_ptr inbound1, inbound2;
+	Points_ptr points = Points::create();
 	Edge_ptr entry = layer->entry();
 	Edge_ptr exit = layer->exit();
 	Edge_ptr edge;
-	Points_ptr points = Points::create();
-	Point_ptr left = entry->left();
-	Point_ptr right = entry->right();
 	Point_ptr point;
-	int inCount1, inCount2;
+	Edges_ptr boundaries[2];
+	Point_ptr current[2];
+
+	boundaries[0] = Edges::create();
+	boundaries[1] = Edges::create();
+
+	current[0] = entry->left();
+	current[1] = entry->right();
 
 	// Clone edges - remove entry and exit
 	for (int i = 0; i < geometry->getEdges()->size(); i++)
@@ -278,11 +304,11 @@ void Surfaces::_findBoundary(Layer_ptr &layer)
 		}
 	}
 
-	// Clone points - remove
+	// Clone points - remove entry points
 	for (int i = 0; i < geometry->getPoints()->size(); i++)
 	{
 		point = geometry->getPoints()->get(i);
-		if (*point != *left && *point != *right)
+		if (*point != *current[0] && *point != *current[1])
 		{
 			points->add(point);
 		}
@@ -291,82 +317,129 @@ void Surfaces::_findBoundary(Layer_ptr &layer)
 	
 	while (points->size() > 0)
 	{
-		inbound1 = _findInboundConnections(edges, left);
-		inbound2 = _findInboundConnections(edges, right);
+		BoundaryBuilderSnapshot_ptr snapshot = _findNextBoundaryEdge(
+			Surfaces::BoundaryBuilderSnapshot::create(), edges, points,
+			entry, exit, current, boundaries);
 
-		inCount1 = inbound1->size();
-		inCount2 = inbound2->size();
-
-		if (exit->hasPoint(left)) inCount1 = 0;
-		if (exit->hasPoint(right)) inCount2 = 0;
-
-		if (inCount1 >= 1 && inCount2 == 0)
+		while (snapshot->isEmpty())
 		{
-			edge = inbound1->get(0);
-			if (*left != *(edge->left())) edge->invert();
-			boundary1->add(edge);
-			left = edge->right();
-			point = left;
-		}
-		else if (inCount1 == 0 && inCount2 >= 1)
-		{
-			edge = inbound2->get(0);
-			if (*right != *(edge->left())) edge->invert();
-			boundary2->add(edge);
-			right = edge->right();
-			point = right;
-		}
-		else if (inCount1 >= 1 && inCount2 >= 1)
-		{
-			if (inbound1->get(0)->length() < inbound2->get(0)->length())
+			if (snapshots.size() == 0)
 			{
-				edge = inbound1->get(0);
-				if (*left != *(edge->left())) edge->invert();
-				boundary1->add(edge);
-				left = edge->right();
-				point = left;
+				throw GeometryBuildException();
 			}
-			else
-			{
-				edge = inbound2->get(0);
-				if (*right != *(edge->left())) edge->invert();
-				boundary2->add(edge);
-				right = edge->right();
-				point = right;
-			}
-		}
-		else
-		{
-			// TODO: build in a "back step"
-			throw GeometryBuildException();
+
+			snapshot = _findNextBoundaryEdge(snapshots.back(), edges,
+				points, entry, exit, current, boundaries);
+			snapshots.pop_back();
 		}
 
-		if ((exit->hasPoint(left) && *exit->left() != *left) ||
-			(exit->hasPoint(right) && *exit->right() != *right))
-		{
-			exit->invert();
-		}
-
-		// Remove point from pool - must be *before* edges
-		points->remove(point);
-
-		// Remove edges from "edges" collection where neither end
-		// point is in the "points" collection
-		for (int i = edges->size() - 1; i > -1; i--)
-		{
-			edge = edges->get(i);
-			if (edge->hasPoint(point)
-				&& (!points->contains(edge->left()))
-				&& (!points->contains(edge->right())))
-			{
-				edges->remove(edge);
-			}
-		}
+		snapshots.push_back(snapshot);
 	}
 
 	// Set boundaries
-	layer->setLeft(boundary1);
-	layer->setRight(boundary2);
+	layer->setLeft(boundaries[0]);
+	layer->setRight(boundaries[1]);
+}
+
+Surfaces::BoundaryBuilderSnapshot_ptr Surfaces::_findNextBoundaryEdge(
+		Surfaces::BoundaryBuilderSnapshot_ptr &snapshot,
+		Edges_ptr &edges, Points_ptr &points,
+		Edge_ptr &entry, Edge_ptr &exit,
+		Point_ptr current[2], Edges_ptr boundaries[2])
+{
+	Point_ptr previous[2];
+	Edges_ptr in[2];
+	int inCount[2];
+	int side = 0;
+	Edge_ptr edge;
+	Point_ptr removedPoint;
+	Edges_ptr removedEdges = Edges::create();
+
+	if (snapshot->isEmpty())
+	{
+		// Start new iteration
+		in[0] = _findInboundConnections(edges, current[0]);
+		in[1] = _findInboundConnections(edges, current[1]);
+	}
+	else
+	{
+		// Apply previous snapshot
+		current[0] = snapshot->getPreviousLeft();
+		current[1] = snapshot->getPreviousRight();
+
+		points->add(snapshot->getRemovedPoint());
+		edges->add(snapshot->getRemovedEdges());
+
+		in[0] = snapshot->getConnectionsLeft();
+		in[1] = snapshot->getConnectionsRight();
+	}
+
+	for (int i = 0; i < 2; i++)
+	{
+		previous[i] = current[i];
+		inCount[i] = in[i]->size();
+		if (exit->hasPoint(current[i])) inCount[i] = 0;
+	}
+
+	if (inCount[0] >= 1 && inCount[1] == 0)
+	{
+		side = 0;
+	}
+	else if (inCount[0] == 0 && inCount[1] >= 1)
+	{
+		side = 1;
+	}
+	else if (inCount[0] >=1 && inCount[1] >= 1)
+	{
+		if (in[0]->get(0)->length() < in[1]->get(0)->length())
+		{
+			side = 0;
+		}
+		else
+		{
+			side = 1;
+		}
+	}
+	else
+	{
+		// Iteration failed, back-track
+		return BoundaryBuilderSnapshot::create();
+	}
+
+	edge = in[side]->get(0);
+	if (*current[side] != *(edge->left())) edge->invert();
+	boundaries[side]->add(edge);
+	current[side] = edge->right();
+
+	in[side]->remove(edge);
+
+	// Check for exit inversion
+	if ((exit->hasPoint(current[0]) && *exit->left() != *current[0]) ||
+		(exit->hasPoint(current[1]) && *exit->right() != *current[1]))
+	{
+		exit->invert();
+	}
+
+	// Remove point from pool - must be *before* edges
+	removedPoint = current[side];
+	points->remove(removedPoint);
+
+	// Remove edges from "edges" collection where neither end
+	// point is in the "points" collection
+	for (int i = edges->size() - 1; i > -1; i--)
+	{
+		edge = edges->get(i);
+		if (edge->hasPoint(removedPoint)
+			&& (!points->contains(edge->left()))
+			&& (!points->contains(edge->right())))
+		{
+			removedEdges->add(edge);
+			edges->remove(edge);
+		}
+	}
+
+	return BoundaryBuilderSnapshot::create(previous[0], previous[1],
+		removedPoint, removedEdges, in[0], in[1]);
 }
 
 void Surfaces::_findBoundary(Rise_ptr &rise)
@@ -380,14 +453,14 @@ void Surfaces::_findBoundary(Rise_ptr &rise)
 	
 	// Left boundary
 	boundary = Edges::create();
-	edge = _findShortestConnected(rise, entry->left());
+	edge = _findShortestInboundConnection(rise, entry->left());
 	if (edge->left()->getZ() > edge->right()->getZ()) edge->invert();
 	boundary->add(edge);
 	rise->setLeft(boundary);
 
 	// Right boundary
 	boundary = Edges::create();
-	edge = _findShortestConnected(rise, entry->right());
+	edge = _findShortestInboundConnection(rise, entry->right());
 	if (edge->left()->getZ() > edge->right()->getZ()) edge->invert();
 	boundary->add(edge);
 	rise->setRight(boundary);
@@ -396,16 +469,19 @@ void Surfaces::_findBoundary(Rise_ptr &rise)
 	point = rise->left()->get(0)->right();
 	if (! exit->hasPoint(point))
 	{
+		// Upper boundary points do not match up!
 		throw GeometryBuildException();
 	}
 
 	if (*point != *exit->left())
 	{
+		// Upper boundary is inverted
 		exit->invert();
 	}
 }
 
-Edge_ptr Surfaces::_findShortestConnected(Rise_ptr &rise, Point_ptr &point)
+Edge_ptr Surfaces::_findShortestInboundConnection(Rise_ptr &rise,
+												  Point_ptr &point)
 {
 	Edges_ptr edges = rise->getGeometry()->getEdges();
 	Edge_ptr entry = rise->entry();
@@ -463,7 +539,7 @@ void Surfaces::_checkBoundaries()
 
 void Surfaces::_collectBoundaries()
 {
-	Layers_ptr layers = getLayers();
+	Layers_ptr layers = _layers;
 	Layer_ptr layer;
 
 	// First layer
@@ -471,22 +547,17 @@ void Surfaces::_collectBoundaries()
 	int i = 0;
 	if (layer->lower()->getGeometry()->size() == 0)
 	{
-		cout << "Layer 1: ";
-		cout << layer->left()->size() << ", " << layer->right()->size() << endl;
+		// Layer is the floor - not a step
 		_left->add(layer->left());
 		_right->add(layer->right());
 		i++;
 	}
 
-	
+	// Remaining layers
 	for (; i < layers->size(); i++)
 	{
 		layer = layers->get(i);
 
-		cout << "Rise " << (i + 1) << ": ";
-		cout << layer->lower()->left()->size() << ", " << layer->lower()->right()->size() << endl;
-		cout << "Layer " << (i + 1) << ": ";
-		cout << layer->left()->size() << ", " << layer->right()->size() << endl;
 		_left->add(layer->lower()->left());
 		_right->add(layer->lower()->right());
 		_left->add(layer->left());
@@ -496,8 +567,6 @@ void Surfaces::_collectBoundaries()
 	// Add boundary for rise from last layer if it exists
 	if (layer->upper()->getGeometry()->size() > 0)
 	{
-		cout << "Rise " << _rises->size() << ": ";
-		cout << layer->upper()->left()->size() << ", " << layer->upper()->right()->size() << endl;
 		_left->add(layer->upper()->left());
 		_right->add(layer->upper()->right());
 	}
@@ -505,7 +574,69 @@ void Surfaces::_collectBoundaries()
 
 void Surfaces::_categorise()
 {
-	// do nothing...
+	Layer_ptr layer;
+	for (int i = 0; i < _layers->size(); i++)
+	{
+		layer = _layers->get(i);
+		if (Tests::isPointCountEqualTo4(layer).result)
+		{
+			if (Tests::isInterfaceAngleEqualTo0(layer).result)
+			{
+				layer->setType(LT_STRAIGHT);
+				continue;
+			}
+
+			// Default for four points
+			layer->setType(LT_WINDER);
+			continue;
+		}
+		
+		if (Tests::isPointCountEqualTo5(layer).result)
+		{
+			if (Tests::isInterfaceAngleBetweenN60And60Inclusive(layer).result)
+			{
+					layer->setType(LT_WINDER_CORNER);
+					continue;
+			}
+			
+			if (Tests::isInterfaceAngleEqualTo90Unsigned(layer).result)
+			{
+				layer->setType(LT_LANDING_FLAT_90);
+				continue;
+			}
+
+			if (Tests::isInterfaceAngleEqualTo90Unsigned(layer).result)
+			{
+				layer->setType(LT_LANDING_FLAT_90);
+				continue;
+			}
+
+			if (Tests::isInterfaceAngleEqualTo180(layer).result)
+			{
+				layer->setType(LT_LANDING_FLAT_180);
+				continue;
+			}
+
+			// Default for five points
+			layer->setType(LT_LANDING_FLAT_UNKNOWN);
+			continue;
+		}
+
+		if (Tests::isPointCountGreaterThanOrEqualTo6(layer).result)
+		{
+			layer->setType(LT_LANDING_FLAT_UNKNOWN);
+			continue;
+		}
+
+		if (Tests::isPointCountLessThanOrEqualTo3(layer).result)
+		{
+			layer->setType(LT_WINDER);
+			continue;
+		}
+
+		// Default layer type
+		layer->setType(LT_UNKNOWN);
+	}
 }
 
 Surfaces_ptr Surfaces::create()
@@ -528,12 +659,84 @@ Edges_ptr Surfaces::right()
 	return _right;
 }
 
-Layers_ptr Surfaces::getLayers()
+Surfaces::BoundaryBuilderSnapshot::BoundaryBuilderSnapshot()
 {
-	return _layers;
+	_empty = true;
 }
 
-Rises_ptr Surfaces::getRises()
+Surfaces::BoundaryBuilderSnapshot::BoundaryBuilderSnapshot(
+	Point_ptr &left, Point_ptr &right,
+	Point_ptr &removedPoint, Edges_ptr &removedEdges,
+	Edges_ptr &connectionsLeft, Edges_ptr &connectionsRight)
 {
-	return _rises;
+	_empty = false;
+	_previous[0] = left;
+	_previous[1] = right;
+	_removedPoint = removedPoint;
+	_removedEdges = removedEdges;
+	_connections[0] = connectionsLeft;
+	_connections[1] = connectionsRight;
+}
+
+Surfaces::BoundaryBuilderSnapshot_ptr 
+	Surfaces::BoundaryBuilderSnapshot::create()
+{
+	return BoundaryBuilderSnapshot_ptr(new
+		BoundaryBuilderSnapshot());
+}
+
+Surfaces::BoundaryBuilderSnapshot_ptr 
+	Surfaces::BoundaryBuilderSnapshot::create(
+			Point_ptr &left, Point_ptr &right,
+			Point_ptr &removedPoint, Edges_ptr &removedEdges,
+			Edges_ptr &connectionsLeft, Edges_ptr &connectionsRight)
+{
+	return BoundaryBuilderSnapshot_ptr(new
+		BoundaryBuilderSnapshot(left, right, removedPoint, removedEdges,
+		connectionsLeft, connectionsRight));
+}
+
+bool Surfaces::BoundaryBuilderSnapshot::isEmpty()
+{
+	return _empty;
+}
+
+Point_ptr* Surfaces::BoundaryBuilderSnapshot::getPrevious()
+{
+	return _previous;
+}
+
+Point_ptr Surfaces::BoundaryBuilderSnapshot::getPreviousLeft()
+{
+	return _previous[0];
+}
+
+Point_ptr Surfaces::BoundaryBuilderSnapshot::getPreviousRight()
+{
+	return _previous[1];
+}
+
+Point_ptr Surfaces::BoundaryBuilderSnapshot::getRemovedPoint()
+{
+	return _removedPoint;
+}
+
+Edges_ptr Surfaces::BoundaryBuilderSnapshot::getRemovedEdges()
+{
+	return _removedEdges;
+}
+
+Edges_ptr* Surfaces::BoundaryBuilderSnapshot::getConnections()
+{
+	return _connections;
+}
+
+Edges_ptr Surfaces::BoundaryBuilderSnapshot::getConnectionsLeft()
+{
+	return _connections[0];
+}
+
+Edges_ptr Surfaces::BoundaryBuilderSnapshot::getConnectionsRight()
+{
+	return _connections[1];
 }
