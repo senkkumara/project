@@ -25,7 +25,7 @@ private:
 	// Constructors
 	Facet(Point_ptr points[3], Edge_ptr edges[3], double normals[3]);
 
-	// Member variables (private)
+	// Fields (private)
 	Point_ptr	_points[3];
 	Edge_ptr	_edges[3];
 	double		_normals[3];
@@ -34,7 +34,7 @@ private:
 	double		_maxZ;
 	double		_minZ;
 
-	// Member functions (private)
+	// Methods (private)
 	void	_init();
 	void	_calculateNormals();
 	void	_calculateAngles();
@@ -56,7 +56,7 @@ public:
 	// Factories
 	static Facet_ptr create(Point_ptr* points, Edge_ptr* edges, double* normals);
 
-	// Member functions (public)
+	// Methods (public)
 	bool		isVertical();
 	bool		isHorizontal();
 	bool		hasPoint(Point_ptr &point);
@@ -70,8 +70,6 @@ public:
 	double		getYAng();
 	double		getZAng();
 	double		getAvgZ();
-
-	// Getters
 	Point_ptr*	getPoints();
 	Edge_ptr*	getEdges();
 	double*		getNormals();

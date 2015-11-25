@@ -21,12 +21,19 @@ typedef shared_ptr<Point> Point_ptr;
 class Point
 {
 private:
+	// Friends
+	friend class Points;
+
 	// Constructors
 	Point(double xcoord, double ycoord, double zcoord);
 	Point(std::vector<double> &coords);
 
-	// Member variables (private)
+	// Fields (private)
 	std::vector<double> _coords;
+
+	// Methods (private)
+	double	_getComponent(int index);
+	void	_setComponent(int index, double value);
 
 	// Operator overloads
 	friend std::ostream &operator<<(std::ostream &strm, const Point &p);
@@ -44,20 +51,14 @@ public:
 
 	static Point_ptr create(std::vector<double> &coords);
 
-	// Member functions (public)
-	void getMatrix(double matrix[4]);
-
-	// Getters
-	double getX();
-	double getY();
-	double getZ();
-	double getComponent(int index);
-
-	// Setters
-	void setX(double value);
-	void setY(double value);
-	void setZ(double value);
-	void setComponent(int index, double value);
+	// Methods (public)
+	void	getMatrix(double matrix[4]);
+	double	getX();
+	double	getY();
+	double	getZ();
+	void	setX(double value);
+	void	setY(double value);
+	void	setZ(double value);
 };
 
 #endif

@@ -10,7 +10,7 @@ using namespace std;
 #include "layers.h"
 #include "layer.h"
 
-class Surfaces;
+class Surfaces;		// Pre-declare class for shared pointer typedef
 typedef shared_ptr<Surfaces> Surfaces_ptr;
 
 class Surfaces

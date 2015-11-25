@@ -50,15 +50,13 @@ public:
 	static Geometry_ptr create(std::string &filename);
 
 	// Methods (public)
-	void		add(Facet_ptr &facet);
-	void		remove(Facet_ptr facet);
-	void		add(Edge_ptr &edge);
-	void		remove(Edge_ptr edge);
-	void		add(Point_ptr &point);
-	void		remove(Point_ptr point);
-	int			size();
-
-	// Getters
+	void			add(Facet_ptr &facet);
+	void			remove(Facet_ptr facet);
+	void			add(Edge_ptr &edge);
+	void			remove(Edge_ptr edge);
+	void			add(Point_ptr &point);
+	void			remove(Point_ptr point);
+	int				size();
 	Facets_ptr		getFacets();
 	Edges_ptr		getEdges();
 	Points_ptr		getPoints();

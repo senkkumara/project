@@ -24,6 +24,9 @@ private:
 	// Constructors
 	Points();
 
+	// Methods (private)
+	void _mirrorComponent(int index);
+
 	// Operator overloads
 	friend std::ostream &operator<<(std::ostream &strm, const Points &ps);
 	friend std::ostream &operator<<(std::ostream &strm,
@@ -33,12 +36,11 @@ public:
 	// Factories
 	static Points_ptr create();
 	
-	// Member functions (public)
-	void		transform(double matrix[4][4]);
-	void		mirrorX();
-	void		mirrorY();
-	void		mirrorZ();
-	void		mirrorComponent(int index);
+	// Methods (public)
+	void mirrorX();
+	void mirrorY();
+	void mirrorZ();
+	void transform(double matrix[4][4]);
 };
 
 #endif

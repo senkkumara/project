@@ -38,6 +38,24 @@ Point::Point(std::vector<double> &coords)
 }
 
 /**
+ *	(Private) Gets the component of the point position corresponding
+ *	to the provided index (e.g. X has an index of 1).
+ */
+double Point::_getComponent(int index)
+{
+	return _coords.at(index);
+}
+
+/**
+ *	(Private) Sets the component of the point position corresponding
+ *	to the provided index (e.g. X has an index of 1).
+ */
+void Point::_setComponent(int index, double value)
+{
+	_coords.at(index) = value;
+}
+
+/**
  *	<< operator overload.
  */
 std::ostream &operator<<(std::ostream &strm, const Point &p)
@@ -99,7 +117,7 @@ void Point::getMatrix(double matrix[4])
 {
 	for (int i = 0; i < 3; i++)
 	{
-		matrix[i] = getComponent(i);
+		matrix[i] = _getComponent(i);
 	}
 	matrix[3] = 1;
 }
@@ -109,7 +127,7 @@ void Point::getMatrix(double matrix[4])
  */
 double Point::getX()
 {
-	return getComponent(0);
+	return _getComponent(0);
 }
 
 /**
@@ -117,7 +135,7 @@ double Point::getX()
  */
 double Point::getY()
 {
-	return getComponent(1);
+	return _getComponent(1);
 }
 
 /**
@@ -125,16 +143,7 @@ double Point::getY()
  */
 double Point::getZ()
 {
-	return getComponent(2);
-}
-
-/**
- *	Gets the component of the point position corresponding
- *	to the provided index (e.g. X has an index of 1).
- */
-double Point::getComponent(int index)
-{
-	return _coords.at(index);
+	return _getComponent(2);
 }
 
 /**
@@ -142,7 +151,7 @@ double Point::getComponent(int index)
  */
 void Point::setX(double value)
 {
-	return setComponent(0, value);
+	return _setComponent(0, value);
 }
 
 /**
@@ -150,7 +159,7 @@ void Point::setX(double value)
  */
 void Point::setY(double value)
 {
-	return setComponent(1, value);
+	return _setComponent(1, value);
 }
 
 /**
@@ -158,14 +167,5 @@ void Point::setY(double value)
  */
 void Point::setZ(double value)
 {
-	return setComponent(2, value);
-}
-
-/**
- *	Sets the component of the point position corresponding
- *	to the provided index (e.g. X has an index of 1).
- */
-void Point::setComponent(int index, double value)
-{
-	_coords.at(index) = value;
+	return _setComponent(2, value);
 }

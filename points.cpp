@@ -20,6 +20,19 @@ Points::Points()
 }
 
 /**
+ *	(Private) Mirror the points about the axis specified by an index
+ *	(X = 0, Y = 1, Z = 2).
+ */
+void Points::_mirrorComponent(int index)
+{
+	for (int i = 0; i < size(); i++)
+	{
+		this->get(i)->_setComponent(index,
+			this->get(i)->_getComponent(index) * -1);
+	}
+}
+
+/**
  *	<< operator overload.
  */
 std::ostream &operator<<(std::ostream &strm, const Points &p)
@@ -46,21 +59,11 @@ Points_ptr Points::create()
 }
 
 /**
- *	Translate the points in the xy plane and rotate about
- *	the z-axis.
- */
-void Points::transform(double matrix[4][4])
-{
-	//TODO: Implement method
-	throw MethodNotImplementedException("Points::transform");
-}
-
-/**
  *	Mirror the points about the X-axis.
  */
 void Points::mirrorX()
 {
-	mirrorComponent(0);
+	_mirrorComponent(0);
 }
 
 /**
@@ -68,7 +71,7 @@ void Points::mirrorX()
  */
 void Points::mirrorY()
 {
-	mirrorComponent(1);
+	_mirrorComponent(1);
 }
 
 /**
@@ -76,18 +79,15 @@ void Points::mirrorY()
  */
 void Points::mirrorZ()
 {
-	mirrorComponent(2);
+	_mirrorComponent(2);
 }
 
 /**
- *	Mirror the points about the axis specified by an index
- *	(X = 0, Y = 1, Z = 2).
+ *	Translate the points in the xy plane and rotate about
+ *	the z-axis.
  */
-void Points::mirrorComponent(int index)
+void Points::transform(double matrix[4][4])
 {
-	for (int i = 0; i < size(); i++)
-	{
-		this->get(i)->setComponent(index,
-			this->get(i)->getComponent(index) * -1);
-	}
+	//TODO: Implement method
+	throw MethodNotImplementedException("Points::transform");
 }

@@ -69,8 +69,6 @@ public:
 	double		getAvgZ();
 	void		invert();
 	bool		hasPoint(Point_ptr &point);
-
-	// Getters
 	Point_ptr*	getPoints();
 	double*		getAngles();
 	double		getMinZ();

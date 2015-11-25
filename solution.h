@@ -10,7 +10,7 @@ using namespace std;
 #include "supports.h"
 #include "rails.h"
 
-class Solution;
+class Solution;		// Pre-declare class for shared pointer typedef
 typedef shared_ptr<Solution> Solution_ptr;
 
 class Solution

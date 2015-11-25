@@ -47,41 +47,42 @@ void Facet::_init()
  */
 void Facet::_calculateNormals()
 {
-	double nX, nY, nZ, sum;
-	Point_ptr p1, p2, p3;
+	double n[3], sum = 0;
+	Point_ptr p[3];
 
-	p1 = _points[0];
-	p2 = _points[1];
-	p3 = _points[2];
+	// Get components
+	for (int i = 0; i < 3; i++)
+	{
+		p[i] = _points[i];
+	}
+	
+	// Calculate normal vector
+	n[0] = ((p[1]->getY() - p[0]->getY()) * (p[2]->getZ() - p[0]->getZ())) - 
+		((p[2]->getY() - p[0]->getY()) * (p[1]->getZ() - p[0]->getZ()));
 
-	nX = ((p2->getY() - p1->getY()) * (p3->getZ() - p1->getZ())) - 
-		((p3->getY() - p1->getY()) * (p2->getZ() - p1->getZ()));
+	n[1] = ((p[1]->getZ() - p[0]->getZ()) * (p[2]->getX() - p[0]->getX())) -
+		((p[1]->getX() - p[0]->getX()) * (p[2]->getZ() - p[0]->getZ()));
 
-	nY = ((p2->getZ() - p1->getZ()) * (p3->getX() - p1->getX())) -
-		((p2->getX() - p1->getX()) * (p3->getZ() - p1->getZ()));
+	n[2] = ((p[1]->getX() - p[0]->getX()) * (p[2]->getY() - p[0]->getY())) -
+		((p[2]->getX() - p[0]->getX()) * (p[1]->getY() - p[0]->getY()));
 
-	nZ = ((p2->getX() - p1->getX()) * (p3->getY() - p1->getY())) -
-		((p3->getX() - p1->getX()) * (p2->getY() - p1->getY()));
+	// Convert to unit vector:
+	//	1. Sum square of components
+	//	2. Divide component by sum
+	//	3. Square root component
+	//
+	for (int i = 0; i < 3; i++)
+	{
+		n[i] = pow(n[i], 2);
+		sum += n[i];
+	}
 
-	nX = pow(nX, 2);
-	nY = pow(nY, 2);
-	nZ = pow(nZ, 2);
-
-	sum = nX + nY + nZ;
-
-	nX /= sum;
-	nY /= sum;
-	nZ /= sum;
-
-	nX = sqrt(nX);
-	nY = sqrt(nY);
-	nZ = sqrt(nZ);
-
-	_normals[0] = nX;
-	_normals[1] = nY;
-	_normals[2] = nZ;
-
-	cout << nX << " " << nY << " " << nZ << endl;
+	for (int i = 0; i < 3; i++)
+	{
+		n[i] /= sum;
+		_normals[i] = sqrt(n[i]);
+	}
+	
 }
 
 /**

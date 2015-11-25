@@ -73,6 +73,9 @@ double Edge::_calculateAngle(double d1, double d2)
 	return atan2(d2, d1);
 }
 
+/**
+ *	(Private) Calculate the various forms of length field for the edge.
+ */
 void Edge::_calculateLengths()
 {
 	Point_ptr pnt1 = _points[0];
