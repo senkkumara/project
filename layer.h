@@ -18,16 +18,36 @@ using namespace std;
 class Layer;	// Pre-declare class for shared pointer typedef
 typedef shared_ptr<Layer> Layer_ptr;
 
-enum LayerType {
+enum LayerType
+{
 	LT_START,
 	LT_END,
 	LT_STRAIGHT,
 	LT_WINDER,
-	LT_WINDER_CORNER,
-	LT_LANDING_FLAT_90,
-	LT_LANDING_FLAT_180,
-	LT_LANDING_FLAT_UNKNOWN,
+	LT_LANDING,
 	LT_UNKNOWN
+};
+
+enum LayerSubType
+{
+	LST_NONE,
+	LST_STANDARD,
+	LST_EXTENDED,
+	LST_CORNER_INNER,
+	LST_CORNER_OUTER,
+	LST_NARROW,
+	LST_90,
+	LST_180,
+	LST_UNKNOWN
+};
+
+enum LayerDirection
+{
+	LD_STRAIGHT,
+	LD_LEFT,
+	LD_RIGHT,
+	LD_MISC,
+	LD_UNKNOWN
 };
 
 class Layer : public Surface
@@ -38,9 +58,11 @@ private:
 	Layer(Facet_ptr &facet);
 
 	// Fields (private)
-	LayerType	_type;
-	Rise_ptr	_lower;
-	Rise_ptr	_upper;
+	LayerType		_type;
+	LayerSubType	_subType;
+	LayerDirection	_direction;
+	Rise_ptr		_lower;
+	Rise_ptr		_upper;
 
 	// Methods (private)
 	void _init();
@@ -70,9 +92,13 @@ public:
 
 	// Getters
 	LayerType		getType();
+	LayerSubType	getSubType();
+	LayerDirection	getDirection();
 
 	// Setters
 	void setType(LayerType type);
+	void setSubType(LayerSubType subType);
+	void setDirection(LayerDirection dir);
 	void setLower(Rise_ptr &rise);
 	void setUpper(Rise_ptr &rise);
 };

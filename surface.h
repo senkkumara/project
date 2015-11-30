@@ -49,6 +49,7 @@ public:
 	bool		onSurface(Facet_ptr &facet);
 	bool		onSurface(Edge_ptr &edge);
 	bool		onSurface(Point_ptr &point);
+	bool		isEmpty();
 
 	// Getters
 	double			getIfcAngle();

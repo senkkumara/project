@@ -221,6 +221,13 @@ bool Surface::onSurface(Point_ptr &point)
 		point->getZ() >= _minHeight;
 }
 
+bool Surface::isEmpty()
+{
+	return (_geometry->getEdges()->size() + 
+		_geometry->getFacets()->size() +
+		_geometry->getPoints()->size()) == 0;
+}
+
 /**
  *	Get the interface angle for the surface.
  */

@@ -598,13 +598,13 @@ void Surfaces::_categorise()
 	int end = _layers->size();
 
 	layer = _layers->get(i);
-	if (Tests::hasNoLowerRise(layer).result)
+	if (Tests::Layer::isStart(layer).result)
 	{
 		layer->setType(LT_START);
 		i++;
 	}
 	layer = _layers->get(end - 1);
-	if (Tests::hasNoUpperRise(layer).result)
+	if (Tests::Layer::isEnd(layer).result)
 	{
 		layer->setType(LT_END);
 		end--;
@@ -613,69 +613,67 @@ void Surfaces::_categorise()
 	for (; i < end; i++)
 	{
 		layer = _layers->get(i);
-		if (Tests::isPointCountEqualTo4(layer).result)
+		if (Tests::Layer::isStraightStandard(layer).result)
 		{
-			if (Tests::isInterfaceAngleEqualTo0(layer).result)
-			{
-				layer->setType(LT_STRAIGHT);
-				continue;
-			}
-
-			// Default for four points
-			layer->setType(LT_WINDER);
+			layer->setType(LT_STRAIGHT);
+			layer->setSubType(LST_STANDARD);
 			continue;
 		}
 		
-		if (Tests::isPointCountEqualTo5(layer).result)
-		{
-			if (Tests::isInterfaceAngleBetweenN60And60Inclusive(layer).result)
-			{
-					layer->setType(LT_WINDER_CORNER);
-					continue;
-			}
-			
-			if (Tests::isInterfaceAngleEqualTo90Unsigned(layer).result)
-			{
-				layer->setType(LT_LANDING_FLAT_90);
-				continue;
-			}
-
-			if (Tests::isInterfaceAngleEqualTo90Unsigned(layer).result)
-			{
-				layer->setType(LT_LANDING_FLAT_90);
-				continue;
-			}
-
-			if (Tests::isInterfaceAngleEqualTo180(layer).result)
-			{
-				layer->setType(LT_LANDING_FLAT_180);
-				continue;
-			}
-
-			// Default for five points
-			layer->setType(LT_LANDING_FLAT_UNKNOWN);
-			continue;
-		}
-
-		if (Tests::isPointCountGreaterThanOrEqualTo6(layer).result)
-		{
-			layer->setType(LT_LANDING_FLAT_UNKNOWN);
-			continue;
-		}
-
-		if (Tests::isPointCountLessThanOrEqualTo3(layer).result)
+		if (Tests::Layer::isWinderStandard(layer).result)
 		{
 			layer->setType(LT_WINDER);
+			layer->setSubType(LST_STANDARD);
+			continue;
+		}
+		
+		if (Tests::Layer::isWinderCornerOuter(layer).result)
+		{
+			layer->setType(LT_WINDER);
+			layer->setSubType(LST_CORNER_OUTER);
 			continue;
 		}
 
-		// Default layer type
-		layer->setType(LT_UNKNOWN);
+		if (Tests::Layer::isWinderCornerInner(layer).result)
+		{
+			layer->setType(LT_WINDER);
+			layer->setSubType(LST_CORNER_INNER);
+			continue;
+		}
+
+		if (Tests::Layer::isLanding90(layer).result)
+		{
+			layer->setType(LT_LANDING);
+			layer->setSubType(LST_90);
+			continue;
+		}
+
+		if (Tests::Layer::isLanding180(layer).result)
+		{
+			layer->setType(LT_LANDING);
+			layer->setSubType(LST_180);
+			continue;
+		}
+
+		if (Tests::Layer::isStraightExtended(layer).result)
+		{
+			layer->setType(LT_STRAIGHT);
+			layer->setSubType(LST_EXTENDED);
+			continue;
+		}
+
+		if (Tests::Layer::isWinderNarrow(layer).result)
+		{
+			layer->setType(LT_WINDER);
+			layer->setSubType(LST_NARROW);
+			continue;
+		}
 	}
 
+	cout << "Layers: " << endl;
 	for (int i = 0; i < _layers->size(); i++)
 	{
-		cout << _layers->get(i)->getType() << endl;
+		cout << "Type: " << _layers->get(i)->getType() << " Sub Type: " << _layers->get(i)->getSubType() << endl;
 	}
 }
 

@@ -16,7 +16,7 @@ using namespace std;
  */
 Edges::Edges()
 {
-	// do nothing...
+	_length = 0;
 }
 
 /**
@@ -46,6 +46,36 @@ Edges_ptr Edges::create()
 }
 
 /**
+ *	@Override
+ */
+void Edges::add(Edge_ptr &edge)
+{
+	__super::add(edge);
+	_length += edge->length();
+}
+
+/**
+ *	@Override
+ */
+void Edges::add(Edges_ptr &edges)
+{
+	__super::add(edges);
+	for (int i = 0; i < edges->size(); i++)
+	{
+		_length += edges->get(i)->length();
+	}
+}
+
+/**
+ *	@Override
+ */
+void Edges::remove(Edge_ptr edge)
+{
+	__super::remove(edge);
+	_length -= edge->length();
+}
+
+/**
  *	Order the edges by length using the "bubble sort" method.
  */
 void Edges::sort()
@@ -65,4 +95,9 @@ void Edges::sort()
 			}
 		}
 	}
+}
+
+double Edges::length()
+{
+	return _length;
 }

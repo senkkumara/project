@@ -23,6 +23,9 @@ private:
 	// Constructors
 	Edges();
 
+	// Fields (private)
+	double _length;
+
 	// Operator overloads
 	friend std::ostream &operator<<(std::ostream &strm, const Edges &es);
 	friend std::ostream &operator<<(std::ostream &strm,
@@ -33,7 +36,11 @@ public:
 	static Edges_ptr create();
 
 	// Methods (public)
-	void sort();
+	void	add(Edge_ptr &edge);		// override
+	void	add(Edges_ptr &edges);		// override
+	void	remove(Edge_ptr edge);		// override
+	void	sort();
+	double	length();
 };
 
 #endif

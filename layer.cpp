@@ -53,6 +53,10 @@ void Layer::_init()
 	_right = Edges::create();
 
 	recalculateIfcAngle();
+
+	_type = LT_UNKNOWN;
+	_subType = LST_UNKNOWN;
+	_direction = LD_UNKNOWN;
 }
 
 /**
@@ -154,11 +158,37 @@ LayerType Layer::getType()
 }
 
 /**
+ *	Get the layer sub-type.
+ */
+LayerSubType Layer::getSubType()
+{
+	return _subType;
+}
+
+/**
+ *	Get the layer direction.
+ */
+LayerDirection Layer::getDirection()
+{
+	return _direction;
+}
+
+/**
  *	Set the type of the layer.
  */
 void Layer::setType(LayerType type)
 {
 	_type = type;
+}
+
+void Layer::setSubType(LayerSubType subType)
+{
+	_subType = subType;
+}
+
+void Layer::setDirection(LayerDirection dir)
+{
+	_direction = dir;
 }
 
 void Layer::setLower(Rise_ptr &rise)

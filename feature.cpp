@@ -58,9 +58,7 @@ FeatureType Feature::_mapTypes(LayerType type)
 		return FT_STRAIGHT;
 	case LT_WINDER:
 		return FT_WINDER;
-	case LT_WINDER_CORNER:
-		return FT_WINDER;
-	case LT_LANDING_FLAT_90:
+	case LT_LANDING:
 		return FT_LANDING_FLAT;
 	default:
 		return FT_UNKNOWN;

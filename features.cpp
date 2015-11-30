@@ -54,26 +54,8 @@ Features::Features(Surfaces_ptr &surfaces)
 				create = false;
 			}
 			break;
-		case LT_WINDER_CORNER:
-			if (prevType == FT_WINDER)
-			{
-				create = false;
-			}
+		case LT_LANDING:
 			break;
-		case LT_LANDING_FLAT_UNKNOWN:
-		case LT_LANDING_FLAT_180:
-		case LT_LANDING_FLAT_90:
-			break;
-		}
-		if (create)
-		{
-			cout << "Creating new..." <<  layer->getType() << endl;
-			add(Feature::create(layer));
-		}
-		else
-		{
-			cout << "Adding to exiting..." << endl;
-			get(size() - 1)->add(layer);
 		}
 	}
 
