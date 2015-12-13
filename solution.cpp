@@ -8,18 +8,18 @@ using namespace std;
  *
  *	Do not use this directly, use the provided factory method.
  */
-Solution::Solution(Specification &spec, Application_ptr &application)
+Solution::Solution(Specification &spec, Application_ptr &app)
 {
 	_iter = 0;
 	_spec = spec;
-	_application = application;
+	_app = app;
 
 	do
 	{
 		_iter++;
-		_skeleton = Skeleton::create(_application, _spec);
-		_supports = Supports::create(_skeleton);
-		_rails = Rails::create(_skeleton);
+		_skeleton = Skeleton::create(_app, _spec);
+		_supports = Supports::create(_app, _skeleton);
+		_rails = Rails::create(_app, _skeleton, _supports);
 	}
 	while (! _isValid());
 }
@@ -35,9 +35,9 @@ bool Solution::_isValid()
  *	argument.
  */
 Solution_ptr Solution::create(Specification &spec,
-							  Application_ptr &application)
+							  Application_ptr &app)
 {
-	return Solution_ptr(new Solution(spec, application));
+	return Solution_ptr(new Solution(spec, app));
 }
 
 int Solution::getIteration()
@@ -53,9 +53,9 @@ Specification Solution::getSpec()
 /**
  *	Gets the application that was used to create the solution.
  */
-Application_ptr Solution::getApplication()
+Application_ptr Solution::getApp()
 {
-	return _application;
+	return _app;
 }
 
 Skeleton_ptr Solution::getSkeleton()

@@ -6,6 +6,11 @@ using namespace std;
 #include "exceptions.h"
 #include "utils.h"
 
+Feature2D::~Feature2D()
+{
+	// do nothing...
+}
+
 void Feature2D::_init()
 {
 	// do nothing...
@@ -26,7 +31,7 @@ Feature2DType Feature2D::getType()
 	return _type;
 }
 
-Feature2DLine::Feature2DLine(Edge_ptr &e, Edges_ptr &b, Entity::Fit f)
+Feature2DLine::Feature2DLine(Edge_ptr &e, Edges_ptr &b, Entity2D::Fit2D f)
 {
 	_init();
 
@@ -43,7 +48,7 @@ Feature2DLine::Feature2DLine(Edge_ptr &e, Edges_ptr &b, Entity::Fit f)
 	p[2] = l[1]->left();
 	p[3] = l[1]->right();
 
-	if (intercept())
+	if (_intercept())
 	{
 		// Rail is not possible!
 		throw SolutionBuildException();
@@ -61,14 +66,20 @@ void Feature2DLine::_init()
 	_type = F2D_LINE;
 }
 
-bool Feature2DLine::intercept(Edge_ptr &e)
+bool Feature2DLine::_intercept()
+{
+	//TODO: implement method
+	return false;
+}
+
+bool Feature2DLine::_intercept(Edge_ptr &e)
 {
 	//TODO: implement method
 	return false;
 }
 
 Feature2DLine_ptr Feature2DLine::create(Edge_ptr &e, Edges_ptr &b,
-										Entity::Fit f)
+										Entity2D::Fit2D f)
 {
 	return Feature2DLine_ptr(new Feature2DLine(e, b, f));
 }
@@ -76,7 +87,7 @@ Feature2DLine_ptr Feature2DLine::create(Edge_ptr &e, Edges_ptr &b,
 bool Feature2DLine::append(Edge_ptr &e)
 {
 	_active->add(e->right());
-	if (intercept())
+	if (_intercept())
 	{
 		_active->remove(e->right());
 		return false;
@@ -84,7 +95,7 @@ bool Feature2DLine::append(Edge_ptr &e)
 	return true;
 }
 
-Entity::Fit Feature2DLine::getFit()
+Entity2D::Fit2D Feature2DLine::getFit()
 {
 	return _fit;
 }
@@ -119,7 +130,7 @@ Feature2DRad::Feature2DRad(Feature2DLine_ptr &f1, Feature2DLine_ptr &f2, Edges_p
 	_active = RadEntity2D::create(l[0], l[1]);
 	_passive = RadEntity2D::createCorner(_active, 150.0, true);
 
-	if (intercept())
+	if (_intercept())
 	{
 		// Rail is not possible! (without further work...)
 		throw SolutionBuildException();
@@ -140,7 +151,19 @@ void Feature2DRad::_init()
 	_type = F2D_RADIUS;
 }
 
-bool Feature2DRad::intercept(Edge_ptr &e)
+bool Feature2DRad::_intercept()
+{
+	//TODO: implement method
+	return false;
+}
+
+bool Feature2DRad::_intercept(Edges_ptr &e)
+{
+	//TODO: implement method
+	return false;
+}
+
+bool Feature2DRad::_intercept(Edge_ptr &e)
 {
 	//TODO: implement method
 	return false;

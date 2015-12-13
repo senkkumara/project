@@ -8,17 +8,21 @@ using namespace std;
 #include "plan.h"
 #include "feature3ds.h"
 
-enum PathType
-{
-	PT_UPPER,
-	PT_LOWER
-};
-
 class Path;
 typedef shared_ptr<Path> Path_ptr;
 
+class PathBuilderSnapshot;
+typedef shared_ptr<PathBuilderSnapshot> PathBuilderSnapshot_ptr;
+
 class Path
 {
+public:
+	enum Type
+	{
+		PATH_TYPE_UPPER,
+		PATH_TYPE_LOWER
+	};
+
 private:
 	// Constructors
 	Path(Application_ptr &app, Specification &spec, Plan_ptr &plan);
@@ -33,7 +37,6 @@ private:
 	void	_build();
 	void	_buildCorners(Feature3Ds_ptr &fs);
 	void	_buildCorner();
-	void	_build3DArc();
 	void	_buildHelix();
 	void	_checkCorners();
 	void	_buildLines();
@@ -43,6 +46,24 @@ public:
 	static Path_ptr create(Application_ptr &app, Specification &spec, Plan_ptr &plan);
 	static Path_ptr create(Path_ptr &path);
 
+};
+
+class PathBuilderSnapshot
+{
+private:
+	// Constructors
+	PathBuilderSnapshot();
+
+	// Fields (private)
+	Path::Type _type;
+
+public:
+	// Factories
+	static PathBuilderSnapshot_ptr create();
+
+	// Methods (public)
+	bool isEmpty();
+	Path::Type getType();
 };
 
 #endif

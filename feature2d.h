@@ -35,8 +35,8 @@ protected:
 
 	// Methods (private)
 	void			_init();
-	virtual bool	intercept() = 0;
-	virtual bool	intercept(Edge_ptr &e) = 0;
+	virtual bool	_intercept() = 0;
+	virtual bool	_intercept(Edge_ptr &e) = 0;
 
 public:
 	// Methods (public)
@@ -53,27 +53,27 @@ class Feature2DLine : public Feature2D
 {
 private:
 	// Constructors
-	Feature2DLine(Edge_ptr &e, Edges_ptr &b, Entity::Fit f);
+	Feature2DLine(Edge_ptr &e, Edges_ptr &b, Entity2D::Fit2D f);
 
 	// Fields (private)
-	Entity::Fit			_fit;
+	Entity2D::Fit2D		_fit;
 	Edges_ptr			_edges;
 	LineEntity2D_ptr	_active;
 	LineEntity2D_ptr	_passive;
 
 	// Methods (private)
 	void _init();
-	bool intercept();
-	bool intercept(Edge_ptr &e);
+	bool _intercept();
+	bool _intercept(Edge_ptr &e);
 
 public:
 	// Factories
-	static Feature2DLine_ptr create(Edge_ptr &e, Edges_ptr &b, Entity::Fit f);
+	static Feature2DLine_ptr create(Edge_ptr &e, Edges_ptr &b, Entity2D::Fit2D f);
 	static Feature2DLine_ptr cast(Feature2D_ptr &f);
 
 	// Methods (public)
 	bool				append(Edge_ptr &e);
-	Entity::Fit			getFit();
+	Entity2D::Fit2D		getFit();
 	LineEntity2D_ptr	getActive();
 	LineEntity2D_ptr	getPassive();
 };
@@ -94,9 +94,9 @@ private:
 
 	// Methods (private)
 	void _init();
-	bool intercept();
-	bool intercept(Edges_ptr &e);
-	bool intercept(Edge_ptr &e);
+	bool _intercept();
+	bool _intercept(Edges_ptr &e);
+	bool _intercept(Edge_ptr &e);
 
 public:
 	// Factories

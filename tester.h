@@ -1,6 +1,12 @@
 #ifndef TESTER_H
 #define TESTER_H
 
+/**
+ *	tester.h
+ *	---------------------------------------------------------------------------
+ *
+ */
+
 using namespace std;
 
 #include <memory>
@@ -13,6 +19,7 @@ typedef shared_ptr<Tester> Tester_ptr;
 
 struct TestResult
 {
+public:
 	TestResult(bool r)
 	{
 		result = r;

@@ -1,6 +1,14 @@
 #ifndef SURFACES_H
 #define SURFACES_H
 
+/**
+ *	surfaces.h
+ *	---------------------------------------------------------------------------
+ *	A Surfaces object is container for one or more Surface objects.
+ *
+ *	It forms one layer of the "Application" stack.
+ */
+
 using namespace std;
 
 #include <memory>
@@ -13,6 +21,9 @@ using namespace std;
 class Surfaces;		// Pre-declare class for shared pointer typedef
 typedef shared_ptr<Surfaces> Surfaces_ptr;
 
+/**
+ *	Container for, and responsible for building, Support objects.
+ */
 class Surfaces
 {
 private:
@@ -21,7 +32,9 @@ private:
 	Surfaces(Geometry_ptr &geometry);
 
 	// Sub-classes
-	class BoundaryBuilderSnapshot;
+	class BoundaryBuilderSnapshot;		// Pre-declare class for shared pointer
+										// typedef
+
 	typedef shared_ptr<BoundaryBuilderSnapshot> 
 		BoundaryBuilderSnapshot_ptr;
 
@@ -67,7 +80,7 @@ private:
 
 	/**
 	 *	Sub-class used for tracking snapshots of building the boundary
-	 *	edges.
+	 *	edges - facilitating "back-stepping" in the event of a failed build.
 	 */
 	class BoundaryBuilderSnapshot
 	{
@@ -95,9 +108,7 @@ private:
 		static BoundaryBuilderSnapshot_ptr create();
 
 		// Methods (public)
-		bool isEmpty();
-
-		// Getters
+		bool		isEmpty();
 		Point_ptr*	getPrevious();
 		Point_ptr	getPreviousLeft();
 		Point_ptr	getPreviousRight();
@@ -113,7 +124,7 @@ public:
 	static Surfaces_ptr create();
 	static Surfaces_ptr create(Geometry_ptr &geometry);
 
-	// methods (public)
+	// Methods (public)
 	Edges_ptr	left();
 	Edges_ptr	right();
 	Layers_ptr	getLayers();

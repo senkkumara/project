@@ -1,6 +1,15 @@
 #ifndef TEST_H
 #define TEST_H
 
+/**
+ *	tests.h
+ *	---------------------------------------------------------------------------
+ *	Contains the "Tests" namespace which in turn contains sub-namespaces
+ *	and methods for testing for certain properties of layers.
+ */
+
+using namespace std;
+
 #include "layer.h"
 #include "edges.h"
 #include "edge.h"
@@ -50,7 +59,8 @@ namespace Tests
 	namespace Profile
 	{
 		// Non-specific
-		TestResult isGoingLengthWithinXpcOfRiseLength(Layer_ptr &layer, double pc);
+		TestResult isGoingLengthWithinXpcOfRiseLength(Layer_ptr &layer,
+			double pc);
 
 		// Specific
 		TestResult isGoingLengthWithin25pcOfRiseLength(Layer_ptr &layer);

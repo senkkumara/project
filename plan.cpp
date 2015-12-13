@@ -12,27 +12,27 @@ Plan::Plan(Application_ptr &app, Specification &spec)
 
 void Plan::_build()
 {
-	switch (_spec.RailSide)
+	switch (_spec.Side)
 	{
-	case RAIL_LEFT:
+	case SIDE_LEFT:
 		// Build left
-		_opts[0] = _build(_app->left(), _app->right(), Entity::FIT_RIGHT);
+		_opts[0] = _build(_app->left(), _app->right(), Entity2D::FIT2D_RIGHT);
 		break;
 
-	case RAIL_RIGHT:
+	case SIDE_RIGHT:
 		// Build right
-		_opts[1] = _build(_app->right(), _app->left(), Entity::FIT_LEFT);
+		_opts[1] = _build(_app->right(), _app->left(), Entity2D::FIT2D_LEFT);
 		break;
 
 	default:
 		// Build both
-		_opts[0] = _build(_app->left(), _app->right(), Entity::FIT_LEFT);
-		_opts[1] = _build(_app->right(), _app->left(), Entity::FIT_RIGHT);
+		_opts[0] = _build(_app->left(), _app->right(), Entity2D::FIT2D_LEFT);
+		_opts[1] = _build(_app->right(), _app->left(), Entity2D::FIT2D_RIGHT);
 		break;
 	}
 }
 
-Feature2Ds_ptr Plan::_build(Edges_ptr &act, Edges_ptr &pass, Entity::Fit fit)
+Feature2Ds_ptr Plan::_build(Edges_ptr &act, Edges_ptr &pass, Entity2D::Fit2D fit)
 {
 	Feature2Ds_ptr fs = Feature2Ds::create();
 
@@ -51,7 +51,7 @@ Feature2Ds_ptr Plan::_build(Edges_ptr &act, Edges_ptr &pass, Entity::Fit fit)
 }
 
 void Plan::_buildLines(Feature2Ds_ptr &fs, Edges_ptr &act,
-					   Edges_ptr &pass, Entity::Fit fit)
+					   Edges_ptr &pass, Entity2D::Fit2D fit)
 {
 	Edge_ptr e = act->first();
 	Feature2DLine_ptr b = Feature2DLine::create(e, pass, fit);
@@ -106,4 +106,14 @@ void Plan::_optimiseRads(Feature2Ds_ptr &fs)
 Plan_ptr Plan::create(Application_ptr &app, Specification &spec)
 {
 	return Plan_ptr(new Plan(app, spec));
+}
+
+PlanBuilderSnapshot::PlanBuilderSnapshot()
+{
+
+}
+
+PlanBuilderSnapshot_ptr PlanBuilderSnapshot::create()
+{
+	return PlanBuilderSnapshot_ptr(new PlanBuilderSnapshot());
 }

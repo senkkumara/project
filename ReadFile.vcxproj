@@ -83,6 +83,7 @@
     <ClCompile Include="rise.cpp" />
     <ClCompile Include="rises.cpp" />
     <ClCompile Include="skeleton.cpp" />
+    <ClCompile Include="slot.cpp" />
     <ClCompile Include="solution.cpp" />
     <ClCompile Include="job.cpp" />
     <ClCompile Include="layer.cpp" />
@@ -99,6 +100,7 @@
     <ClCompile Include="surfaces.cpp" />
     <ClCompile Include="tester.cpp" />
     <ClCompile Include="tests.cpp" />
+    <ClCompile Include="transformation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="feature2d.h" />
@@ -117,6 +119,8 @@
     <ClInclude Include="feature3ds.h" />
     <ClInclude Include="geometry.h" />
     <ClInclude Include="region.h" />
+    <ClInclude Include="slot.h" />
+    <ClInclude Include="transformation.h" />
     <ClInclude Include="utils.h" />
     <ClInclude Include="path.h" />
     <ClInclude Include="plan.h" />

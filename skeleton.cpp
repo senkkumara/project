@@ -10,8 +10,8 @@ Skeleton::Skeleton(Application_ptr &app, Specification &spec)
 	_spec = spec;
 	_init();
 
-	Skeleton::SkeletonBuilderSnapshot_ptr snapshot =
-		Skeleton::SkeletonBuilderSnapshot::create();
+	SkeletonBuilderSnapshot_ptr snapshot =
+		SkeletonBuilderSnapshot::create();
 
 	do
 	{
@@ -28,22 +28,22 @@ void Skeleton::_init()
 	_iter = 0;
 }
 
-Skeleton::PlanBuilderSnapshot_ptr Skeleton::_buildPlan()
+PlanBuilderSnapshot_ptr Skeleton::_buildPlan()
 {
 	_plan = Plan::create(_app, _spec);
-	return Skeleton::PlanBuilderSnapshot::create();
+	return PlanBuilderSnapshot::create();
 }
 
-Skeleton::PathBuilderSnapshot_ptr Skeleton::_buildLower()
+PathBuilderSnapshot_ptr Skeleton::_buildLower()
 {
 	_lower = Path::create(_app, _spec, _plan);
-	return Skeleton::PathBuilderSnapshot::create();
+	return PathBuilderSnapshot::create();
 }
 
-Skeleton::PathBuilderSnapshot_ptr Skeleton::_buildUpper()
+PathBuilderSnapshot_ptr Skeleton::_buildUpper()
 {
 	_upper = Path::create(_lower);
-	return Skeleton::PathBuilderSnapshot::create();
+	return PathBuilderSnapshot::create();
 }
 
 void Skeleton::_buildDatums()
@@ -81,45 +81,17 @@ Path_ptr Skeleton::upper()
 	return _upper;
 }
 
-Skeleton::SkeletonBuilderSnapshot::SkeletonBuilderSnapshot()
+SkeletonBuilderSnapshot::SkeletonBuilderSnapshot()
 {
 
 }
 
-Skeleton::SkeletonBuilderSnapshot_ptr
-	Skeleton::SkeletonBuilderSnapshot::create()
+SkeletonBuilderSnapshot_ptr SkeletonBuilderSnapshot::create()
 {
 	return SkeletonBuilderSnapshot_ptr(new SkeletonBuilderSnapshot());
 }
 
-bool Skeleton::SkeletonBuilderSnapshot::isValid()
+bool SkeletonBuilderSnapshot::isValid()
 {
 	return true;
-}
-
-Skeleton::PlanBuilderSnapshot::PlanBuilderSnapshot()
-{
-
-}
-
-Skeleton::PlanBuilderSnapshot_ptr
-	Skeleton::PlanBuilderSnapshot::create()
-{
-	return PlanBuilderSnapshot_ptr(new PlanBuilderSnapshot());
-}
-
-Skeleton::PathBuilderSnapshot::PathBuilderSnapshot()
-{
-
-}
-
-Skeleton::PathBuilderSnapshot_ptr
-	Skeleton::PathBuilderSnapshot::create()
-{
-	return PathBuilderSnapshot_ptr(new PathBuilderSnapshot());
-}
-
-PathType Skeleton::PathBuilderSnapshot::getType()
-{
-	return _type;
 }

@@ -38,12 +38,12 @@ int main()
 			
 			if (side == "l" || side == "L")
 			{
-				s = RAIL_LEFT;
+				s = SIDE_LEFT;
 				break;
 			}
 			else if (side == "r" || side == "R")
 			{
-				s = RAIL_RIGHT;
+				s = SIDE_RIGHT;
 				break;
 			}
 			else if (side == "exit")
@@ -57,10 +57,10 @@ int main()
 		}
 		
 		Specification spec;
-		spec.RunMode = MODE_CLEAN;
+		spec.Mode = MODE_CLEAN;
 		spec.Project = "0000001";
 		spec.Filename = filename;
-		spec.RailSide = s;
+		spec.Side = s;
 
 		// Create application
 		try {

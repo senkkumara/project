@@ -9,6 +9,8 @@
  *	used to model an application - also see "facet" and "point".
  */
 
+using namespace std;
+
 #include <memory>
 #include "point.h"
 

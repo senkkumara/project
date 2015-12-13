@@ -10,9 +10,6 @@ using namespace std;
 #include "feature2ds.h"
 #include "entity.h"
 
-class Plan;
-typedef shared_ptr<Plan> Plan_ptr;
-
 class Plan
 {
 private:
@@ -26,8 +23,8 @@ private:
 
 	// Methods (private)
 	void				_build();
-	Feature2Ds_ptr		_build(Edges_ptr &act, Edges_ptr &pass, Entity::Fit fit);
-	void				_buildLines(Feature2Ds_ptr &fs, Edges_ptr &act,Edges_ptr &pass, Entity::Fit fit);
+	Feature2Ds_ptr		_build(Edges_ptr &act, Edges_ptr &pass, Entity2D::Fit2D fit);
+	void				_buildLines(Feature2Ds_ptr &fs, Edges_ptr &act,Edges_ptr &pass, Entity2D::Fit2D fit);
 	void				_checkLines(Feature2Ds_ptr &fs);
 	void				_optimiseLines(Feature2Ds_ptr &fs);
 	void				_buildRads(Feature2Ds_ptr &fs, Edges_ptr &p);
@@ -37,6 +34,26 @@ private:
 public:
 	// Factories
 	static Plan_ptr create(Application_ptr &app, Specification &spec);
+};
+
+class Plan;
+typedef shared_ptr<Plan> Plan_ptr;
+
+class PlanBuilderSnapshot;
+typedef shared_ptr<PlanBuilderSnapshot> PlanBuilderSnapshot_ptr;
+
+class PlanBuilderSnapshot
+{
+private:
+	// Constructors
+	PlanBuilderSnapshot();
+
+public:
+	// Factories
+	static PlanBuilderSnapshot_ptr create();
+
+	// Methods (public)
+	bool isEmpty();
 };
 
 #endif

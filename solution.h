@@ -1,6 +1,14 @@
 #ifndef SOLUTION_H
 #define SOLUTION_H
 
+/**
+ *	solution.h
+ *	---------------------------------------------------------------------------
+ *	A Solution object forms one half of the Job hierachy - the other being
+ *	Application. It therefore contains a hierarchy of objects that form
+ *	the definition of a stairlift for a given application.
+ */
+
 using namespace std;
 
 #include <memory>
@@ -13,6 +21,10 @@ using namespace std;
 class Solution;		// Pre-declare class for shared pointer typedef
 typedef shared_ptr<Solution> Solution_ptr;
 
+/**
+ *	Contains the hierarchy of objects that define a stairlift for a given
+ *	application.
+ */
 class Solution
 {
 private:
@@ -22,7 +34,7 @@ private:
 	// Fields (private)
 	int				_iter;
 	Specification	_spec;
-	Application_ptr	_application;
+	Application_ptr	_app;
 	Skeleton_ptr	_skeleton;
 	Supports_ptr	_supports;
 	Rails_ptr		_rails;
@@ -33,12 +45,12 @@ private:
 public:
 	// Factories
 	static Solution_ptr create(Specification &spec,
-		Application_ptr &application);
+		Application_ptr &app);
 
-	// Getters
+	// Methods (public)
 	int				getIteration();
 	Specification	getSpec();
-	Application_ptr getApplication();
+	Application_ptr getApp();
 	Skeleton_ptr	getSkeleton();
 	Supports_ptr	getSupports();
 	Rails_ptr		getRails();

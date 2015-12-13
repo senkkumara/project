@@ -21,3 +21,18 @@ Path_ptr Path::create(Path_ptr &path)
 {
 	return Path_ptr(new Path(path));
 }
+
+PathBuilderSnapshot::PathBuilderSnapshot()
+{
+
+}
+
+PathBuilderSnapshot_ptr PathBuilderSnapshot::create()
+{
+	return PathBuilderSnapshot_ptr(new PathBuilderSnapshot());
+}
+
+Path::Type PathBuilderSnapshot::getType()
+{
+	return _type;
+}
