@@ -4,7 +4,7 @@
 using namespace std;
 
 #include <memory>
-#include "plan.h"
+#include "skeleton.h"
 
 class Supports;
 typedef shared_ptr<Supports> Supports_ptr;
@@ -13,17 +13,17 @@ class Supports
 {
 private:
 	// Constructors
-	Supports(Plan_ptr &plan);
+	Supports(Skeleton_ptr &layout);
 
 	// Member variables (private)
-	Plan_ptr _plan;
+	Skeleton_ptr _skeleton;
 
 public:
 	// Factories
-	static Supports_ptr create(Plan_ptr &plan);
+	static Supports_ptr create(Skeleton_ptr &layout);
 
 	// Getters
-	Plan_ptr getPlan();
+	Skeleton_ptr getSkeleton();
 };
 
 #endif

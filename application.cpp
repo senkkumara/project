@@ -23,7 +23,6 @@ Application::Application(Specification &spec)
 	_filename = spec.Filename;
 	_geometry = Geometry::create(_filename);
 	_surfaces = Surfaces::create(_geometry);
-	_features = Features::create(_surfaces);
 }
 
 /**

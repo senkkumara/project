@@ -2,17 +2,17 @@ using namespace std;
 
 #include "supports.h"
 
-Supports::Supports(Plan_ptr &plan)
+Supports::Supports(Skeleton_ptr &skeleton)
 {
-	_plan = plan;
+	_skeleton = skeleton;
 }
 
-Supports_ptr Supports::create(Plan_ptr &plan)
+Supports_ptr Supports::create(Skeleton_ptr &skeleton)
 {
-	return Supports_ptr(new Supports(plan));
+	return Supports_ptr(new Supports(skeleton));
 }
 
-Plan_ptr Supports::getPlan()
+Skeleton_ptr Supports::getSkeleton()
 {
-	return _plan;
+	return _skeleton;
 }

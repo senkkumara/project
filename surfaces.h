@@ -66,7 +66,8 @@ private:
 		const Surfaces_ptr &s);
 
 	/**
-	 *	Sub-class used for tracking snapshots of building the boundary edges.
+	 *	Sub-class used for tracking snapshots of building the boundary
+	 *	edges.
 	 */
 	class BoundaryBuilderSnapshot
 	{

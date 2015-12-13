@@ -29,18 +29,21 @@ int main()
 
 		// Get rail side
 		std::string side;
+		Side s;
 		while (true)
 		{
 			cout << "Please choose a side for the rail (l/r): " << endl;
 			cin >> side;
 			cout << endl;
-
+			
 			if (side == "l" || side == "L")
 			{
+				s = RAIL_LEFT;
 				break;
 			}
 			else if (side == "r" || side == "R")
 			{
+				s = RAIL_RIGHT;
 				break;
 			}
 			else if (side == "exit")
@@ -57,7 +60,7 @@ int main()
 		spec.RunMode = MODE_CLEAN;
 		spec.Project = "0000001";
 		spec.Filename = filename;
-		spec.RailSide = side;
+		spec.RailSide = s;
 
 		// Create application
 		try {

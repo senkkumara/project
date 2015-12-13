@@ -4,39 +4,39 @@
 using namespace std;
 
 #include <memory>
-#include "collection.h"
 #include "application.h"
-#include "block.h"
+#include "collection.h"
+#include "feature2d.h"
+#include "feature2ds.h"
+#include "entity.h"
 
 class Plan;
 typedef shared_ptr<Plan> Plan_ptr;
 
-class Plan : public Collection<Block_ptr, Plan_ptr>
+class Plan
 {
 private:
 	// Constructors
-	Plan(Application_ptr &app);
+	Plan(Application_ptr &app, Specification &spec);
 
 	// Fields (private)
 	Application_ptr _app;
+	Specification	_spec;
+	Feature2Ds_ptr	_opts[2];	// 0 -> left, 1 -> right
 
 	// Methods (private)
-	void _buildPath();
-	void _checkPath();
-	void _buildRise();
-	void _smoothRise();
-	void _checkRise();
-
-	// Operator overloads
-	friend std::ostream &operator<<(std::ostream &strm, const Plan &p);
-	friend std::ostream &operator<<(std::ostream &strm,
-		const Plan_ptr &p);
+	void				_build();
+	Feature2Ds_ptr		_build(Edges_ptr &act, Edges_ptr &pass, Entity::Fit fit);
+	void				_buildLines(Feature2Ds_ptr &fs, Edges_ptr &act,Edges_ptr &pass, Entity::Fit fit);
+	void				_checkLines(Feature2Ds_ptr &fs);
+	void				_optimiseLines(Feature2Ds_ptr &fs);
+	void				_buildRads(Feature2Ds_ptr &fs, Edges_ptr &p);
+	void				_checkRads(Feature2Ds_ptr &fs);
+	void				_optimiseRads(Feature2Ds_ptr &fs);
 
 public:
 	// Factories
-	static Plan_ptr create(Application_ptr &app);
-
-
+	static Plan_ptr create(Application_ptr &app, Specification &spec);
 };
 
 #endif

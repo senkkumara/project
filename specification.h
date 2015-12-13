@@ -9,12 +9,19 @@ enum Mode
 	MODE_ITERATE		// Solution started, use CAD
 };
 
+enum Side
+{
+	RAIL_RIGHT,
+	RAIL_LEFT,
+	RAIL_UNDEFINED
+};
+
 struct Specification
 {
 	Mode		RunMode;
 	std::string Project;
 	std::string Filename;
-	std::string RailSide;
+	Side		RailSide;
 };
 
 #endif

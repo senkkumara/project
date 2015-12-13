@@ -39,15 +39,6 @@
     <ClCompile Include="points.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="test.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="plan.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="block.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="job.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -99,13 +90,34 @@
     <ClCompile Include="rails.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="equation.cpp">
+    <ClCompile Include="skeleton.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="feature.cpp">
+    <ClCompile Include="plan.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="features.cpp">
+    <ClCompile Include="path.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="entity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="entities.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="feature2ds.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="feature2d.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="feature3d.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="feature3ds.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="region.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -114,9 +126,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="point.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="feature.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="layer.h">
@@ -134,22 +143,10 @@
     <ClInclude Include="tester.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="features.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="layers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="points.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="test.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="plan.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="block.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="job.h">
@@ -209,7 +206,37 @@
     <ClInclude Include="rails.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="equation.h">
+    <ClInclude Include="path.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="plan.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="skeleton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="entity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="entities.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="feature2d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="feature2ds.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="feature3d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="feature3ds.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="region.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

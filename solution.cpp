@@ -10,14 +10,16 @@ using namespace std;
  */
 Solution::Solution(Specification &spec, Application_ptr &application)
 {
+	_iter = 0;
 	_spec = spec;
 	_application = application;
 
 	do
 	{
-		_plan = Plan::create(_application);
-		_supports = Supports::create(_plan);
-		_rails = Rails::create(_plan);
+		_iter++;
+		_skeleton = Skeleton::create(_application, _spec);
+		_supports = Supports::create(_skeleton);
+		_rails = Rails::create(_skeleton);
 	}
 	while (! _isValid());
 }
@@ -38,6 +40,11 @@ Solution_ptr Solution::create(Specification &spec,
 	return Solution_ptr(new Solution(spec, application));
 }
 
+int Solution::getIteration()
+{
+	return _iter;
+}
+
 Specification Solution::getSpec()
 {
 	return _spec;
@@ -51,9 +58,9 @@ Application_ptr Solution::getApplication()
 	return _application;
 }
 
-Plan_ptr Solution::getPlan()
+Skeleton_ptr Solution::getSkeleton()
 {
-	return _plan;
+	return _skeleton;
 }
 
 Supports_ptr Solution::getSupports()

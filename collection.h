@@ -21,6 +21,7 @@ public:
 	// Methods (public)
 	void	add(V &item);
 	void	add(C &items);
+	void	insert(V &item, int index);
 	void	remove(V item);
 	V		get(int index);
 	V		first();
@@ -44,6 +45,11 @@ template<class V, class C> void Collection<V, C>::add(C &items)
 	{
 		add(items->get(i));
 	}
+}
+
+template<class V, class C> void Collection<V, C>::insert(V &item, int index)
+{
+	_items.insert(_items.begin() + index, item);
 }
 
 template<class V, class C> void Collection<V, C>::remove(V item)

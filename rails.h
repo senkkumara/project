@@ -4,7 +4,7 @@
 using namespace std;
 
 #include <memory>
-#include "plan.h"
+#include "skeleton.h"
 
 class Rails;
 typedef shared_ptr<Rails> Rails_ptr;
@@ -13,17 +13,17 @@ class Rails
 {
 private:
 	// Constructors
-	Rails(Plan_ptr &plan);
+	Rails(Skeleton_ptr &layout);
 
 	// Member variables (private)
-	Plan_ptr _plan;
+	Skeleton_ptr _skeleton;
 
 public:
 	// Factories
-	static Rails_ptr create(Plan_ptr &plan);
+	static Rails_ptr create(Skeleton_ptr &layout);
 
 	// Getters
-	Plan_ptr getPlan();
+	Skeleton_ptr getSkeleton();
 };
 
 #endif

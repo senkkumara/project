@@ -2,17 +2,17 @@ using namespace std;
 
 #include "rails.h"
 
-Rails::Rails(Plan_ptr &plan)
+Rails::Rails(Skeleton_ptr &skeleton)
 {
-	_plan = plan;
+	_skeleton = skeleton;
 }
 
-Rails_ptr Rails::create(Plan_ptr &plan)
+Rails_ptr Rails::create(Skeleton_ptr &skeleton)
 {
-	return Rails_ptr(new Rails(plan));
+	return Rails_ptr(new Rails(skeleton));
 }
 
-Plan_ptr Rails::getPlan()
+Skeleton_ptr Rails::getSkeleton()
 {
-	return _plan;
+	return _skeleton;
 }
