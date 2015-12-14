@@ -14,6 +14,9 @@ using namespace std;
 #include "collection.h"
 #include "rise.h"
 
+/**
+ *	Container for Rise objects.
+ */
 class Rises;	// Pre-declare class for shared pointer typedef
 typedef shared_ptr<Rises> Rises_ptr;
 

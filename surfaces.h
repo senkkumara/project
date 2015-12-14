@@ -98,6 +98,13 @@ private:
 		Edges_ptr	_removedEdges;
 		Edges_ptr	_connections[2];
 
+		// Operator overloads
+		friend std::ostream &operator<<(std::ostream &strm,
+			const Surfaces &s);
+
+		friend std::ostream &operator<<(std::ostream &strm,
+			const Surfaces_ptr &s);
+
 	public:
 		// Factories
 		static BoundaryBuilderSnapshot_ptr create(Point_ptr &left,

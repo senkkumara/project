@@ -3,7 +3,7 @@
 
 /**
  *	points.h
- *	-----------------------------------------------------------------------
+ *	---------------------------------------------------------------------------
  *	A Points object is container for one or more Point objects.
  */
 
@@ -18,6 +18,9 @@ using namespace std;
 class Points;
 typedef shared_ptr<Points> Points_ptr;
 
+/**
+ *	Collection of Points.
+ */
 class Points : public Collection<Point_ptr, Points_ptr>
 {
 private:
@@ -28,9 +31,9 @@ private:
 	void _mirrorComponent(int index);
 
 	// Operator overloads
-	friend std::ostream &operator<<(std::ostream &strm, const Points &ps);
+	friend std::ostream &operator<<(std::ostream &strm, const Points &p);
 	friend std::ostream &operator<<(std::ostream &strm,
-		const Points_ptr &ps);
+		const Points_ptr &p);
 
 public:
 	// Factories
@@ -40,7 +43,6 @@ public:
 	void mirrorX();
 	void mirrorY();
 	void mirrorZ();
-	void transform(double matrix[4][4]);
 };
 
 #endif

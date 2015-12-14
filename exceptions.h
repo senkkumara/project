@@ -1,6 +1,12 @@
 #ifndef EXCEPTIONS_H
 #define EXCEPTIONS_H
 
+/**
+ *	exceptions.h
+ *	---------------------------------------------------------------------------
+ *	Contains the custom exceptions for the application.
+ */
+
 using namespace std;
 
 #include <exception>

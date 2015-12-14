@@ -3,10 +3,10 @@
 
 /**
  *	edge.h
- *	-----------------------------------------------------------------------
- *	A edge object represents a 2D/3D line surface conssiting of
- *	two points. It is one of the three geometry objects
- *	used to model an application - also see "facet" and "point".
+ *	---------------------------------------------------------------------------
+ *	A edge object represents a 2D/3D line consisting of	two points. It is
+ *	one of the three geometry objects used to model an application - also
+ *	see "facet" and "point".
  */
 
 using namespace std;
@@ -17,6 +17,9 @@ using namespace std;
 class Edge;		// Pre-declare class for shared pointer typedef
 typedef shared_ptr<Edge> Edge_ptr;
 
+/**
+ *	Connects two points (2D or 3D).
+ */
 class Edge
 {
 private:
@@ -27,9 +30,7 @@ private:
 	Point_ptr	_points[2];
 	double		_angles[3];
 	double		_length;
-	double		_dx;
-	double		_dy;
-	double		_dz;
+	double		_d[3];
 	double		_lengthXY;
 	double		_lengthXZ;
 	double		_lengthYZ;
@@ -45,9 +46,7 @@ private:
 
 	// Operator overloads
 	friend std::ostream &operator<<(std::ostream &strm, const Edge &e);
-	friend std::ostream &operator<<(std::ostream &strm,
-		const Edge_ptr &e);
-
+	friend std::ostream &operator<<(std::ostream &strm, const Edge_ptr &e);
 	friend bool operator==(Edge &e1, Edge &e2);
 	friend bool operator!=(Edge &e1, Edge &e2);
 
@@ -55,7 +54,7 @@ public:
 	// Factories
 	static Edge_ptr create(Point_ptr point1, Point_ptr point2);
 
-	// Member functions (public)
+	// Methods (public)
 	Point_ptr	left();
 	Point_ptr	right();
 	double		length();

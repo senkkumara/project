@@ -1,6 +1,13 @@
 #ifndef PATH_H
 #define PATH_H
 
+/**
+ *	path.h
+ *	---------------------------------------------------------------------------
+ *	A Path object is a collection of Feature3D objects that represent the rail
+ *	trajectory.
+ */
+
 using namespace std;
 
 #include <memory>
@@ -8,15 +15,16 @@ using namespace std;
 #include "plan.h"
 #include "feature3ds.h"
 
-class Path;
+class Path;		// Pre-declare class for shared pointer typedef
 typedef shared_ptr<Path> Path_ptr;
 
-class PathBuilderSnapshot;
+class PathBuilderSnapshot;		// Pre-declare class for shared pointer typedef
 typedef shared_ptr<PathBuilderSnapshot> PathBuilderSnapshot_ptr;
 
 class Path
 {
 public:
+	// Enumerations
 	enum Type
 	{
 		PATH_TYPE_UPPER,
@@ -43,9 +51,10 @@ private:
 
 public:
 	// Factories
-	static Path_ptr create(Application_ptr &app, Specification &spec, Plan_ptr &plan);
-	static Path_ptr create(Path_ptr &path);
+	static Path_ptr create(Application_ptr &app, Specification &spec,
+		Plan_ptr &plan);
 
+	static Path_ptr create(Path_ptr &path);
 };
 
 class PathBuilderSnapshot

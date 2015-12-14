@@ -251,6 +251,33 @@
     <ClInclude Include="slot.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="obstruction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="obstructions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="entity2d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="entity3d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="entity2ds.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="entity3ds.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="feature.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="features.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="attachable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />

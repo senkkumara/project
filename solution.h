@@ -29,7 +29,7 @@ class Solution
 {
 private:
 	// Constructors
-	Solution(Specification &spec, Application_ptr &application);
+	Solution(Specification &spec, Application_ptr &app);
 
 	// Fields (private)
 	int				_iter;
@@ -41,6 +41,10 @@ private:
 
 	// Methods (private)
 	bool _isValid();
+
+	// Operator overloads
+	friend std::ostream &operator<<(std::ostream &strm, const Solution &s);
+	friend std::ostream &operator<<(std::ostream &strm, const Solution_ptr &s);
 
 public:
 	// Factories

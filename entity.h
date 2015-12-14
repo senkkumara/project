@@ -1,6 +1,12 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
+/**
+ *	entity.h
+ *	---------------------------------------------------------------------------
+ *	A Entity object is container for one or more Rail objects.
+ */
+
 using namespace std;
 
 #include <memory>
@@ -9,28 +15,28 @@ using namespace std;
 #include "point.h"
 #include "points.h"
 
-class Entity;
+class Entity;			// Pre-declare class for shared pointer typedef
 typedef shared_ptr<Entity> Entity_ptr;
 
-class Entity2D;
+class Entity2D;			// Pre-declare class for shared pointer typedef
 typedef shared_ptr<Entity2D> Entity2D_ptr;
 
-class Entity3D;
+class Entity3D;			// Pre-declare class for shared pointer typedef
 typedef shared_ptr<Entity3D> Entity3D_ptr;
 
-class LineEntity2D;
+class LineEntity2D;		// Pre-declare class for shared pointer typedef
 typedef shared_ptr<LineEntity2D> LineEntity2D_ptr;
 
-class RadEntity2D;
+class RadEntity2D;		// Pre-declare class for shared pointer typedef
 typedef shared_ptr<RadEntity2D> RadEntity2D_ptr;
 
-class LineEntity3D;
+class LineEntity3D;		// Pre-declare class for shared pointer typedef
 typedef shared_ptr<LineEntity3D> LineEntity3D_ptr;
 
-class ArcEntity3D;
+class ArcEntity3D;		// Pre-declare class for shared pointer typedef
 typedef shared_ptr<ArcEntity3D> ArcEntity3D_ptr;
 
-class HelixEntity3D;
+class HelixEntity3D;	// Pre-declare class for shared pointer typedef
 typedef shared_ptr<HelixEntity3D> HelixEntity3D_ptr;
 
 class Entity

@@ -1,6 +1,17 @@
 #ifndef JOB_H
 #define JOB_H
 
+/**
+ *	job.h
+ *	---------------------------------------------------------------------------
+ *	A Rails object is container for one or more Rail objects.
+ *
+ *	It forms one layer of the "Solution" stack.
+ *
+ *	During the building of the Rails object snapshots are taken of each
+ *	iteration - this is to facilitate "back-stepping".
+ */
+
 using namespace std;
 
 #include <memory>
@@ -9,6 +20,9 @@ using namespace std;
 #include "solution.h"
 #include "specification.h"
 
+/**
+ *	Top-most object of the hierarchy - containing all others.
+ */
 class Job;
 typedef shared_ptr<Job> Job_ptr;
 
@@ -20,16 +34,20 @@ private:
 
 	// Member variables (private)
 	Specification	_spec;
-	Application_ptr	_application;
+	Application_ptr	_app;
 	Solution_ptr	_solution;
+
+	// Operator overloads
+	friend std::ostream &operator<<(std::ostream &strm, const Job &j);
+	friend std::ostream &operator<<(std::ostream &strm, const Job_ptr &j);
 
 public:
 	// Factories
 	static Job_ptr create(Specification &spec);
 
-	// Getters
+	// Methods (public)
 	Specification	getSpec();
-	Application_ptr	getApplication();
+	Application_ptr	getApp();
 	Solution_ptr	getSolution();
 };
 

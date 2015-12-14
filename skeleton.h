@@ -1,6 +1,13 @@
 #ifndef SKELETON_H
 #define SKELETON_H
 
+/**
+ *	skeleton.h
+ *	---------------------------------------------------------------------------
+ *	A Skeleton object is responsible for managing the objects that build and
+ *	represent datum curves to represent the paths of the rails.
+ */
+
 using namespace std;
 
 #include <memory>
@@ -17,6 +24,10 @@ class SkeletonBuilderSnapshot;		// Pre-declare class for shared pointer
 
 typedef shared_ptr<SkeletonBuilderSnapshot> SkeletonBuilderSnapshot_ptr;
 
+/**
+ *	Manages objects responsible for creating datum curves representing the 
+ *	upper and lower rails.
+ */
 class Skeleton
 {
 private:
@@ -60,6 +71,10 @@ public:
 	Path_ptr			upper();
 };
 
+/**
+ *	Responsible for tracking changes to the Skeleton object as it is
+ *	built - facilitating "back-stepping" in the event of a failed build.
+ */
 class SkeletonBuilderSnapshot
 {
 private:
@@ -70,6 +85,13 @@ private:
 	PlanBuilderSnapshot_ptr _planSnap;
 	PathBuilderSnapshot_ptr _lowerSnap;
 	PathBuilderSnapshot_ptr _upperSnap;
+
+	// Operator overloads
+	friend std::ostream &operator<<(std::ostream &strm,
+		const SkeletonBuilderSnapshot &s);
+
+	friend std::ostream &operator<<(std::ostream &strm,
+		const SkeletonBuilderSnapshot_ptr &s);
 
 public:
 	// Factories

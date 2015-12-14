@@ -26,7 +26,7 @@ LineEntity2D_ptr Feature2D::exit()
 	return _exit;
 }
 
-Feature2DType Feature2D::getType()
+Feature2D::Type Feature2D::getType()
 {
 	return _type;
 }
@@ -63,7 +63,7 @@ Feature2DLine::Feature2DLine(Edge_ptr &e, Edges_ptr &b, Entity2D::Fit2D f)
 void Feature2DLine::_init()
 {
 	__super::_init();
-	_type = F2D_LINE;
+	_type = FEATURE2D_TYPE_LINE;
 }
 
 bool Feature2DLine::_intercept()
@@ -148,7 +148,7 @@ Feature2DRad::Feature2DRad(Feature2DLine_ptr &f1, Feature2DLine_ptr &f2, Edges_p
 void Feature2DRad::_init()
 {
 	__super::_init();
-	_type = F2D_RADIUS;
+	_type = FEATURE2D_TYPE_RADIUS;
 }
 
 bool Feature2DRad::_intercept()

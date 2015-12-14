@@ -59,9 +59,9 @@ void Edge::_calculateAngles()
 	Point_ptr pnt2 = _points[1];
 
 	// Store values
-	_angles[0] = _calculateAngle(_dy, _dz);	// anti-clockwise from y;
-	_angles[1] = _calculateAngle(_dz, _dx);	// anti-clockwise from z;
-	_angles[2] = _calculateAngle(_dx, _dy);	// anti-clockwise from x;
+	_angles[0] = _calculateAngle(_d[1], _d[2]);	// anti-clockwise from y;
+	_angles[1] = _calculateAngle(_d[2], _d[0]);	// anti-clockwise from z;
+	_angles[2] = _calculateAngle(_d[0], _d[1]);	// anti-clockwise from x;
 }
 
 /**
@@ -81,14 +81,14 @@ void Edge::_calculateLengths()
 	Point_ptr pnt1 = _points[0];
 	Point_ptr pnt2 = _points[1];
 
-	_dx = pnt2->getX() - pnt1->getX();
-	_dy = pnt2->getY() - pnt1->getY();
-	_dz = pnt2->getZ() - pnt1->getZ();
+	_d[0] = pnt2->getX() - pnt1->getX();
+	_d[1] = pnt2->getY() - pnt1->getY();
+	_d[2] = pnt2->getZ() - pnt1->getZ();
 
-	_length = sqrt(pow(_dx, 2) + pow(_dy, 2) + pow(_dz, 2));
-	_lengthXY = sqrt(pow(_dx, 2) + pow(_dy, 2));
-	_lengthXZ = sqrt(pow(_dx, 2) + pow(_dz, 2));
-	_lengthYZ = sqrt(pow(_dy, 2) + pow(_dz, 2));
+	_length = sqrt(pow(_d[0], 2) + pow(_d[1], 2) + pow(_d[2], 2));
+	_lengthXY = sqrt(pow(_d[0], 2) + pow(_d[1], 2));
+	_lengthXZ = sqrt(pow(_d[0], 2) + pow(_d[2], 2));
+	_lengthYZ = sqrt(pow(_d[1], 2) + pow(_d[2], 2));
 }
 
 /**
@@ -172,7 +172,7 @@ double Edge::length()
  */
 double Edge::dx()
 {
-	return _dx;
+	return _d[0];
 }
 
 /**
@@ -180,7 +180,7 @@ double Edge::dx()
  */
 double Edge::dy()
 {
-	return _dy;
+	return _d[1];
 }
 
 /**
@@ -188,7 +188,7 @@ double Edge::dy()
  */
 double Edge::dz()
 {
-	return _dz;
+	return _d[2];
 }
 
 /**

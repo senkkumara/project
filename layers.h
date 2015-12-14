@@ -1,6 +1,12 @@
 #ifndef LAYERS_H
 #define LAYERS_H
 
+/**
+ *	facets.h
+ *	-----------------------------------------------------------------------
+ *	A Layers object is container for one or more Layer objects.
+ */
+
 using namespace std;
 
 #include <memory>
@@ -11,6 +17,9 @@ using namespace std;
 class Layers;	// Pre-declare class for shared pointer typedef
 typedef shared_ptr<Layers> Layers_ptr;
 
+/**
+ *	Collection of Layers.
+ */
 class Layers : public Collection<Layer_ptr, Layers_ptr>
 {
 private:

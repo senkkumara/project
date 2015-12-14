@@ -31,21 +31,6 @@ class RailsBuilderSnapshot;		// Pre-declare class for shared pointer
 typedef shared_ptr<RailsBuilderSnapshot> RailsBuilderSnapshot_ptr;
 
 /**
- *	Responsible for tracking changes to the Rails object as it is
- *	built - facilitating "back-stepping" in the event of a failed build.
- */
-class RailsBuilderSnapshot
-{
-private:
-	// Operator overloads
-	friend std::ostream &operator<<(std::ostream &strm,
-		const RailsBuilderSnapshot &r);
-
-	friend std::ostream &operator<<(std::ostream &strm,
-		const RailsBuilderSnapshot_ptr &r);
-};
-
-/**
  *	Container for, and responsible for building, Rail objects.
  *
  *	The building is achieved as follows:
@@ -83,6 +68,21 @@ public:
 	Skeleton_ptr		getSkeleton();
 	Supports_ptr		getSupports();
 	vector<Slot_ptr>	getSlots();
+};
+
+/**
+ *	Responsible for tracking changes to the Rails object as it is
+ *	built - facilitating "back-stepping" in the event of a failed build.
+ */
+class RailsBuilderSnapshot
+{
+private:
+	// Operator overloads
+	friend std::ostream &operator<<(std::ostream &strm,
+		const RailsBuilderSnapshot &r);
+
+	friend std::ostream &operator<<(std::ostream &strm,
+		const RailsBuilderSnapshot_ptr &r);
 };
 
 #endif

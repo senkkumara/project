@@ -103,6 +103,12 @@
     <ClCompile Include="transformation.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="attachable.h" />
+    <ClInclude Include="entity2d.h" />
+    <ClInclude Include="entity2ds.h" />
+    <ClInclude Include="entity3d.h" />
+    <ClInclude Include="entity3ds.h" />
+    <ClInclude Include="feature.h" />
     <ClInclude Include="feature2d.h" />
     <ClInclude Include="feature2ds.h" />
     <ClInclude Include="chair.h" />
@@ -117,7 +123,10 @@
     <ClInclude Include="facets.h" />
     <ClInclude Include="feature3d.h" />
     <ClInclude Include="feature3ds.h" />
+    <ClInclude Include="features.h" />
     <ClInclude Include="geometry.h" />
+    <ClInclude Include="obstruction.h" />
+    <ClInclude Include="obstructions.h" />
     <ClInclude Include="region.h" />
     <ClInclude Include="slot.h" />
     <ClInclude Include="transformation.h" />

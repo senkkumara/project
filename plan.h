@@ -1,6 +1,13 @@
 #ifndef PLAN_H
 #define PLAN_H
 
+/**
+ *	plan.h
+ *	---------------------------------------------------------------------------
+ *	A Plan object is a collection of Feature2D objects that represent the 2D
+ *	view of the rail trajectory.
+ */
+
 using namespace std;
 
 #include <memory>
@@ -9,6 +16,12 @@ using namespace std;
 #include "feature2d.h"
 #include "feature2ds.h"
 #include "entity.h"
+
+class Plan;		// Pre-declare class for shared pointer typedef
+typedef shared_ptr<Plan> Plan_ptr;
+
+class PlanBuilderSnapshot;		// Pre-declare class for shared pointer typedef
+typedef shared_ptr<PlanBuilderSnapshot> PlanBuilderSnapshot_ptr;
 
 class Plan
 {
@@ -35,12 +48,6 @@ public:
 	// Factories
 	static Plan_ptr create(Application_ptr &app, Specification &spec);
 };
-
-class Plan;
-typedef shared_ptr<Plan> Plan_ptr;
-
-class PlanBuilderSnapshot;
-typedef shared_ptr<PlanBuilderSnapshot> PlanBuilderSnapshot_ptr;
 
 class PlanBuilderSnapshot
 {

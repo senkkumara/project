@@ -600,13 +600,13 @@ void Surfaces::_categorise()
 	layer = _layers->get(i);
 	if (Tests::Layer::isStart(layer).result)
 	{
-		layer->setType(LT_START);
+		layer->setType(Layer::LAYER_TYPE_START);
 		i++;
 	}
 	layer = _layers->get(end - 1);
 	if (Tests::Layer::isEnd(layer).result)
 	{
-		layer->setType(LT_END);
+		layer->setType(Layer::LAYER_TYPE_END);
 		end--;
 	}
 
@@ -615,57 +615,57 @@ void Surfaces::_categorise()
 		layer = _layers->get(i);
 		if (Tests::Layer::isStraightStandard(layer).result)
 		{
-			layer->setType(LT_STRAIGHT);
-			layer->setSubType(LST_STANDARD);
+			layer->setType(Layer::LAYER_TYPE_STRAIGHT);
+			layer->setSubType(Layer::LAYER_SUB_TYPE_STANDARD);
 			continue;
 		}
 		
 		if (Tests::Layer::isWinderStandard(layer).result)
 		{
-			layer->setType(LT_WINDER);
-			layer->setSubType(LST_STANDARD);
+			layer->setType(Layer::LAYER_TYPE_WINDER);
+			layer->setSubType(Layer::LAYER_SUB_TYPE_STANDARD);
 			continue;
 		}
 		
 		if (Tests::Layer::isWinderCornerOuter(layer).result)
 		{
-			layer->setType(LT_WINDER);
-			layer->setSubType(LST_CORNER_OUTER);
+			layer->setType(Layer::LAYER_TYPE_WINDER);
+			layer->setSubType(Layer::LAYER_SUB_TYPE_CORNER_OUTER);
 			continue;
 		}
 
 		if (Tests::Layer::isWinderCornerInner(layer).result)
 		{
-			layer->setType(LT_WINDER);
-			layer->setSubType(LST_CORNER_INNER);
+			layer->setType(Layer::LAYER_TYPE_WINDER);
+			layer->setSubType(Layer::LAYER_SUB_TYPE_CORNER_INNER);
 			continue;
 		}
 
 		if (Tests::Layer::isLanding90(layer).result)
 		{
-			layer->setType(LT_LANDING);
-			layer->setSubType(LST_90);
+			layer->setType(Layer::LAYER_TYPE_LANDING);
+			layer->setSubType(Layer::LAYER_SUB_TYPE_90);
 			continue;
 		}
 
 		if (Tests::Layer::isLanding180(layer).result)
 		{
-			layer->setType(LT_LANDING);
-			layer->setSubType(LST_180);
+			layer->setType(Layer::LAYER_TYPE_LANDING);
+			layer->setSubType(Layer::LAYER_SUB_TYPE_180);
 			continue;
 		}
 
 		if (Tests::Layer::isStraightExtended(layer).result)
 		{
-			layer->setType(LT_STRAIGHT);
-			layer->setSubType(LST_EXTENDED);
+			layer->setType(Layer::LAYER_TYPE_STRAIGHT);
+			layer->setSubType(Layer::LAYER_SUB_TYPE_EXTENDED);
 			continue;
 		}
 
 		if (Tests::Layer::isWinderNarrow(layer).result)
 		{
-			layer->setType(LT_WINDER);
-			layer->setSubType(LST_NARROW);
+			layer->setType(Layer::LAYER_TYPE_WINDER);
+			layer->setSubType(Layer::LAYER_SUB_TYPE_NARROW);
 			continue;
 		}
 	}

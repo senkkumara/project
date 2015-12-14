@@ -81,13 +81,3 @@ void Points::mirrorZ()
 {
 	_mirrorComponent(2);
 }
-
-/**
- *	Translate the points in the xy plane and rotate about
- *	the z-axis.
- */
-void Points::transform(double matrix[4][4])
-{
-	//TODO: Implement method
-	throw MethodNotImplementedException("Points::transform");
-}

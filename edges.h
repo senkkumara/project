@@ -14,6 +14,9 @@ using namespace std;
 #include "collection.h"
 #include "edge.h"
 
+/**
+ *	Collection of Edges.
+ */
 class Edges;	// Pre-declare class for shared pointer typedef
 typedef shared_ptr<Edges> Edges_ptr;
 
@@ -27,18 +30,18 @@ private:
 	double _length;
 
 	// Operator overloads
-	friend std::ostream &operator<<(std::ostream &strm, const Edges &es);
+	friend std::ostream &operator<<(std::ostream &strm, const Edges &e);
 	friend std::ostream &operator<<(std::ostream &strm,
-		const Edges_ptr &es);
+		const Edges_ptr &e);
 
 public:
 	// Factories
 	static Edges_ptr create();
 
 	// Methods (public)
-	void	add(Edge_ptr &edge);		// override
-	void	add(Edges_ptr &edges);		// override
-	void	remove(Edge_ptr edge);		// override
+	void	add(Edge_ptr &e);		// override
+	void	add(Edges_ptr &e);		// override
+	void	remove(Edge_ptr e);		// override
 	void	sort();
 	double	length();
 };

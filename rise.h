@@ -17,6 +17,9 @@ using namespace std;
 class Rise;
 typedef shared_ptr<Rise> Rise_ptr;
 
+/**
+ *	A near vertical (generally vertical) surface that connects two layers.
+ */
 class Rise : public Surface
 {
 private:
@@ -24,7 +27,7 @@ private:
 	Rise();
 	Rise(Facet_ptr &facet);
 
-	// Member functions (private)
+	// Methods (private)
 	void _init();
 
 	// Operator overloads

@@ -42,6 +42,9 @@ private:
 	friend std::ostream &operator<<(std::ostream &strm, const Slot &s);
 	friend std::ostream &operator<<(std::ostream &strm, const Slot_ptr &s);
 
+	friend bool operator==(Slot &s1, Slot &s2);
+	friend bool operator!=(Slot &s1, Slot &s2);
+
 public:
 	// Factories
 	static Slot_ptr create(double val);

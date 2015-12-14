@@ -23,6 +23,10 @@ using namespace std;
 class Application;	// Pre-declare class for shared pointer typedef
 typedef shared_ptr<Application> Application_ptr;
 
+/**
+ *	Contains the hierarchy of objects that define the geometry of a
+ *	staircase.
+ */
 class Application
 {
 private:
@@ -47,7 +51,7 @@ public:
 	// Factories
 	static Application_ptr create(Specification &spec);
 
-	// Getters
+	// Methods (public)
 	std::string		getFilename();
 	Surfaces_ptr	getSurfaces();
 	Geometry_ptr	getGeometry();

@@ -54,9 +54,9 @@ void Layer::_init()
 
 	recalculateIfcAngle();
 
-	_type = LT_UNKNOWN;
-	_subType = LST_UNKNOWN;
-	_direction = LD_UNKNOWN;
+	_type = Layer::LAYER_TYPE_UNKNOWN;
+	_subType = Layer::LAYER_SUB_TYPE_UNKNOWN;
+	_direction = Layer::LAYER_DIRECTION_UNKNOWN;
 }
 
 /**
@@ -152,7 +152,7 @@ Rise_ptr Layer::upper()
 /**
  *	Get the layer type.
  */
-LayerType Layer::getType()
+Layer::Type Layer::getType()
 {
 	return _type;
 }
@@ -160,7 +160,7 @@ LayerType Layer::getType()
 /**
  *	Get the layer sub-type.
  */
-LayerSubType Layer::getSubType()
+Layer::SubType Layer::getSubType()
 {
 	return _subType;
 }
@@ -168,7 +168,7 @@ LayerSubType Layer::getSubType()
 /**
  *	Get the layer direction.
  */
-LayerDirection Layer::getDirection()
+Layer::Direction Layer::getDirection()
 {
 	return _direction;
 }
@@ -176,17 +176,17 @@ LayerDirection Layer::getDirection()
 /**
  *	Set the type of the layer.
  */
-void Layer::setType(LayerType type)
+void Layer::setType(Layer::Type type)
 {
 	_type = type;
 }
 
-void Layer::setSubType(LayerSubType subType)
+void Layer::setSubType(Layer::SubType subType)
 {
 	_subType = subType;
 }
 
-void Layer::setDirection(LayerDirection dir)
+void Layer::setDirection(Layer::Direction dir)
 {
 	_direction = dir;
 }

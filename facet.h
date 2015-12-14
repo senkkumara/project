@@ -19,6 +19,9 @@ using namespace std;
 class Facet;	// Pre-declare class for shared pointer typedef
 typedef shared_ptr<Facet> Facet_ptr;
 
+/**
+ *	A triangular planar surface bound by three edges and a point.
+ */
 class Facet
 {
 private:
@@ -49,8 +52,8 @@ private:
 	friend std::ostream &operator<<(std::ostream &strm,
 		const Facet_ptr &f);
 
-	friend bool operator==(Facet &cF1, Facet &cF2);
-	friend bool operator!=(Facet &cF1, Facet &cF2);
+	friend bool operator==(Facet &f1, Facet &f2);
+	friend bool operator!=(Facet &f1, Facet &f2);
 
 public:
 	// Factories

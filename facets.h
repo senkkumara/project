@@ -14,6 +14,9 @@ using namespace std;
 #include "collection.h"
 #include "facet.h"
 
+/**
+ *	Collection of Facets.
+ */
 class Facets;	// Pre-declare class for shared pointer typedef
 typedef shared_ptr<Facets> Facets_ptr;
 

@@ -9,21 +9,23 @@ using namespace std;
 #include "edges.h"
 #include "edge.h"
 
-class Feature3D;
+class Feature3D;		// Pre-declare class for shared pointer typedef
 typedef shared_ptr<Feature3D> Feature3D_ptr;
-
-enum Feature3DType
-{
-	F3D_STRAIGHT,
-	F3D_CORNER,
-	F3D_HELIX,
-	F3D_SPLIT,
-	F3D_SPECIAL,
-	F3D_TRANSITION
-};
 
 class Feature3D
 {
+public:
+	// Enumerations
+	typedef enum Feature3DType
+	{
+		FEATURE3D_TYPE_STRAIGHT,
+		FEATURE3D_TYPE_CORNER,
+		FEATURE3D_TYPE_HELIX,
+		FEATURE3D_TYPE_SPLIT,
+		FEATURE3D_TYPE_SPECIAL,
+		FEATURE3D_TYPE_TRANSITION
+	};
+
 protected:
 	// Deconstructors
 	virtual ~Feature3D();

@@ -1,36 +1,48 @@
 #ifndef GEOMETRY_H
 #define GEOMETRY_H
 
+/**
+ *	geometry.h
+ *	---------------------------------------------------------------------------
+ *	A Geometry object is a container for multiple geometric object types
+ *	(Points, Edges, Facets).
+ */
+
 #include <memory>
 #include <vector>
 #include "facets.h"
 #include "edges.h"
 #include "points.h"
 
-class Geometry;
+class Geometry;		// Pre-declare class for shared pointer typedef
 typedef shared_ptr<Geometry> Geometry_ptr;
 
-enum FileType
-{
-	FILE_DXF,
-	FILE_STL,
-};
-
+/**
+ *	A collection of Points, Edges and Facets.
+ */
 class Geometry
 {
+public:
+	// Enumerations
+	enum FileType
+	{
+		FILE_DXF,
+		FILE_STL,
+	};
+
 private:
 	// Constructors
 	Geometry();
 	Geometry(std::string &filename);
 
-	// Member fields (private)
+	// Fields (private)
 	std::string		_filename;
 	FileType		_fileType;
 	Facets_ptr		_facets;
 	Edges_ptr		_edges;
 	Points_ptr		_points;
 
-	// Member functions (private)
+	// Methods (private)
 	void	_init();
 	void	_categoriseInput();
 	void	_build();

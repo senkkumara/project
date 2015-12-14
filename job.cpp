@@ -8,8 +8,8 @@ using namespace std;
 Job::Job(Specification &spec)
 {
 	_spec = spec;
-	_application = Application::create(spec);
-	_solution = Solution::create(spec, _application);
+	_app = Application::create(spec);
+	_solution = Solution::create(spec, _app);
 }
 
 /**
@@ -31,15 +31,14 @@ Specification Job::getSpec()
 /**
  *	
  */
-Application_ptr Job::getApplication()
+Application_ptr Job::getApp()
 {
-	return _application;
+	return _app;
 }
 
 /**
  *	
  */
-
 Solution_ptr Job::getSolution()
 {
 	return _solution;

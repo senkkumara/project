@@ -1,6 +1,12 @@
 #ifndef COLLECTION_H
 #define COLLECTION_H
 
+/**
+ *	collection.h
+ *	---------------------------------------------------------------------------
+ *	Defines a template for a collection container.
+ */
+
 using namespace std;
 
 #include <vector>
@@ -19,19 +25,17 @@ protected:
 
 public:
 	// Methods (public)
-	void	add(V &item);
-	void	add(C &items);
-	void	insert(V &item, int index);
-	void	remove(V item);
-	V		get(int index);
-	V		first();
-	V		last();
-	int		size();
-	bool	contains(V item);
-	V		get(V item);
-
-	// Getters
-	std::vector<V> getItems();
+	void			add(V &item);
+	void			add(C &items);
+	void			insert(V &item, int index);
+	void			remove(V item);
+	V				get(int index);
+	V				first();
+	V				last();
+	int				size();
+	bool			contains(V item);
+	V				get(V item);
+	std::vector<V>	getItems();
 };
 
 template<class V, class C> void Collection<V, C>::add(V &item)

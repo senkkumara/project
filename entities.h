@@ -17,6 +17,9 @@ using namespace std;
 class Entities;	// Pre-declare class for shared pointer typedef
 typedef shared_ptr<Entities> Entities_ptr;
 
+/**
+ *	Collection of Entities.
+ */
 class Entities : public Collection<Entity_ptr, Entities_ptr>
 {
 private:
@@ -24,9 +27,9 @@ private:
 	Entities();
 
 	// Operator overloads
-	friend std::ostream &operator<<(std::ostream &strm, const Entities &fs);
+	friend std::ostream &operator<<(std::ostream &strm, const Entities &e);
 	friend std::ostream &operator<<(std::ostream &strm,
-		const Entities_ptr &fs);
+		const Entities_ptr &e);
 
 public:
 	// Factories
