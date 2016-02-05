@@ -13,7 +13,7 @@ using namespace std;
 #include "exceptions.h"
 
 /**
- *	(Private) Constructs a application from facets retrieved from
+ *	(Private) Constructs an application from facets retrieved from
  *	a text file argument.
  *
  *	Do not use this directly, use the provided factory method.
@@ -28,7 +28,7 @@ Application::Application(Specification &spec)
 /**
  *	<< operator overload.
  */
-std::ostream &operator<<(std::ostream &strm, const Application &s)
+std::ostream &operator<<(std::ostream &strm, const Application &a)
 {
 	//TODO: Implement method
 	throw MethodNotImplementedException("<< Application");
@@ -38,14 +38,13 @@ std::ostream &operator<<(std::ostream &strm, const Application &s)
 /**
  *	<< operator overload.
  */
-std::ostream &operator<<(std::ostream &strm, const Application_ptr &s)
+std::ostream &operator<<(std::ostream &strm, const Application_ptr &a)
 {
 	return strm << *s;
 }
 
 /**
- *	Factory method using constructor that takes a filename as
- *	an argument.
+ *	Factory method using constructor that takes a filename as an argument.
  */
 Application_ptr Application::create(Specification &spec)
 {

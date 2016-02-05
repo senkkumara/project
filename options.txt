@@ -1,0 +1,9 @@
+# No value or a value of "none" means the option is not set.
+
+target-quality
+target-path-quality
+target-plan-quality
+
+maximum-skeleton-optimisation-iterations
+maximum-path-optimisation-iterations
+maximum-plan-optimisation-iterations

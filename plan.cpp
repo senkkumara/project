@@ -3,87 +3,86 @@ using namespace std;
 #include "plan.h"
 #include "utils.h"
 
-Plan::Plan(Application_ptr &app, Specification &spec)
+/**
+ *	(Private) Constructs a Plan from an Application and Specification
+ *	arguments.
+ */
+Plan::Plan(Application_ptr &app, Specification &spec, Side side)
 {
 	_app = app;
 	_spec = spec;
+	_side = side;
+
 	_build();
 }
 
+/**
+ *	(Private) Build a single potential plan - based on the active and passive
+ *	edges and a provided side.
+ *	
+ *	The "Active" edge is the side that the rail will be placed and is therefore
+ *	the one which is followed. The "Passive" edge is the other wall and is
+ *	merely checked against for clashes.
+ */
 void Plan::_build()
-{
-	switch (_spec.Side)
-	{
-	case SIDE_LEFT:
-		// Build left
-		_opts[0] = _build(_app->left(), _app->right(), Entity2D::FIT2D_RIGHT);
-		break;
-
-	case SIDE_RIGHT:
-		// Build right
-		_opts[1] = _build(_app->right(), _app->left(), Entity2D::FIT2D_LEFT);
-		break;
-
-	default:
-		// Build both
-		_opts[0] = _build(_app->left(), _app->right(), Entity2D::FIT2D_LEFT);
-		_opts[1] = _build(_app->right(), _app->left(), Entity2D::FIT2D_RIGHT);
-		break;
-	}
-}
-
-Feature2Ds_ptr Plan::_build(Edges_ptr &act, Edges_ptr &pass, Entity2D::Fit2D fit)
 {
 	Feature2Ds_ptr fs = Feature2Ds::create();
 
-	_buildLines(fs, act, pass, fit);
-	_checkLines(fs);
-	_optimiseLines(fs);
+	// Build the lines...
+	_buildLines();
 
+	// Only build radii if more than one line
 	if (fs->size() < 2)
 	{
-		_buildRads(fs, pass);
-		_checkRads(fs);
-		_optimiseRads(fs);
+		// Build the radii...
+		_buildRads();
+		_checkRads();
+
+		// Optimise the path... (if it has radii, otherwise its just a
+		// straight rail and is intrinsically optimised!)
+		_optimise();
 	}
 
-	return fs;
 }
 
-void Plan::_buildLines(Feature2Ds_ptr &fs, Edges_ptr &act,
-					   Edges_ptr &pass, Entity2D::Fit2D fit)
+/**
+ *	(Private) Build the lines using edges and fit.
+ */
+void Plan::_buildLines()
 {
-	Edge_ptr e = act->first();
-	Feature2DLine_ptr b = Feature2DLine::create(e, pass, fit);
-	fs->add((Feature2D_ptr)b);
-
-	for (int i = 1; i < act->size(); i++)
+	// Build the first line from the first edge
+	if (_active->size() < 1)
 	{
-		e = act->get(i);
+		return;		//TODO: add exception handling
+	}
+
+	Edge_ptr e = _active->first();
+	Feature2DLine_ptr line = Feature2DLine::create(e, _passive, side);
+	_lines->add(line);
+
+	for (int i = 1; i < _active->size(); i++)
+	{
+		e = _active->get(i);
 
 		// Attempt to add edge to current line
 		if (! b->append(e))
 		{
 			// Create new line
-			fs->add((Feature2D_ptr)Feature2DLine::create(e, pass, fit));
+			b = Feature2DLine::create(e, pass, fit);
+			fs->add((Feature2D_ptr)b);
 		}
 	}
 }
 
-void Plan::_checkLines(Feature2Ds_ptr &fs)
-{
-	//TODO: implement method
-}
-
-void Plan::_optimiseLines(Feature2Ds_ptr &fs)
-{
-	//TODO: implement method
-}
-
-void Plan::_buildRads(Feature2Ds_ptr &fs, Edges_ptr &pass)
+/**
+ *	(Private) Build radii between the lines.
+ */
+void Plan::_buildRads()
 {
 	Feature2DLine_ptr l[2];
 	Feature2DRad_ptr r;
+
+	// Add rads between each pair of lines
 	for (int i = 0; i < fs->size() - 1; i++)
 	{
 		l[0] = Feature2DLine::cast(fs->get(i));
@@ -93,26 +92,56 @@ void Plan::_buildRads(Feature2Ds_ptr &fs, Edges_ptr &pass)
 	}
 }
 
-void Plan::_checkRads(Feature2Ds_ptr &fs)
+/**
+ *	(Private) Ensure that the created radii are physically possible and do
+ *	not break the design rules.
+ */
+void Plan::_checkRads()
 {
 	//TODO: implement method
 }
 
-void Plan::_optimiseRads(Feature2Ds_ptr &fs)
+/**
+ *	(Private) Iterate to improve the quality of the path.
+ */
+void Plan::_optimise()
 {
 	//TODO: implement method
 }
 
-Plan_ptr Plan::create(Application_ptr &app, Specification &spec)
+/**
+ *	
+ */
+void Plan::_calculateQuality()
 {
-	return Plan_ptr(new Plan(app, spec));
+	//TODO: implement method
 }
 
+void Plan::_fixFeature(Feature2D_ptr &f)
+{
+	//TODO: implement method
+}
+
+/**
+ *	Factory method using the constructor with an Application and 
+ *	Specification argument.
+ */
+Plan_ptr Plan::create(Application_ptr &app, Specification &spec, Side side)
+{
+	return Plan_ptr(new Plan(app, spec, side));
+}
+
+/**
+ *	(Private) Constructs a Plan Builder Snapshot.
+ */
 PlanBuilderSnapshot::PlanBuilderSnapshot()
 {
-
+	//TODO: implement method
 }
 
+/**
+ *	Factory method using the constructor with no arguments.
+ */
 PlanBuilderSnapshot_ptr PlanBuilderSnapshot::create()
 {
 	return PlanBuilderSnapshot_ptr(new PlanBuilderSnapshot());

@@ -18,6 +18,7 @@ using namespace std;
 #include <string>
 #include "application.h"
 #include "solution.h"
+#include "solutions.h"
 #include "specification.h"
 
 /**
@@ -33,9 +34,9 @@ private:
 	Job(Specification &spec);
 
 	// Member variables (private)
-	Specification	_spec;
-	Application_ptr	_app;
-	Solution_ptr	_solution;
+	Specification		_spec;
+	Application_ptr		_app;
+	Solutions_ptr		_solutions;
 
 	// Operator overloads
 	friend std::ostream &operator<<(std::ostream &strm, const Job &j);
@@ -46,9 +47,9 @@ public:
 	static Job_ptr create(Specification &spec);
 
 	// Methods (public)
-	Specification	getSpec();
-	Application_ptr	getApp();
-	Solution_ptr	getSolution();
+	Specification		getSpecification();
+	Application_ptr		getApplication();
+	Solutions_ptr		getSolutions();
 };
 
 #endif

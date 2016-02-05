@@ -21,14 +21,14 @@ typedef shared_ptr<Entity> Entity_ptr;
 class Entity2D;			// Pre-declare class for shared pointer typedef
 typedef shared_ptr<Entity2D> Entity2D_ptr;
 
-class Entity3D;			// Pre-declare class for shared pointer typedef
-typedef shared_ptr<Entity3D> Entity3D_ptr;
-
 class LineEntity2D;		// Pre-declare class for shared pointer typedef
 typedef shared_ptr<LineEntity2D> LineEntity2D_ptr;
 
 class RadEntity2D;		// Pre-declare class for shared pointer typedef
 typedef shared_ptr<RadEntity2D> RadEntity2D_ptr;
+
+class Entity3D;			// Pre-declare class for shared pointer typedef
+typedef shared_ptr<Entity3D> Entity3D_ptr;
 
 class LineEntity3D;		// Pre-declare class for shared pointer typedef
 typedef shared_ptr<LineEntity3D> LineEntity3D_ptr;
@@ -140,24 +140,16 @@ private:
 
 class Entity2D : public Entity
 {
-public:
-	enum Fit2D
-	{
-		FIT2D_BEST,
-		FIT2D_LEFT,
-		FIT2D_RIGHT
-	};
-
 protected:
 	// Destructor
 	virtual ~Entity2D();
 
 	// Fields (protected)
-	Fit2D _fit;
+	Side _side;
 
 public:
 	// Methods (public)
-	Fit2D				getFit();
+	Side				getSide();
 	virtual double		x(double t) = 0;
 	virtual double		y(double t) = 0;
 	Point_ptr			posAt(double pc);
@@ -168,18 +160,18 @@ class LineEntity2D : public Entity2D, Collection<Point_ptr, Points_ptr>
 private:
 	// Constructors
 	LineEntity2D(Point_ptr &p1, Point_ptr &p2);
-	LineEntity2D(Point_ptr &p1, Point_ptr &p2, Entity2D::Fit2D f);
+	LineEntity2D(Point_ptr &p1, Point_ptr &p2, Side s);
 	LineEntity2D(Points_ptr &p);
-	LineEntity2D(Points_ptr &p, Entity2D::Fit2D f);
+	LineEntity2D(Points_ptr &p, Side s);
 	LineEntity2D(Edge_ptr &e);
-	LineEntity2D(Edge_ptr &e, Entity2D::Fit2D f);
+	LineEntity2D(Edge_ptr &e, Side s);
 	LineEntity2D(LineEntity2D_ptr &l, Transformation_ptr &t);
 
 	// Fields (private)
 	vector<Entity2D_ptr> _deps;
 
 	// Methods (private)
-	void	_init(Points_ptr &p, Entity2D::Fit2D f);
+	void	_init(Points_ptr &p, Side s);
 	void	_calculate();
 	bool	_increment(Point_ptr &p);
 	void	_applyTransform();
@@ -188,11 +180,11 @@ public:
 	// Factories
 	static LineEntity2D_ptr clone(LineEntity2D_ptr &l);
 	static LineEntity2D_ptr create(Point_ptr &point, Point_ptr &point2);
-	static LineEntity2D_ptr create(Point_ptr &point, Point_ptr &point2, Entity2D::Fit2D f);
+	static LineEntity2D_ptr create(Point_ptr &point, Point_ptr &point2, Side f);
 	static LineEntity2D_ptr create(Points_ptr &points);
-	static LineEntity2D_ptr create(Points_ptr &points, Entity2D::Fit2D f);
+	static LineEntity2D_ptr create(Points_ptr &points, Side s);
 	static LineEntity2D_ptr create(Edge_ptr &e);
-	static LineEntity2D_ptr create(Edge_ptr &e, Entity2D::Fit2D f);
+	static LineEntity2D_ptr create(Edge_ptr &e, Side s);
 	static LineEntity2D_ptr create(LineEntity2D_ptr &l, Transformation_ptr &t);
 	static LineEntity2D_ptr createParallel(LineEntity2D_ptr &l,
 		double d, bool link);
