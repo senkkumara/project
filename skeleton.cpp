@@ -10,6 +10,10 @@ using namespace std;
 #include <iostream>
 #include "exceptions.h"
 
+/**
+ *	(Private) Constructor requiring an application, specification and side
+ *	arguments.
+ */
 Skeleton::Skeleton(Application_ptr &app, Specification &spec, Side side)
 {
 	//TODO: implement method - including snapshot functionality
@@ -31,6 +35,9 @@ Skeleton::Skeleton(Application_ptr &app, Specification &spec, Side side)
 	while (! sn->isValid() && _iter < 10);
 }
 
+/**
+ *	(Private) Build the plan for the rail.
+ */
 PlanBuilderSnapshot_ptr Skeleton::_buildPlan()
 {
 	//TODO: implement method
@@ -38,6 +45,9 @@ PlanBuilderSnapshot_ptr Skeleton::_buildPlan()
 	return PlanBuilderSnapshot::create();
 }
 
+/**
+ *	(Private) Builds the lower rail.
+ */
 PathBuilderSnapshot_ptr Skeleton::_buildLower()
 {
 	//TODO: implement method
@@ -45,6 +55,9 @@ PathBuilderSnapshot_ptr Skeleton::_buildLower()
 	return PathBuilderSnapshot::create();
 }
 
+/**
+ *	(Private) Builds the upper rail - by offsetting the lower rail.
+ */
 PathBuilderSnapshot_ptr Skeleton::_buildUpper()
 {
 	//::TODO: implement method
@@ -52,31 +65,51 @@ PathBuilderSnapshot_ptr Skeleton::_buildUpper()
 	return PathBuilderSnapshot::create();
 }
 
-Skeleton_ptr Skeleton::create(Application_ptr &app, Specification &spec, Side side)
+/**
+ *	Factory method for the constuctor using an application, specification
+ *	and side arguments.
+ */
+Skeleton_ptr Skeleton::create(Application_ptr &app, Specification &spec,
+							  Side side)
 {
 	return Skeleton_ptr(new Skeleton(app, spec, side));
 }
 
-int Skeleton::getIterations()
+/**
+ *	Get the current iteration of the skeleton build.
+ */
+int Skeleton::getIteration()
 {
 	return _iter;
 }
 
+/**
+ *	Get the application the skeleton is built on.
+ */
 Application_ptr Skeleton::getApplication()
 {
 	return _app;
 }
 
+/**
+ *	Get the specification the skeleton is built using.
+ */
 Specification Skeleton::getSpecification()
 {
 	return _spec;
 }
 
+/**
+ *	Get the side the skeleton is built on.
+ */
 Side Skeleton::getSide()
 {
 	return _side;
 }
 
+/**
+ *	Get the plan belonging to the skeleton.
+ */
 Plan_ptr Skeleton::getPlan()
 {
 	return _plan;

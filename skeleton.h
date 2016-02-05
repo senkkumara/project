@@ -61,7 +61,7 @@ public:
 	static Skeleton_ptr create(Application_ptr &app, Specification &spec, Side side);
 
 	// Methods (public)
-	int					getIterations();
+	int					getIteration();
 	Application_ptr		getApplication();
 	Specification		getSpecification();
 	Side				getSide();

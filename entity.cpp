@@ -441,7 +441,7 @@ RadEntity2D::RadEntity2D(LineEntity2D_ptr &e1, LineEntity2D_ptr &e2)
 
 void RadEntity2D::_calculate()
 {
-	
+	//TODO: implement method
 }
 
 void RadEntity2D::_applyTransform()
@@ -545,6 +545,52 @@ bool RadEntity2D::intercept(Edges_ptr &e)
 }
 
 void RadEntity2D::transform(Transformation_ptr &t)
+{
+	//TODO: implement method
+}
+
+Entity3D::Fit3D Entity3D::getFit()
+{
+	return _fit;
+}
+
+Point_ptr Entity3D::posAt(double pc)
+{
+	//TODO: implement method
+	return nullptr;
+}
+
+LineEntity3D::LineEntity3D(Point_ptr &point1, Point_ptr &point2)
+{
+	//TODO: implement method
+}
+
+LineEntity3D::LineEntity3D(Points_ptr &points)
+{
+	//TODO: implement method
+}
+
+void LineEntity3D::_applyTransform()
+{
+	//TODO: implement method
+}
+
+LineEntity3D_ptr LineEntity3D::clone(LineEntity3D_ptr &l)
+{
+	//TODO: implement method
+}
+
+LineEntity3D_ptr LineEntity3D::createParallel(LineEntity3D_ptr &l, double d, bool link)
+{
+	//TODO: implement method
+}
+
+LineEntity3D_ptr LineEntity3D::createNormal(LineEntity3D_ptr &l, Point_ptr &p, bool link)
+{
+	//TODO: implement method
+}
+
+LineEntity3D_ptr LineEntity3D::convertTo3D(LineEntity2D_ptr &l)
 {
 	//TODO: implement method
 }

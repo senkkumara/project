@@ -12,6 +12,7 @@ using namespace std;
 #include <memory>
 #include "edge.h"
 #include "edges.h"
+#include "enums.h"
 #include "point.h"
 #include "points.h"
 
@@ -140,16 +141,24 @@ private:
 
 class Entity2D : public Entity
 {
+public:
+	enum Fit2D
+	{
+		FIT2D_BEST,
+		FIT2D_LEFT,
+		FIT2D_RIGHT
+	};
+
 protected:
 	// Destructor
 	virtual ~Entity2D();
 
 	// Fields (protected)
-	Side _side;
+	Fit2D _fit;
 
 public:
 	// Methods (public)
-	Side				getSide();
+	Fit2D				getFit();
 	virtual double		x(double t) = 0;
 	virtual double		y(double t) = 0;
 	Point_ptr			posAt(double pc);
@@ -160,18 +169,18 @@ class LineEntity2D : public Entity2D, Collection<Point_ptr, Points_ptr>
 private:
 	// Constructors
 	LineEntity2D(Point_ptr &p1, Point_ptr &p2);
-	LineEntity2D(Point_ptr &p1, Point_ptr &p2, Side s);
+	LineEntity2D(Point_ptr &p1, Point_ptr &p2, Fit2D fit);
 	LineEntity2D(Points_ptr &p);
-	LineEntity2D(Points_ptr &p, Side s);
+	LineEntity2D(Points_ptr &p, Fit2D fit);
 	LineEntity2D(Edge_ptr &e);
-	LineEntity2D(Edge_ptr &e, Side s);
+	LineEntity2D(Edge_ptr &e, Fit2D fit);
 	LineEntity2D(LineEntity2D_ptr &l, Transformation_ptr &t);
 
 	// Fields (private)
 	vector<Entity2D_ptr> _deps;
 
 	// Methods (private)
-	void	_init(Points_ptr &p, Side s);
+	void	_init(Points_ptr &p, Fit2D fit);
 	void	_calculate();
 	bool	_increment(Point_ptr &p);
 	void	_applyTransform();
@@ -180,11 +189,11 @@ public:
 	// Factories
 	static LineEntity2D_ptr clone(LineEntity2D_ptr &l);
 	static LineEntity2D_ptr create(Point_ptr &point, Point_ptr &point2);
-	static LineEntity2D_ptr create(Point_ptr &point, Point_ptr &point2, Side f);
+	static LineEntity2D_ptr create(Point_ptr &point, Point_ptr &point2, Fit2D fit);
 	static LineEntity2D_ptr create(Points_ptr &points);
-	static LineEntity2D_ptr create(Points_ptr &points, Side s);
+	static LineEntity2D_ptr create(Points_ptr &points, Fit2D fit);
 	static LineEntity2D_ptr create(Edge_ptr &e);
-	static LineEntity2D_ptr create(Edge_ptr &e, Side s);
+	static LineEntity2D_ptr create(Edge_ptr &e, Fit2D fit);
 	static LineEntity2D_ptr create(LineEntity2D_ptr &l, Transformation_ptr &t);
 	static LineEntity2D_ptr createParallel(LineEntity2D_ptr &l,
 		double d, bool link);
