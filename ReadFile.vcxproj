@@ -65,8 +65,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="feature.cpp" />
-    <ClCompile Include="feature2d.cpp" />
-    <ClCompile Include="feature2ds.cpp" />
     <ClCompile Include="chair.cpp" />
     <ClCompile Include="connection.cpp" />
     <ClCompile Include="edge.cpp" />
@@ -75,8 +73,6 @@
     <ClCompile Include="entity.cpp" />
     <ClCompile Include="facet.cpp" />
     <ClCompile Include="facets.cpp" />
-    <ClCompile Include="feature3d.cpp" />
-    <ClCompile Include="feature3ds.cpp" />
     <ClCompile Include="features.cpp" />
     <ClCompile Include="geometry.cpp" />
     <ClCompile Include="path.cpp" />

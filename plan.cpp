@@ -4,6 +4,33 @@ using namespace std;
 #include "utils.h"
 
 /**
+ *	Factory method using the constructor with an Application and 
+ *	Specification argument.
+ */
+Plan_ptr Plan::create(Application_ptr &app, Specification &spec, Side side)
+{
+	return Plan_ptr(new Plan(app, spec, side));
+}
+
+/**
+ *	Apply a previously created Plan Builder Snapshot.
+ */
+bool Plan::applyChanges(PlanBuilderSnapshot_ptr &s)
+{
+	//TODO: implement method
+	return true;
+}
+
+/**
+ *	Remove a previously applied Plan Builder Snapshot.
+ */
+bool Plan::removeChanges(PlanBuilderSnapshot_ptr &s)
+{
+	//TODO: implement method
+	return true;
+}
+
+/**
  *	(Private) Constructs a Plan from an Application and Specification
  *	arguments.
  */
@@ -29,14 +56,14 @@ void Plan::_build()
 	Feature2Ds_ptr fs = Feature2Ds::create();
 
 	// Build the lines...
-	_buildLines();
+	_buildRegions();
 
 	// Only build radii if more than one line
 	if (fs->size() < 2)
 	{
 		// Build the radii...
-		_buildRads();
-		_checkRads();
+		_buildTransitions();
+		_checkTransitions();
 
 		// Optimise the path... (if it has radii, otherwise its just a
 		// straight rail and is intrinsically optimised!)
@@ -46,57 +73,72 @@ void Plan::_build()
 }
 
 /**
- *	(Private) Build the lines using edges and fit.
+ *	(Private) Build the regions using edges and fit.
  */
-void Plan::_buildLines()
+void Plan::_buildRegions()
 {
-	// Build the first line from the first edge
+	// Only build if there is 
 	if (_active->size() < 1)
 	{
 		return;		//TODO: add exception handling
 	}
 
+	Entity2D::Fit2D fit = _mapFit();
+
+	// Build the first region from the first edge
 	Edge_ptr e = _active->first();
-	Feature2DLine_ptr line = Feature2DLine::create(e, _passive, side);
-	_lines->add(line);
+	SurfaceRegion2D_ptr reg = SurfaceRegion2D::create(e, _passive, fit);
+	_regions->add(reg);
 
 	for (int i = 1; i < _active->size(); i++)
 	{
 		e = _active->get(i);
 
-		// Attempt to add edge to current line
-		if (! b->append(e))
+		// Attempt to add edge to current region
+		if (! reg->append(e))
 		{
-			// Create new line
-			b = Feature2DLine::create(e, pass, fit);
-			fs->add((Feature2D_ptr)b);
+			// Create new region
+			reg = SurfaceRegion2D::create(e, _passive, fit);
+			_regions->add(reg);
 		}
 	}
 }
 
 /**
- *	(Private) Build radii between the lines.
+ *	(Private) Build transitions between the regions.
  */
-void Plan::_buildRads()
+void Plan::_buildTransitions()
 {
-	Feature2DLine_ptr l[2];
-	Feature2DRad_ptr r;
+	SurfaceRegion2D_ptr r[2];
+	SurfaceTransition2D_ptr t;
+	Feature2D_ptr f;
 
-	// Add rads between each pair of lines
-	for (int i = 0; i < fs->size() - 1; i++)
+	// Add transition between each pair of regions
+	for (int i = 0; i < _regions->size() - 1; i++)
 	{
-		l[0] = Feature2DLine::cast(fs->get(i));
-		l[1] = Feature2DLine::cast(fs->get(i + 1));
-		r = Feature2DRad::create(l[0], l[1], pass);
-		fs->insert((Feature2D_ptr)r, i + 1);
+		r[0] = _regions->get(i);
+		r[1] = _regions->get(i + 1);
+		t = SurfaceTransition2D::create(r[0], r[1], _passive);
+		_trans->add(t);
+
+		_feats->add(Feature2D::create(r[0], t));
+		if (i > 1)
+		{
+			_feats->get(_feats->size() - 1)->setIn(t);
+		}
 	}
+
+	// Create last feature
+	f = Feature2D::create(r[1]);
+	f->setIn(t);
+	_feats->add(f);
 }
 
 /**
  *	(Private) Ensure that the created radii are physically possible and do
  *	not break the design rules.
  */
-void Plan::_checkRads()
+void Plan::_checkTransitions()
 {
 	//TODO: implement method
 }
@@ -110,33 +152,39 @@ void Plan::_optimise()
 }
 
 /**
- *	
+ *	(Private) Recalculate the quality of the Plan.
  */
 void Plan::_calculateQuality()
 {
 	//TODO: implement method
 }
 
+/**
+ *	(Private) Fix a Feature so it is no longer breaking the design rules /
+ *	geometry can be created.
+ */
 void Plan::_fixFeature(Feature2D_ptr &f)
 {
 	//TODO: implement method
 }
 
 /**
- *	Factory method using the constructor with an Application and 
- *	Specification argument.
+ *	(Private) Map the side the plan is to be placed on to the fit used when
+ *	creating the entities.
  */
-Plan_ptr Plan::create(Application_ptr &app, Specification &spec, Side side)
+Entity2D::Fit2D Plan::_mapFit()
 {
-	return Plan_ptr(new Plan(app, spec, side));
-}
+	switch (_side)
+	{
+	case SIDE_LEFT:
+		return Entity2D::FIT2D_LEFT;
 
-/**
- *	(Private) Constructs a Plan Builder Snapshot.
- */
-PlanBuilderSnapshot::PlanBuilderSnapshot()
-{
-	//TODO: implement method
+	case SIDE_RIGHT:
+		return Entity2D::FIT2D_RIGHT;
+
+	default:
+		return Entity2D::FIT2D_BEST;
+	}
 }
 
 /**
@@ -145,4 +193,12 @@ PlanBuilderSnapshot::PlanBuilderSnapshot()
 PlanBuilderSnapshot_ptr PlanBuilderSnapshot::create()
 {
 	return PlanBuilderSnapshot_ptr(new PlanBuilderSnapshot());
+}
+
+/**
+ *	(Private) Constructs a Plan Builder Snapshot.
+ */
+PlanBuilderSnapshot::PlanBuilderSnapshot()
+{
+	//TODO: implement method
 }

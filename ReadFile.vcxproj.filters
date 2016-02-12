@@ -105,18 +105,6 @@
     <ClCompile Include="entities.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="feature2ds.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="feature2d.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="feature3d.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="feature3ds.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="region.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

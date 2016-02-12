@@ -40,7 +40,7 @@ std::ostream &operator<<(std::ostream &strm, const Application &a)
  */
 std::ostream &operator<<(std::ostream &strm, const Application_ptr &a)
 {
-	return strm << *s;
+	return strm << *a;
 }
 
 /**

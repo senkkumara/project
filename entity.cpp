@@ -1,6 +1,7 @@
 using namespace std;
 
 #include "entity.h"
+#include "utils.h"
 
 /**
  *	Virtual deconstructor, forcing Entity to be polymorphic.
@@ -62,7 +63,7 @@ Entity::Transformation_ptr Entity::getTransformation()
 
 bool Entity::isTransformed()
 {
-	return _t->isEmpty();
+	return (_t == nullptr) || _t->isEmpty();
 }
 
 void Entity::setRange(double min, double max)
@@ -79,20 +80,6 @@ void Entity::setMinT(double min)
 void Entity::setMaxT(double max)
 {
 	_range[1] = max;
-}
-
-Entity::TransformationFunction::TransformationFunction(Entity_ptr &e, Fn fn, double p)
-{
-	_entity = e;
-	_fn = fn;
-	_inputs.push_back(p);
-}
-
-Entity::TransformationFunction::TransformationFunction(Entity_ptr &e, Fn fn, vector<double> p)
-{
-	_entity = e;
-	_fn = fn;
-	_inputs = p;
 }
 
 Entity::TransformationFunction_ptr Entity::TransformationFunction::create(Entity_ptr &e, Fn fn,
@@ -122,6 +109,30 @@ vector<double> Entity::TransformationFunction::getInputs()
 double Entity::TransformationFunction::calculate()
 {
 	return _fn(_entity, _inputs);
+}
+
+Entity::TransformationFunction::TransformationFunction(Entity_ptr &e, Fn fn, double p)
+{
+	_entity = e;
+	_fn = fn;
+	_inputs.push_back(p);
+}
+
+Entity::TransformationFunction::TransformationFunction(Entity_ptr &e, Fn fn, vector<double> p)
+{
+	_entity = e;
+	_fn = fn;
+	_inputs = p;
+}
+
+Entity::TransformationMatrix_ptr Entity::TransformationMatrix::create()
+{
+	return TransformationMatrix_ptr(new TransformationMatrix());
+}
+
+Entity::TransformationMatrix::TransformationMatrix()
+{
+	//TODO: implement method
 }
 
 Point_ptr Entity::Transformation::getOrigin()
@@ -161,78 +172,6 @@ Point_ptr Entity2D::posAt(double pc)
 	}
 
 	return Point::create(xP, yP, zP);
-}
-
-LineEntity2D::LineEntity2D(Point_ptr &p1, Point_ptr &p2)
-{
-	Points_ptr p = Points::create();
-	p->add(p1);
-	p->add(p2);
-
-	_init(p, Entity2D::FIT2D_BEST);
-}
-
-LineEntity2D::LineEntity2D(Point_ptr &p1, Point_ptr &p2, Entity2D::Fit2D f)
-{
-	Points_ptr p = Points::create();
-	p->add(p1);
-	p->add(p2);
-
-	_init(p, f);
-}
-
-LineEntity2D::LineEntity2D(Points_ptr &p)
-{
-	_init(p, Entity2D::FIT2D_BEST);
-}
-
-LineEntity2D::LineEntity2D(Points_ptr &p, Entity2D::Fit2D f)
-{
-	_init(p, f);
-}
-
-LineEntity2D::LineEntity2D(Edge_ptr &e)
-{
-	Points_ptr p = Points::create();
-	p->add(e->left());
-	p->add(e->right());
-
-	_init(p, Entity2D::FIT2D_BEST);
-}
-
-LineEntity2D::LineEntity2D(Edge_ptr &e, Entity2D::Fit2D f)
-{
-	Points_ptr p = Points::create();
-	p->add(e->left());
-	p->add(e->right());
-
-	_init(p, f);
-}
-
-LineEntity2D::LineEntity2D(LineEntity2D_ptr &l, Transformation_ptr &t)
-{
-	//TODO: implement method
-}
-
-void LineEntity2D::_init(Points_ptr &p, Entity2D::Fit2D f)
-{
-	//TODO: implement method
-}
-
-void LineEntity2D::_calculate()
-{
-	//TODO: implement method
-}
-
-bool LineEntity2D::_increment(Point_ptr &p)
-{
-	//TODO: implement method
-	return false;
-}
-
-void LineEntity2D::_applyTransform()
-{
-	//TODO: implement method
 }
 
 LineEntity2D_ptr LineEntity2D::clone(LineEntity2D_ptr &l)
@@ -306,6 +245,11 @@ LineEntity2D_ptr LineEntity2D::convertTo2D(LineEntity3D_ptr &l)
 {
 	//TODO: implement method
 	return 0;
+}
+
+LineEntity2D_ptr LineEntity2D::cast(Entity2D_ptr &e)
+{
+	return utils::cast<Entity2D_ptr, LineEntity2D_ptr, LineEntity2D>(e);
 }
 
 vector<Entity2D_ptr> LineEntity2D::getDeps()
@@ -431,20 +375,74 @@ void LineEntity2D::transform(Transformation_ptr &t)
 	//TODO: implement method
 }
 
-RadEntity2D::RadEntity2D(LineEntity2D_ptr &e1, LineEntity2D_ptr &e2)
+LineEntity2D::LineEntity2D(Point_ptr &p1, Point_ptr &p2)
 {
-	_adj[0] = e1;
-	_adj[1] = e2;
+	Points_ptr p = Points::create();
+	p->add(p1);
+	p->add(p2);
 
-	_calculate();
+	_init(p, Entity2D::FIT2D_BEST);
 }
 
-void RadEntity2D::_calculate()
+LineEntity2D::LineEntity2D(Point_ptr &p1, Point_ptr &p2, Entity2D::Fit2D f)
+{
+	Points_ptr p = Points::create();
+	p->add(p1);
+	p->add(p2);
+
+	_init(p, f);
+}
+
+LineEntity2D::LineEntity2D(Points_ptr &p)
+{
+	_init(p, Entity2D::FIT2D_BEST);
+}
+
+LineEntity2D::LineEntity2D(Points_ptr &p, Entity2D::Fit2D f)
+{
+	_init(p, f);
+}
+
+LineEntity2D::LineEntity2D(Edge_ptr &e)
+{
+	Points_ptr p = Points::create();
+	p->add(e->left());
+	p->add(e->right());
+
+	_init(p, Entity2D::FIT2D_BEST);
+}
+
+LineEntity2D::LineEntity2D(Edge_ptr &e, Entity2D::Fit2D f)
+{
+	Points_ptr p = Points::create();
+	p->add(e->left());
+	p->add(e->right());
+
+	_init(p, f);
+}
+
+LineEntity2D::LineEntity2D(LineEntity2D_ptr &l, Transformation_ptr &t)
 {
 	//TODO: implement method
 }
 
-void RadEntity2D::_applyTransform()
+void LineEntity2D::_init(Points_ptr &p, Entity2D::Fit2D f)
+{
+	//TODO: implement method
+}
+
+void LineEntity2D::_calculate()
+{
+	//TODO: implement method
+}
+
+bool LineEntity2D::_increment(Point_ptr &p)
+{
+	//TODO: implement method
+	return false;
+}
+
+void LineEntity2D::_applyTransform()
 {
 	//TODO: implement method
 }
@@ -485,6 +483,11 @@ RadEntity2D_ptr RadEntity2D::convertToArc(HelixEntity3D_ptr &l)
 	return 0;
 }
 
+RadEntity2D_ptr RadEntity2D::cast(Entity2D_ptr &e)
+{
+	return utils::cast<Entity2D_ptr, RadEntity2D_ptr, RadEntity2D>(e);
+}
+
 vector<Entity2D_ptr> RadEntity2D::getDeps()
 {
 	return _deps;
@@ -492,11 +495,13 @@ vector<Entity2D_ptr> RadEntity2D::getDeps()
 
 double RadEntity2D::x(double t)
 {
+	//TODO: correct(?)
 	return (_range[0] * cos(t)) + _range[1];
 }
 
 double RadEntity2D::y(double t)
 {
+	//TODO: correct(?)
 	return (_range[0] * sin(t)) + _range[1];
 }
 
@@ -549,6 +554,24 @@ void RadEntity2D::transform(Transformation_ptr &t)
 	//TODO: implement method
 }
 
+RadEntity2D::RadEntity2D(LineEntity2D_ptr &e1, LineEntity2D_ptr &e2)
+{
+	_adj[0] = e1;
+	_adj[1] = e2;
+
+	_calculate();
+}
+
+void RadEntity2D::_calculate()
+{
+	//TODO: implement method
+}
+
+void RadEntity2D::_applyTransform()
+{
+	//TODO: implement method
+}
+
 Entity3D::Fit3D Entity3D::getFit()
 {
 	return _fit;
@@ -557,7 +580,106 @@ Entity3D::Fit3D Entity3D::getFit()
 Point_ptr Entity3D::posAt(double pc)
 {
 	//TODO: implement method
-	return nullptr;
+	return 0;
+}
+
+Entity3D::~Entity3D()
+{
+	//TODO: implement method
+}
+
+LineEntity3D_ptr LineEntity3D::clone(LineEntity3D_ptr &l)
+{
+	//TODO: implement method
+	return 0;
+}
+
+LineEntity3D_ptr LineEntity3D::createParallel(LineEntity3D_ptr &l, double d, bool link)
+{
+	//TODO: implement method
+	return 0;
+}
+
+LineEntity3D_ptr LineEntity3D::createNormal(LineEntity3D_ptr &l, Point_ptr &p, bool link)
+{
+	//TODO: implement method
+	return 0;
+}
+
+LineEntity3D_ptr LineEntity3D::convertTo3D(LineEntity2D_ptr &l)
+{
+	//TODO: implement method
+	return 0;
+}
+
+LineEntity3D_ptr LineEntity3D::cast(Entity3D_ptr &e)
+{
+	return utils::cast<Entity3D_ptr, LineEntity3D_ptr, LineEntity3D>(e);
+}
+
+vector<Entity3D_ptr> LineEntity3D::getDeps()
+{
+	//TODO: implement method
+	vector<Entity3D_ptr> v;
+	return v;
+}
+
+void LineEntity3D::transform(double m[4][4])
+{
+	//TODO: implement method
+}
+
+double LineEntity3D::x(double t)
+{
+	//TODO: implement method
+	return 0.0;
+}
+
+double LineEntity3D::y(double t)
+{
+	//TODO: implement method
+	return 0.0;
+}
+
+double LineEntity3D::z(double t)
+{
+	//TODO: implement method
+	return 0.0;
+}
+
+void LineEntity3D::update()
+{
+	//TODO: implement method
+}
+
+void LineEntity3D::updateDeps()
+{
+	//TODO: implement method
+}
+
+void LineEntity3D::add(Point_ptr &p)
+{
+	//TODO: implement method
+}
+
+void LineEntity3D::add(Points_ptr &p)
+{
+	//TODO: implement method
+}
+
+void LineEntity3D::insert(Point_ptr &p, int i)
+{
+	//TODO: implement method
+}
+
+void LineEntity3D::remove(Point_ptr &p)
+{
+	//TODO: implement method
+}
+
+void LineEntity3D::transform(Transformation_ptr &t)
+{
+	//TODO: implement method
 }
 
 LineEntity3D::LineEntity3D(Point_ptr &point1, Point_ptr &point2)
@@ -571,26 +693,6 @@ LineEntity3D::LineEntity3D(Points_ptr &points)
 }
 
 void LineEntity3D::_applyTransform()
-{
-	//TODO: implement method
-}
-
-LineEntity3D_ptr LineEntity3D::clone(LineEntity3D_ptr &l)
-{
-	//TODO: implement method
-}
-
-LineEntity3D_ptr LineEntity3D::createParallel(LineEntity3D_ptr &l, double d, bool link)
-{
-	//TODO: implement method
-}
-
-LineEntity3D_ptr LineEntity3D::createNormal(LineEntity3D_ptr &l, Point_ptr &p, bool link)
-{
-	//TODO: implement method
-}
-
-LineEntity3D_ptr LineEntity3D::convertTo3D(LineEntity2D_ptr &l)
 {
 	//TODO: implement method
 }

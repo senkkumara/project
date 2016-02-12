@@ -13,7 +13,7 @@ using namespace std;
 #include <memory>
 #include "application.h"
 #include "plan.h"
-#include "feature3ds.h"
+#include "features.h"
 
 class Path;		// Pre-declare class for shared pointer typedef
 typedef shared_ptr<Path> Path_ptr;
