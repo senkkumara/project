@@ -31,6 +31,12 @@ public:
 		PATH_TYPE_LOWER
 	};
 
+	// Factories
+	static Path_ptr create(Application_ptr &app, Specification &spec,
+		Plan_ptr &plan);
+
+	static Path_ptr create(Path_ptr &path);
+
 private:
 	// Constructors
 	Path(Application_ptr &app, Specification &spec, Plan_ptr &plan);
@@ -39,33 +45,20 @@ private:
 	// Fields (private)
 	Application_ptr _app;
 	Specification	_spec;
-	Feature3Ds_ptr	_opts[2];	// 0 -> left, 1 -> right
+	Feature3Ds_ptr	_opts[2];
 
 	// Methods (private)
-	void	_build();
-	void	_buildCorners(Feature3Ds_ptr &fs);
-	void	_buildCorner();
-	void	_buildHelix();
-	void	_checkCorners();
-	void	_buildLines();
-
-public:
-	// Factories
-	static Path_ptr create(Application_ptr &app, Specification &spec,
-		Plan_ptr &plan);
-
-	static Path_ptr create(Path_ptr &path);
+	void			_build();
+	void			_buildCorners(Feature3Ds_ptr &fs);
+	void			_buildCorner();
+	void			_buildHelix();
+	void			_checkCorners();
+	void			_buildLines();
+	Entity3D::Fit3D	_mapFit();
 };
 
 class PathBuilderSnapshot
 {
-private:
-	// Constructors
-	PathBuilderSnapshot();
-
-	// Fields (private)
-	Path::Type _type;
-
 public:
 	// Factories
 	static PathBuilderSnapshot_ptr create();
@@ -73,6 +66,13 @@ public:
 	// Methods (public)
 	bool isEmpty();
 	Path::Type getType();
+
+private:
+	// Constructors
+	PathBuilderSnapshot();
+
+	// Fields (private)
+	Path::Type _type;
 };
 
 #endif

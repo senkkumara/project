@@ -14,42 +14,6 @@ using namespace std;
  *
  *	Do not use this directly, use the provided factory method.
  */
-Features::Features()
-{
-	// do nothing...
-}
-
-/**
- *	<< operator overload.
- */
-std::ostream &operator<<(std::ostream &strm, const Features &f)
-{
-	//TODO: Implement method
-	throw MethodNotImplementedException("<< Features");
-	return strm;
-}
-
-/**
- *	<< operator overload.
- */
-std::ostream &operator<<(std::ostream &strm, const Features_ptr &f)
-{
-	return strm << *f;
-}
-
-/**
- *	Factory method using default constructor.
- */
-Features_ptr Features::create()
-{
-	return Features_ptr(new Features());
-}
-
-/**
- *	(Private) Default constructor.
- *
- *	Do not use this directly, use the provided factory method.
- */
 Feature2Ds::Feature2Ds()
 {
 	// do nothing...

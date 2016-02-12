@@ -20,9 +20,15 @@ using namespace std;
  */
 Application::Application(Specification &spec)
 {
+	// Construct geometry
 	_filename = spec.Filename;
 	_geometry = Geometry::create(_filename);
 	_surfaces = Surfaces::create(_geometry);
+
+	// Expose key items from Surfaces
+	_boundary[0] = _surfaces->left();
+	_boundary[1] = _surfaces->right();
+	_nosings = _surfaces->getNosings();
 }
 
 /**
@@ -76,11 +82,19 @@ Geometry_ptr Application::getGeometry()
 }
 
 /**
+ *	Get the boundary the application comprises of.
+ */
+Edges_ptr* Application::getBoundary()
+{
+	return _boundary;
+}
+
+/**
  *	Get the edges comprising the left boundary.
  */
 Edges_ptr Application::left()
 {
-	return _leftBoundary;
+	return _boundary[0];
 }
 
 /**
@@ -88,5 +102,13 @@ Edges_ptr Application::left()
  */
 Edges_ptr Application::right()
 {
-	return _rightBoundary;
+	return _boundary[1];
+}
+
+/**
+ *	Get the nosings the application comprises of.
+ */
+Edges_ptr Application::getNosings()
+{
+	return _nosings;
 }

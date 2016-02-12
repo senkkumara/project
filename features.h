@@ -14,33 +14,11 @@ using namespace std;
 #include "collection.h"
 #include "feature.h"
 
-class Features;	// Pre-declare class for shared pointer typedef
-typedef shared_ptr<Features> Features_ptr;
-
 class Feature2Ds;	// Pre-declare class for shared pointer typedef
 typedef shared_ptr<Feature2Ds> Feature2Ds_ptr;
 
 class Feature3Ds;	// Pre-declare class for shared pointer typedef
 typedef shared_ptr<Feature3Ds> Feature3Ds_ptr;
-
-/**
- *	Collection of Features.
- */
-class Features : public Collection<Feature_ptr, Features_ptr>
-{
-private:
-	// Constructors
-	Features();
-
-	// Operator overloads
-	friend std::ostream &operator<<(std::ostream &strm, const Features &f);
-	friend std::ostream &operator<<(std::ostream &strm,
-		const Features_ptr &f);
-
-public:
-	// Factories
-	static Features_ptr create();
-};
 
 /**
  *	Collection of Feature2D.

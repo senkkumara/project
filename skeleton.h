@@ -31,6 +31,19 @@ typedef shared_ptr<SkeletonBuilderSnapshot> SkeletonBuilderSnapshot_ptr;
  */
 class Skeleton
 {
+public:
+	// Factories
+	static Skeleton_ptr create(Application_ptr &app, Specification &spec, Side side);
+
+	// Methods (public)
+	int					getIteration();
+	Application_ptr		getApplication();
+	Specification		getSpecification();
+	Side				getSide();
+	Plan_ptr			getPlan();
+	Path_ptr			getLower();
+	Path_ptr			getUpper();
+
 private:
 	// Constructors
 	Skeleton(Application_ptr &app, Specification &spec, Side side);
@@ -45,9 +58,9 @@ private:
 	Path_ptr			_lower;
 
 	// Methods (private)
-	PlanBuilderSnapshot_ptr _buildPlan();
-	PathBuilderSnapshot_ptr _buildLower();
-	PathBuilderSnapshot_ptr _buildUpper();
+	void _buildPlan();
+	void _buildLower();
+	void _buildUpper();
 
 	// Operator overloads
 	friend std::ostream &operator<<(std::ostream &strm,
@@ -55,19 +68,6 @@ private:
 
 	friend std::ostream &operator<<(std::ostream &strm,
 		const Skeleton_ptr &p);
-
-public:
-	// Factories
-	static Skeleton_ptr create(Application_ptr &app, Specification &spec, Side side);
-
-	// Methods (public)
-	int					getIteration();
-	Application_ptr		getApplication();
-	Specification		getSpecification();
-	Side				getSide();
-	Plan_ptr			getPlan();
-	Path_ptr			getLower();
-	Path_ptr			getUpper();
 };
 
 /**
@@ -76,6 +76,13 @@ public:
  */
 class SkeletonBuilderSnapshot
 {
+public:
+	// Factories
+	static SkeletonBuilderSnapshot_ptr create();
+
+	// Methods (public)
+	bool isValid();
+
 private:
 	// Constructors
 	SkeletonBuilderSnapshot();
@@ -91,13 +98,6 @@ private:
 
 	friend std::ostream &operator<<(std::ostream &strm,
 		const SkeletonBuilderSnapshot_ptr &s);
-
-public:
-	// Factories
-	static SkeletonBuilderSnapshot_ptr create();
-
-	// Methods (public)
-	bool isValid();
 };
 
 #endif

@@ -33,28 +33,6 @@ typedef shared_ptr<SolutionBuilderSnapshot> SolutionBuilderSnapshot_ptr;
  */
 class Solution
 {
-private:
-	// Constructors
-	Solution(Specification &spec, Application_ptr &app, Side side);
-
-	// Fields (private)
-	Specification	_spec;
-	Application_ptr	_app;
-	Side			_side;
-	int				_iter;
-	Skeleton_ptr	_skeleton;
-	Supports_ptr	_supports;
-	Rails_ptr		_rails;
-	double			_quality;
-
-	// Methods (private)
-	bool			_isValid();
-	void			_calculateQuality();
-
-	// Operator overloads
-	friend std::ostream &operator<<(std::ostream &strm, const Solution &s);
-	friend std::ostream &operator<<(std::ostream &strm, const Solution_ptr &s);
-
 public:
 	// Factories
 	static Solution_ptr create(Specification &spec,
@@ -68,6 +46,28 @@ public:
 	Supports_ptr	getSupports();
 	Rails_ptr		getRails();
 	double			getQuality();
+
+private:
+	// Constructors
+	Solution(Specification &spec, Application_ptr &app, Side side);
+
+	// Fields (private)
+	Specification	_spec;
+	Application_ptr	_app;
+	Side			_side;
+	int				_iter;
+	double			_quality;
+	Skeleton_ptr	_skeleton;
+	Supports_ptr	_supports;
+	Rails_ptr		_rails;
+
+	// Methods (private)
+	bool			_isValid();
+	void			_recalculateQuality();
+
+	// Operator overloads
+	friend std::ostream &operator<<(std::ostream &strm, const Solution &s);
+	friend std::ostream &operator<<(std::ostream &strm, const Solution_ptr &s);
 };
 
 /**
@@ -76,6 +76,12 @@ public:
  */
 class SolutionBuilderSnapshot
 {
+public:
+	// Factories
+	static SolutionBuilderSnapshot_ptr create();
+
+	// Methods (public)
+
 private:
 	// Constructors
 	SolutionBuilderSnapshot();
@@ -88,12 +94,6 @@ private:
 
 	friend std::ostream &operator<<(std::ostream &strm,
 		const SolutionBuilderSnapshot_ptr &s);
-
-public:
-	// Factories
-	static SolutionBuilderSnapshot_ptr create();
-
-	// Methods (public)
 };
 
 #endif

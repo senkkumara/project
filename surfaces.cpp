@@ -34,8 +34,9 @@ void Surfaces::_init()
 {
 	_layers = Layers::create();
 	_rises = Rises::create();
-	_left = Edges::create();
-	_right = Edges::create();
+	_boundary[0] = Edges::create();
+	_boundary[1] = Edges::create();
+	_nosings = Edges::create();
 }
 
 void Surfaces::_build(Geometry_ptr &geometry)
@@ -229,7 +230,7 @@ void Surfaces::_findBoundaries()
 	// oriented such that:
 	//		X: across the first step
 	//		Y: along "going" of first step
-	//		Z: direct of "ris" of first step
+	//		Z: direct of "rise" of first step
 	//
 	int i = 0;
 
@@ -564,8 +565,8 @@ void Surfaces::_collectBoundaries()
 	if (layer->lower()->getGeometry()->size() == 0)
 	{
 		// Layer is the floor - not a step
-		_left->add(layer->left());
-		_right->add(layer->right());
+		_boundary[0]->add(layer->left());
+		_boundary[1]->add(layer->right());
 		i++;
 	}
 
@@ -574,17 +575,31 @@ void Surfaces::_collectBoundaries()
 	{
 		layer = layers->get(i);
 
-		_left->add(layer->lower()->left());
-		_right->add(layer->lower()->right());
-		_left->add(layer->left());
-		_right->add(layer->right());
+		_boundary[0]->add(layer->lower()->left());
+		_boundary[1]->add(layer->lower()->right());
+		_boundary[0]->add(layer->left());
+		_boundary[1]->add(layer->right());
 	}
 
 	// Add boundary for rise from last layer if it exists
 	if (layer->upper()->getGeometry()->size() > 0)
 	{
-		_left->add(layer->upper()->left());
-		_right->add(layer->upper()->right());
+		_boundary[0]->add(layer->upper()->left());
+		_boundary[1]->add(layer->upper()->right());
+	}
+}
+
+/**
+ *
+ */
+void Surfaces::_collectNosings()
+{
+	int count = _rises->size();
+	if (! count) return;
+
+	for (unsigned int i = 0; i < count; i++)
+	{
+		_nosings->add(_rises->get(i)->exit());
 	}
 }
 
@@ -677,16 +692,6 @@ void Surfaces::_categorise()
 	}
 }
 
-Layers_ptr Surfaces::getLayers()
-{
-	return _layers;
-}
-
-Rises_ptr Surfaces::getRises()
-{
-	return _rises;
-}
-
 /**
  *	
  */
@@ -708,7 +713,7 @@ Surfaces_ptr Surfaces::create(Geometry_ptr &geometry)
  */
 Edges_ptr Surfaces::left()
 {
-	return _left;
+	return _boundary[0];
 }
 
 /**
@@ -716,7 +721,31 @@ Edges_ptr Surfaces::left()
  */
 Edges_ptr Surfaces::right()
 {
-	return _right;
+	return _boundary[1];
+}
+
+/**
+ *
+ */
+Layers_ptr Surfaces::getLayers()
+{
+	return _layers;
+}
+
+/**
+ *
+ */
+Rises_ptr Surfaces::getRises()
+{
+	return _rises;
+}
+
+/**
+ *
+ */
+Edges_ptr Surfaces::getNosings()
+{
+	return _nosings;
 }
 
 /**

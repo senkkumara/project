@@ -9,71 +9,6 @@ using namespace std;
 #include "solution.h"
 
 /**
- *	(Private) Constructs an solution from a application
- *	argument.
- *
- *	Do not use this directly, use the provided factory method.
- */
-Solution::Solution(Specification &spec, Application_ptr &app, Side side)
-{
-	//TODO: implement method - include snapshot mechanism
-	_iter = 0;
-	_spec = spec;
-	_app = app;
-
-	do
-	{
-		_iter++;
-		_skeleton = Skeleton::create(_app, _spec, side);
-		_supports = Supports::create(_app, _skeleton);
-		_rails = Rails::create(_app, _skeleton, _supports);
-	}
-	while (! _isValid());
-}
-
-/**
- *	(Private) Determine whether the solutions meets all of the design rules.
- */
-bool Solution::_isValid()
-{
-	//TODO: implement method
-	return true;
-}
-
-/**
- *	(Private) Recalculate the quality of the solution.
- */
-void Solution::_calculateQuality()
-{
-	if (! _isValid())
-	{
-		_quality = 0;
-	}
-	else
-	{
-		//TODO: implement method
-		_quality = 1;
-	}
-}
-
-/**
- *	<< operator overload.
- */
-std::ostream &operator<<(std::ostream &strm, const Solution &s)
-{
-	//TODO: implement method
-	return strm;
-}
-
-/**
- *	<< operator overload.
- */
-std::ostream &operator<<(std::ostream &strm, const Solution_ptr &s)
-{
-	return strm << *s;
-}
-
-/**
  *	Factory method using the constructor with a Specification and an
  *	application argument.
  */
@@ -137,4 +72,66 @@ Rails_ptr Solution::getRails()
 double Solution::getQuality()
 {
 	return _quality;
+}
+
+/**
+ *	(Private) Constructs an solution from a application
+ *	argument.
+ *
+ *	Do not use this directly, use the provided factory method.
+ */
+Solution::Solution(Specification &spec, Application_ptr &app, Side side)
+{
+	_spec = spec;
+	_app = app;
+	_side = side;
+	_iter = 0;
+	_quality = 0.0;
+
+	//TODO: add some way of iterating to improve quality
+	_skeleton = Skeleton::create(_app, _spec, side);
+	_supports = Supports::create(_app, _skeleton);
+	_rails = Rails::create(_app, _skeleton, _supports);
+}
+
+/**
+ *	(Private) Determine whether the solutions meets all of the design rules.
+ */
+bool Solution::_isValid()
+{
+	//TODO: implement method
+	return true;
+}
+
+/**
+ *	(Private) Recalculate the quality of the solution.
+ */
+void Solution::_recalculateQuality()
+{
+	if (! _isValid())
+	{
+		_quality = 0.0;
+	}
+	else
+	{
+		//TODO: implement method
+		_quality = 1.0;
+	}
+}
+
+/**
+ *	<< operator overload.
+ */
+std::ostream &operator<<(std::ostream &strm, const Solution &s)
+{
+	//TODO: implement method
+	return strm;
+}
+
+/**
+ *	<< operator overload.
+ */
+std::ostream &operator<<(std::ostream &strm, const Solution_ptr &s)
+{
+	return strm << *s;
 }

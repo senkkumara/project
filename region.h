@@ -144,6 +144,13 @@ public:
 		SURFACEREGION3D_TYPE_SPLIT,
 		SURFACEREGION3D_TYPE_SPECIAL
 	};
+
+	// Methods (public)
+	Type getType();
+
+private:
+	// Fields (private)
+	Type _type;
 };
 
 #endif

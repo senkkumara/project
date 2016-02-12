@@ -33,12 +33,15 @@ private:
 	// Constructors
 	Application(Specification &spec);
 
-	// Member variables (private)
+	// Fields (private)
 	std::string		_filename;
 	Surfaces_ptr	_surfaces;
 	Geometry_ptr	_geometry;
-	Edges_ptr		_leftBoundary;
-	Edges_ptr		_rightBoundary;
+	Edges_ptr		_boundary[2];
+	Edges_ptr		_nosings;
+
+	// Methods (private)
+
 
 	// Operator overloads
 	friend std::ostream& operator<<(std::ostream &strm,
@@ -55,8 +58,10 @@ public:
 	std::string		getFilename();
 	Surfaces_ptr	getSurfaces();
 	Geometry_ptr	getGeometry();
+	Edges_ptr*		getBoundary();
 	Edges_ptr		left();
 	Edges_ptr		right();
+	Edges_ptr		getNosings();
 };
 
 #endif

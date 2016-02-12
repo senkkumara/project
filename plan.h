@@ -34,6 +34,7 @@ class Plan
 {
 public:
 	// Factories
+	static Plan_ptr create(Application_ptr &app, Specification &spec);
 	static Plan_ptr create(Application_ptr &app, Specification &spec, Side side);
 
 	// Methods (public)
@@ -42,6 +43,7 @@ public:
 
 private:
 	// Constructors
+	Plan(Application_ptr &app, Specification &spec);
 	Plan(Application_ptr &app, Specification &spec, Side side);
 
 	// Fields (private)
@@ -49,14 +51,17 @@ private:
 	Specification				_spec;
 	Side						_side;
 	int							_iter;
+	double						_quality;
 	Edges_ptr					_active;
 	Edges_ptr					_passive;
 	SurfaceRegion2Ds_ptr		_regions;
 	SurfaceTransition2Ds_ptr	_trans;
 	Feature2Ds_ptr				_feats;
-	double						_quality;
 
 	// Methods (private)
+	void			_init(Application_ptr &app, Specification &spec,
+						  Side side);
+
 	void			_build();
 	void			_buildRegions();
 	void			_buildTransitions();

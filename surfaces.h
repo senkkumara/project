@@ -41,8 +41,8 @@ private:
 	// Fields (private)
 	Layers_ptr	_layers;
 	Rises_ptr	_rises;
-	Edges_ptr	_left;
-	Edges_ptr	_right;
+	Edges_ptr	_boundary[2];
+	Edges_ptr	_nosings;
 
 	// Methods (private)
 	void		_init();
@@ -69,6 +69,7 @@ private:
 
 	void		_checkBoundaries();
 	void		_collectBoundaries();
+	void		_collectNosings();
 	void		_categorise();
 
 	// Operator overloads
@@ -136,6 +137,7 @@ public:
 	Edges_ptr	right();
 	Layers_ptr	getLayers();
 	Rises_ptr	getRises();
+	Edges_ptr	getNosings();
 };
 
 #endif

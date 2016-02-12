@@ -159,3 +159,8 @@ bool SurfaceTransition2D::_intercept(Edge_ptr &e)
 	//TODO: implement method
 	return false;
 }
+
+SurfaceRegion3D::Type SurfaceRegion3D::getType()
+{
+	return _type;
+}

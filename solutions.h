@@ -24,18 +24,20 @@ typedef shared_ptr<Solutions> Solutions_ptr;
 
 class Solutions : public Collection<Solution_ptr, Solutions_ptr>
 {
+public:
+	// Factories
+	static Solutions_ptr create();
+	static Solutions_ptr create(Specification &spec, Application_ptr &app);
+
 private:
 	// Constructors
+	Solutions();
 	Solutions(Specification &spec, Application_ptr &app);
 
 	// Operator overloads
 	friend std::ostream &operator<<(std::ostream &strm, const Solutions &ss);
 	friend std::ostream &operator<<(std::ostream &strm,
 		const Solutions_ptr &ss);
-
-public:
-	// Factories
-	static Solutions_ptr create(Specification &spec, Application_ptr &app);
 };
 
 #endif

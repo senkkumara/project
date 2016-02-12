@@ -12,6 +12,31 @@ using namespace std;
 #include "solutions.h"
 
 /**
+ *	Factory method using default constructor.
+ */
+Solutions_ptr Solutions::create()
+{
+	return Solutions_ptr(new Solutions());
+}
+
+/**
+ *	Factory method using constructor with Specification and Application
+ *	arguments.
+ */
+Solutions_ptr Solutions::create(Specification &spec, Application_ptr &app)
+{
+	return Solutions_ptr(new Solutions(spec, app));
+}
+
+/**
+ *	(Private) Default constructor.
+ */
+Solutions::Solutions()
+{
+	// Do nothing...
+}
+
+/**
  *	(Private) Constructor requiring a Specification and Application
  *	arguments.
  *
@@ -47,12 +72,4 @@ std::ostream &operator<<(std::ostream &strm, const Solutions &s)
 std::ostream &operator<<(std::ostream &strm, const Solutions_ptr &s)
 {
 	return strm << *s;
-}
-
-/**
- *	Factory method using default constructor.
- */
-Solutions_ptr Solutions::create(Specification &spec, Application_ptr &app)
-{
-	return Solutions_ptr(new Solutions(spec, app));
 }

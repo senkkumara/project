@@ -7,6 +7,15 @@ using namespace std;
  *	Factory method using the constructor with an Application and 
  *	Specification argument.
  */
+Plan_ptr Plan::create(Application_ptr &app, Specification &spec)
+{
+	return Plan_ptr(new Plan(app, spec));
+}
+
+/**
+ *	Factory method using the constructor with an Application and 
+ *	Specification and side arguments.
+ */
 Plan_ptr Plan::create(Application_ptr &app, Specification &spec, Side side)
 {
 	return Plan_ptr(new Plan(app, spec, side));
@@ -34,13 +43,54 @@ bool Plan::removeChanges(PlanBuilderSnapshot_ptr &s)
  *	(Private) Constructs a Plan from an Application and Specification
  *	arguments.
  */
+Plan::Plan(Application_ptr &app, Specification &spec)
+{
+	_init(app, spec, spec.Side);
+	_build();
+}
+
+/**
+ *	(Private) Constructs a Plan from an Application, Specification and Side
+ *	arguments.
+ */
 Plan::Plan(Application_ptr &app, Specification &spec, Side side)
+{
+	_init(app, spec, side);
+	_build();
+}
+
+/**
+ *	(Private) Initialise member fields.
+ */
+void Plan::_init(Application_ptr &app, Specification &spec, Side side)
 {
 	_app = app;
 	_spec = spec;
 	_side = side;
+	_iter = 0;
 
-	_build();
+	switch (_side)
+	{
+	case SIDE_LEFT:
+		_active = _app->left();
+		_passive = _app->right();
+		break;
+
+	case SIDE_RIGHT:
+		_active = _app->right();
+		_passive = _app->left();
+		break;
+
+	default:
+		//TODO: throw exception
+		break;
+	};
+
+	_regions = SurfaceRegion2Ds::create();
+	_trans = SurfaceTransition2Ds::create();
+	_feats = Feature2Ds::create();
+
+	_quality = 0.0;
 }
 
 /**
@@ -53,23 +103,20 @@ Plan::Plan(Application_ptr &app, Specification &spec, Side side)
  */
 void Plan::_build()
 {
-	Feature2Ds_ptr fs = Feature2Ds::create();
-
 	// Build the lines...
 	_buildRegions();
 
 	// Only build radii if more than one line
-	if (fs->size() < 2)
+	if (_feats->size() < 2)
 	{
 		// Build the radii...
 		_buildTransitions();
 		_checkTransitions();
 
-		// Optimise the path... (if it has radii, otherwise its just a
+		// Optimise the plan... (if it has radii, otherwise its just a
 		// straight rail and is intrinsically optimised!)
 		_optimise();
 	}
-
 }
 
 /**
@@ -90,6 +137,9 @@ void Plan::_buildRegions()
 	SurfaceRegion2D_ptr reg = SurfaceRegion2D::create(e, _passive, fit);
 	_regions->add(reg);
 
+	Feature2D_ptr feat = Feature2D::create(reg);
+	_feats->add(feat);
+
 	for (int i = 1; i < _active->size(); i++)
 	{
 		e = _active->get(i);
@@ -100,6 +150,9 @@ void Plan::_buildRegions()
 			// Create new region
 			reg = SurfaceRegion2D::create(e, _passive, fit);
 			_regions->add(reg);
+
+			feat = Feature2D::create(reg);
+			_feats->add(feat);
 		}
 	}
 }
@@ -109,29 +162,24 @@ void Plan::_buildRegions()
  */
 void Plan::_buildTransitions()
 {
+	Feature2D_ptr f[2];
 	SurfaceRegion2D_ptr r[2];
 	SurfaceTransition2D_ptr t;
-	Feature2D_ptr f;
 
 	// Add transition between each pair of regions
-	for (int i = 0; i < _regions->size() - 1; i++)
+	for (int i = 0; i < _feats->size() - 2; i++)
 	{
-		r[0] = _regions->get(i);
-		r[1] = _regions->get(i + 1);
+		f[0] = _feats->get(i);
+		f[1] = _feats->get(i + 1);
+		r[0] = f[0]->getRegion();
+		r[1] = f[1]->getRegion();
+
 		t = SurfaceTransition2D::create(r[0], r[1], _passive);
 		_trans->add(t);
 
-		_feats->add(Feature2D::create(r[0], t));
-		if (i > 1)
-		{
-			_feats->get(_feats->size() - 1)->setIn(t);
-		}
+		f[0]->setOut(t);
+		f[1]->setIn(t);
 	}
-
-	// Create last feature
-	f = Feature2D::create(r[1]);
-	f->setIn(t);
-	_feats->add(f);
 }
 
 /**
