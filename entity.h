@@ -50,6 +50,9 @@ class Entity
 {
 public:
 	// Methods (public)
+	virtual double		x(double t) = 0;
+	virtual double		y(double t) = 0;
+	virtual double		z(double t) = 0;
 	double*				getRange();
 	double				minT();
 	double				maxT();
@@ -59,11 +62,11 @@ public:
 	double*				getXCoefficients();
 	double*				getYCoefficients();
 	double*				getZCoefficients();
-	bool				isTransformed();
-	void				setRange(double min, double max);
-	void				setMinT(double min);
-	void				setMaxT(double max);
+	virtual void		setRange(double min, double max) = 0;
+	virtual void		setMinT(double min) = 0;
+	virtual void		setMaxT(double max) = 0;
 	virtual Point_ptr	posAt(double t) = 0;
+	virtual Point_ptr	posAtDist(double pc) = 0;
 
 protected:
 	// Destructors
@@ -75,32 +78,32 @@ protected:
 	Point_ptr			_ends[2];
 };
 
-class Entity2D : public Entity
+class Entity2D
 {
 public:
 	// Enumerations (public)
 	enum Fit2D
 	{
-		FIT2D_BEST,
-		FIT2D_LEFT,
-		FIT2D_RIGHT
+		// Fits relative to someone 'standing' on the start & looking at
+		// the end of the entity.
+		FIT2D_BEST,		// Do not adjust LOBF
+		FIT2D_LEFT,		// Adjust LOBF so is left of all points
+		FIT2D_RIGHT		// Adjust LOBF so is right of all points
 	};
 
 	// Methods (public)
 	Fit2D				getFit();
-	virtual double		x(double t) = 0;
-	virtual double		y(double t) = 0;
-	virtual Point_ptr	posAt(double t) = 0;
 
 protected:
 	// Destructor
-	virtual ~Entity2D();
+	virtual ~Entity2D();	// Abstract base class
 
 	// Fields (protected)
 	Fit2D _fit;
 };
 
-class LineEntity2D : public Entity2D, Collection<Point_ptr, Points_ptr>
+class LineEntity2D : public Entity, public Entity2D,
+	public Collection<Point_ptr, Points_ptr>
 {
 public:
 	// Factories
@@ -113,32 +116,31 @@ public:
 	static LineEntity2D_ptr create(Edge_ptr &e, Fit2D fit);
 	static LineEntity2D_ptr create(Edges_ptr &es);
 	static LineEntity2D_ptr create(Edges_ptr &es, Fit2D fit);
-	static LineEntity2D_ptr createParallel(LineEntity2D_ptr &l,
-		double d, bool link);
-
-	static LineEntity2D_ptr createNormal(LineEntity2D_ptr &l,
-		Point_ptr &p, bool link);
-
-	static LineEntity2D_ptr createNormal(LineEntity2D_ptr &l,
-		double t, bool link);
-
+	static LineEntity2D_ptr createParallel(LineEntity2D_ptr &l, double d);
+	static LineEntity2D_ptr createNormal(LineEntity2D_ptr &l, Point_ptr &p);
+	static LineEntity2D_ptr createNormal(LineEntity2D_ptr &l, double t);
 	static LineEntity2D_ptr convertTo2D(LineEntity3D_ptr &l);
 	static LineEntity2D_ptr cast(Entity2D_ptr &e);
 
 	// Methods (public)
 	double		x(double t);
 	double		y(double t);
-	void		add(Point_ptr &p);
-	void		add(Points_ptr &p);
-	void		insert(Point_ptr &p, int i);
-	void		remove(Point_ptr &p);
+	double		z(double t);
+	void		setRange(double min, double max);
+	void		setMinT(double min);
+	void		setMaxT(double max);
 	Point_ptr	posAt(double t);
-	bool		intercept(LineEntity2D_ptr &e);
-	bool		intercept(vector<LineEntity2D_ptr> e);
-	bool		intercept(Edge_ptr &e);
-	bool		intercept(Edges_ptr &e);
-	bool		intercept(RadEntity2D_ptr &e);
-	bool		intercept(vector<RadEntity2D_ptr> &es);
+	Point_ptr	posAtDist(double pc);
+	void		add(Point_ptr &p);						// Override
+	void		add(Points_ptr &p);						// Override
+	void		insert(Point_ptr &p, int i);			// Override
+	void		remove(Point_ptr &p);					// Override
+	bool		intersects(LineEntity2D_ptr &e);
+	bool		intersects(vector<LineEntity2D_ptr> e);
+	bool		intersects(Edge_ptr &e);
+	bool		intersects(Edges_ptr &e);
+	bool		intersects(RadEntity2D_ptr &e);
+	bool		intersects(vector<RadEntity2D_ptr> &es);
 	Point_ptr	getIntersect(LineEntity2D_ptr &l);
 
 private:
@@ -152,9 +154,6 @@ private:
 	LineEntity2D(Edges_ptr &es);
 	LineEntity2D(Edges_ptr &es, Fit2D fit);
 
-	// Fields (private)
-	vector<Entity2D_ptr> _deps;
-
 	// Methods (private)
 	void	_init(Points_ptr &p, Fit2D fit);
 	void	_calculate();
@@ -162,7 +161,7 @@ private:
 	bool	_decrement(Point_ptr &p);
 };
 
-class RadEntity2D : public Entity2D
+class RadEntity2D : public Entity, public Entity2D
 {
 public:
 	// Factories
@@ -174,14 +173,21 @@ public:
 	static RadEntity2D_ptr cast(Entity2D_ptr &e);
 
 	// Methods (public)
-	vector<Entity2D_ptr> getDeps();
 	double		x(double t);
 	double		y(double t);
+	double		z(double t);
+	void		setRange(double min, double max);
+	void		setMinT(double min);
+	void		setMaxT(double max);
+	void		setEnds(Point_ptr &start, Point_ptr &end);
+	void		setStart(Point_ptr &start);
+	void		setEnd(Point_ptr &end);
 	Point_ptr	posAt(double t);
-	bool		intercept(LineEntity2D_ptr &e);
-	bool		intercept(vector<LineEntity2D_ptr> e);
-	bool		intercept(Edge_ptr &e);
-	bool		intercept(Edges_ptr &e);
+	Point_ptr	posAtDist(double pc);
+	bool		intersects(LineEntity2D_ptr &e);
+	bool		intersects(vector<LineEntity2D_ptr> e);
+	bool		intersects(Edge_ptr &e);
+	bool		intersects(Edges_ptr &e);
 
 private:
 	// Constructors
@@ -194,7 +200,7 @@ private:
 	void _calculate();
 };
 
-class Entity3D : public Entity
+class Entity3D
 {
 public:
 	// Enumerations (public)
@@ -208,6 +214,8 @@ public:
 
 	enum Fit3D
 	{
+		// Fits relative to someone 'standing' on the start & looking at
+		// the end of the entity.
 		FIT3D_BEST,
 		FIT3D_LEFT,
 		FIT3D_LEFT_ABOVE,
@@ -221,10 +229,6 @@ public:
 
 	// Methods (public)
 	Fit3D				getFit();
-	virtual double		x(double t) = 0;
-	virtual double		y(double t) = 0;
-	virtual double		z(double t) = 0;
-	virtual Point_ptr	posAt(double pc) = 0;
 
 protected:
 	// Destructor
@@ -234,7 +238,8 @@ protected:
 	Fit3D _fit;
 };
 
-class LineEntity3D : public Entity3D, Collection<Point_ptr, Points_ptr>
+class LineEntity3D : public Entity, public Entity3D,
+	public Collection<Point_ptr, Points_ptr>
 {
 public:
 	// Factories
@@ -248,31 +253,51 @@ public:
 	double		x(double t);
 	double		y(double t);
 	double		z(double t);
-	void		add(Point_ptr &p);
-	void		add(Points_ptr &p);
-	void		insert(Point_ptr &p, int i);
-	void		remove(Point_ptr &p);
+	void		setRange(double min, double max);
+	void		setMinT(double min);
+	void		setMaxT(double max);
 	Point_ptr	posAt(double t);
+	Point_ptr	posAtDist(double pc);
+	void		add(Point_ptr &p);				// Override
+	void		add(Points_ptr &p);				// Override
+	void		insert(Point_ptr &p, int i);	// Override
+	void		remove(Point_ptr &p);			// Override
 
 private:
 	// Constructors
 	LineEntity3D(Point_ptr &p1, Point_ptr &p2);
 	LineEntity3D(Points_ptr &ps);
+
+	// Methods (private)
+	void _increment(Point_ptr &p);
+	void _decrement(Point_ptr &p);
 };
 
-class ArcEntity3D : public Entity3D, public RadEntity2D, Collection<Point_ptr, Points_ptr>
+class ArcEntity3D : public RadEntity2D,
+	public Collection<Point_ptr, Points_ptr>
 {
 public:
 	// Factories
 	static ArcEntity3D_ptr create(RadEntity2D_ptr &r, double h);
 	static ArcEntity3D_ptr cast(Entity3D_ptr &e);
 
+	// Method (public)
+	double		x(double t);
+	double		y(double t);
+	double		z(double t);
+	void		setRange(double min, double max);
+	void		setMinT(double min);
+	void		setMaxT(double max);
+	Point_ptr	posAt(double t);
+	Point_ptr	posAtDist(double pc);
+
 private:
 	// Constructors
 	ArcEntity3D(RadEntity2D_ptr &r, double h);
 };
 
-class HelixEntity3D : public Entity3D, public RadEntity2D, Collection<Point_ptr, Points_ptr>
+class HelixEntity3D : public RadEntity2D,
+	public Collection<Point_ptr, Points_ptr>
 {
 public:
 	// Factories
@@ -284,15 +309,18 @@ public:
 	static HelixEntity3D_ptr cast(Entity3D_ptr &e);
 
 	// Methods (public)
-	vector<Entity3D_ptr> getDeps();
 	double		x(double t);
 	double		y(double t);
 	double		z(double t);
-	void		add(Point_ptr &p);
-	void		add(Points_ptr &p);
-	void		insert(Point_ptr &p, int i);
-	void		remove(Point_ptr &p);
+	void		setRange(double min, double max);
+	void		setMinT(double min);
+	void		setMaxT(double max);
 	Point_ptr	posAt(double t);
+	Point_ptr	posAtDist(double pc);
+	void		add(Point_ptr &p);				// Override
+	void		add(Points_ptr &p);				// Override
+	void		insert(Point_ptr &p, int i);	// Override
+	void		remove(Point_ptr &p);			// Override
 
 private:
 	// Constructors
@@ -300,7 +328,10 @@ private:
 
 	// Fields (private)
 	LineEntity3D_ptr		_adj[2];
-	vector<Entity3D_ptr>	_deps;
+
+	// Methods (private)
+	void _increment(Point_ptr &p);
+	void _decrement(Point_ptr &p);
 };
 
 /**
