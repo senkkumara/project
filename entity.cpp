@@ -11,62 +11,98 @@ Entity::~Entity()
 	// do nothing...
 }
 
+/**
+ *	Get the valid "t" range for the entity.
+ */
 double* Entity::getRange()
 {
 	return _range;
 }
 
+/**
+ *	Get the minimum "t" value for the entity.
+ */
 double Entity::minT()
 {
 	return _range[0];
 }
 
+/**
+ *	Get the maximum "t" value for the entity.
+ */
 double Entity::maxT()
 {
 	return _range[1];
 }
 
+/**
+ *	Get points representing the ends the entity.
+ */
 Point_ptr* Entity::getEnds()
 {
 	return _ends;
 }
 
-Point_ptr Entity::left()
+/**
+ *	Get the point representing the start of the entity.
+ */
+Point_ptr Entity::start()
 {
 	return _ends[0];
 }
 
-Point_ptr Entity::right()
+/**
+ *	Get the point representing the end of the entity.
+ */
+Point_ptr Entity::end()
 {
 	return _ends[1];
 }
 
+/**
+ *	Get the X coefficients of the equation of the entity.
+ */
 double*	Entity::getXCoefficients()
 {
 	return _cfs[0];
 }
 
+/**
+ *	Get the Y coefficients of the equation of the entity.
+ */
 double* Entity::getYCoefficients()
 {
 	return _cfs[1];
 }
 
+/**
+ *	Get the Z coefficients of the equation of the entity.
+ */
 double* Entity::getZCoefficients()
 {
 	return _cfs[2];
 }
 
+/**
+ *	Set the range of "t" value for the entity.
+ */
 void Entity::setRange(double min, double max)
 {
 	setMinT(min);
 	setMaxT(max);
 }
 
+/**
+ *	Set the minimum "t" value for the entity.
+ */
 void Entity::setMinT(double min)
 {
 	_range[0] = min;
 }
 
+/**
+ *	Set the maximum "t" value for the entity.
+ */
 void Entity::setMaxT(double max)
 {
 	_range[1] = max;
@@ -131,11 +167,6 @@ LineEntity2D_ptr LineEntity2D::cast(Entity2D_ptr &e)
 	return utils::cast<Entity2D_ptr, LineEntity2D_ptr, LineEntity2D>(e);
 }
 
-vector<Entity2D_ptr> LineEntity2D::getDeps()
-{
-	return _deps;
-}
-
 double LineEntity2D::x(double t)
 {
 	return (_cfs[0][0]*t + _cfs[0][1]);
@@ -144,19 +175,6 @@ double LineEntity2D::x(double t)
 double LineEntity2D::y(double t)
 {
 	return (_cfs[1][0]*t + _cfs[1][1]);
-}
-
-void LineEntity2D::update()
-{
-	//TODO: implement method
-}
-
-void LineEntity2D::updateDeps()
-{
-	for (unsigned int i = 0; i < _deps.size(); i++)
-	{
-		_deps.at(i)->update();
-	}
 }
 
 void LineEntity2D::add(Point_ptr &p)
@@ -346,11 +364,6 @@ RadEntity2D_ptr RadEntity2D::cast(Entity2D_ptr &e)
 	return utils::cast<Entity2D_ptr, RadEntity2D_ptr, RadEntity2D>(e);
 }
 
-vector<Entity2D_ptr> RadEntity2D::getDeps()
-{
-	return _deps;
-}
-
 double RadEntity2D::x(double t)
 {
 	//TODO: correct(?)
@@ -361,19 +374,6 @@ double RadEntity2D::y(double t)
 {
 	//TODO: correct(?)
 	return (_range[0] * sin(t)) + _range[1];
-}
-
-void RadEntity2D::update()
-{
-	//TODO: implement method
-}
-
-void RadEntity2D:: updateDeps()
-{
-	for (unsigned int i = 0; i < _deps.size(); i++)
-	{
-		_deps.at(i)->update();
-	}
 }
 
 bool RadEntity2D::intercept(LineEntity2D_ptr &e)
@@ -416,11 +416,6 @@ RadEntity2D::RadEntity2D(LineEntity2D_ptr &e1, LineEntity2D_ptr &e2)
 }
 
 void RadEntity2D::_calculate()
-{
-	//TODO: implement method
-}
-
-void RadEntity2D::_applyTransform()
 {
 	//TODO: implement method
 }
@@ -470,18 +465,6 @@ LineEntity3D_ptr LineEntity3D::cast(Entity3D_ptr &e)
 	return utils::cast<Entity3D_ptr, LineEntity3D_ptr, LineEntity3D>(e);
 }
 
-vector<Entity3D_ptr> LineEntity3D::getDeps()
-{
-	//TODO: implement method
-	vector<Entity3D_ptr> v;
-	return v;
-}
-
-void LineEntity3D::transform(double m[4][4])
-{
-	//TODO: implement method
-}
-
 double LineEntity3D::x(double t)
 {
 	//TODO: implement method
@@ -498,16 +481,6 @@ double LineEntity3D::z(double t)
 {
 	//TODO: implement method
 	return 0.0;
-}
-
-void LineEntity3D::update()
-{
-	//TODO: implement method
-}
-
-void LineEntity3D::updateDeps()
-{
-	//TODO: implement method
 }
 
 void LineEntity3D::add(Point_ptr &p)
@@ -536,11 +509,6 @@ LineEntity3D::LineEntity3D(Point_ptr &point1, Point_ptr &point2)
 }
 
 LineEntity3D::LineEntity3D(Points_ptr &points)
-{
-	//TODO: implement method
-}
-
-void LineEntity3D::_applyTransform()
 {
 	//TODO: implement method
 }

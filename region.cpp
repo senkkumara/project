@@ -145,7 +145,7 @@ LineEntity2D_ptr SurfaceTransition2D::exit()
 SurfaceTransition2D::SurfaceTransition2D(SurfaceRegion2D_ptr &f1, SurfaceRegion2D_ptr &f2, Edges_ptr &b)
 {
 	_init();
-
+	/*
 	//_boundary = b;
 
 	LineEntity2D_ptr l[2];
@@ -169,7 +169,7 @@ SurfaceTransition2D::SurfaceTransition2D(SurfaceRegion2D_ptr &f1, SurfaceRegion2
 	//p[3] = _passive.at(1)->right();
 
 	_entry = LineEntity2D::create(p[0], p[1]);
-	_exit = LineEntity2D::create(p[2], p[3]);
+	_exit = LineEntity2D::create(p[2], p[3]);*/
 }
 
 void SurfaceTransition2D::_init()

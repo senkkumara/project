@@ -54,8 +54,8 @@ public:
 	double				minT();
 	double				maxT();
 	Point_ptr*			getEnds();
-	Point_ptr			left();
-	Point_ptr			right();
+	Point_ptr			start();
+	Point_ptr			end();
 	double*				getXCoefficients();
 	double*				getYCoefficients();
 	double*				getZCoefficients();
@@ -63,9 +63,7 @@ public:
 	void				setRange(double min, double max);
 	void				setMinT(double min);
 	void				setMaxT(double max);
-	virtual void		update() = 0;
-	virtual void		updateDeps() = 0;
-	virtual Point_ptr	posAt(double pc) = 0;
+	virtual Point_ptr	posAt(double t) = 0;
 
 protected:
 	// Destructors
@@ -75,9 +73,6 @@ protected:
 	double				_cfs[3][2];
 	double				_range[2];
 	Point_ptr			_ends[2];
-
-private:
-	virtual void		_applyTransform() = 0;
 };
 
 class Entity2D : public Entity
@@ -95,7 +90,7 @@ public:
 	Fit2D				getFit();
 	virtual double		x(double t) = 0;
 	virtual double		y(double t) = 0;
-	Point_ptr			posAt(double pc);
+	virtual Point_ptr	posAt(double t) = 0;
 
 protected:
 	// Destructor
@@ -131,15 +126,13 @@ public:
 	static LineEntity2D_ptr cast(Entity2D_ptr &e);
 
 	// Methods (public)
-	vector<Entity2D_ptr> getDeps();
 	double		x(double t);
 	double		y(double t);
-	void		update();
-	void		updateDeps();
 	void		add(Point_ptr &p);
 	void		add(Points_ptr &p);
 	void		insert(Point_ptr &p, int i);
 	void		remove(Point_ptr &p);
+	Point_ptr	posAt(double t);
 	bool		intercept(LineEntity2D_ptr &e);
 	bool		intercept(vector<LineEntity2D_ptr> e);
 	bool		intercept(Edge_ptr &e);
@@ -184,8 +177,7 @@ public:
 	vector<Entity2D_ptr> getDeps();
 	double		x(double t);
 	double		y(double t);
-	void		update();
-	void		updateDeps();
+	Point_ptr	posAt(double t);
 	bool		intercept(LineEntity2D_ptr &e);
 	bool		intercept(vector<LineEntity2D_ptr> e);
 	bool		intercept(Edge_ptr &e);
@@ -197,11 +189,9 @@ private:
 
 	// Fields (private)
 	LineEntity2D_ptr		_adj[2];
-	vector<Entity2D_ptr>	_deps;
 
 	// Methods (private)
 	void _calculate();
-	void _applyTransform();
 };
 
 class Entity3D : public Entity
@@ -230,11 +220,11 @@ public:
 	};
 
 	// Methods (public)
-	Fit3D			getFit();
-	virtual double	x(double t) = 0;
-	virtual double	y(double t) = 0;
-	virtual double	z(double t) = 0;
-	Point_ptr		posAt(double pc);
+	Fit3D				getFit();
+	virtual double		x(double t) = 0;
+	virtual double		y(double t) = 0;
+	virtual double		z(double t) = 0;
+	virtual Point_ptr	posAt(double pc) = 0;
 
 protected:
 	// Destructor
@@ -255,28 +245,19 @@ public:
 	static LineEntity3D_ptr cast(Entity3D_ptr &e);
 
 	// Methods (public)
-	vector<Entity3D_ptr> getDeps();
-	void		transform(double m[4][4]);
 	double		x(double t);
 	double		y(double t);
 	double		z(double t);
-	void		update();
-	void		updateDeps();
 	void		add(Point_ptr &p);
 	void		add(Points_ptr &p);
 	void		insert(Point_ptr &p, int i);
 	void		remove(Point_ptr &p);
+	Point_ptr	posAt(double t);
 
 private:
 	// Constructors
-	LineEntity3D(Point_ptr &point1, Point_ptr &point2);
-	LineEntity3D(Points_ptr &points);
-
-	// Fields (private)
-	vector<Entity3D_ptr> _deps;
-
-	// Methods (private)
-	void _applyTransform();
+	LineEntity3D(Point_ptr &p1, Point_ptr &p2);
+	LineEntity3D(Points_ptr &ps);
 };
 
 class ArcEntity3D : public Entity3D, public RadEntity2D, Collection<Point_ptr, Points_ptr>
@@ -289,9 +270,6 @@ public:
 private:
 	// Constructors
 	ArcEntity3D(RadEntity2D_ptr &r, double h);
-
-	// Methods (private)
-	void _applyTransform();
 };
 
 class HelixEntity3D : public Entity3D, public RadEntity2D, Collection<Point_ptr, Points_ptr>
@@ -310,12 +288,11 @@ public:
 	double		x(double t);
 	double		y(double t);
 	double		z(double t);
-	void		update();
-	void		updateDeps();
 	void		add(Point_ptr &p);
 	void		add(Points_ptr &p);
 	void		insert(Point_ptr &p, int i);
 	void		remove(Point_ptr &p);
+	Point_ptr	posAt(double t);
 
 private:
 	// Constructors
@@ -324,9 +301,6 @@ private:
 	// Fields (private)
 	LineEntity3D_ptr		_adj[2];
 	vector<Entity3D_ptr>	_deps;
-
-	// Methods (private)
-	void _applyTransform();
 };
 
 /**
@@ -366,11 +340,6 @@ private:
 	SurfaceEntity_ptr			_base;
 	SurfaceEntity_ptr			_ceiling;
 	vector<SurfaceEntity_ptr>	_sides;
-};
-
-namespace Transformations
-{
-	double constant(vector<double> p);
 };
 
 #endif
