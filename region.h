@@ -52,12 +52,13 @@ public:
 
 	// Methods (public)
 	bool				append(Edge_ptr &e);
-	Edges_ptr			getBoundary();
+	Edges_ptr*			getBoundary();
+	Edges_ptr			getActive();
+	Edges_ptr			getPassive();
 	Entity2D::Fit2D		getFit();
 	Type				getType();
-	Edges_ptr			getEdges();
-	LineEntity2D_ptr	getActive();
-	LineEntity2D_ptr	getPassive();
+	LineEntity2D_ptr	inner();
+	LineEntity2D_ptr	outer();
 	LineEntity2D_ptr	entry();
 	LineEntity2D_ptr	exit();
 
@@ -66,15 +67,14 @@ private:
 	SurfaceRegion2D(Edge_ptr &e, Edges_ptr &b, Entity2D::Fit2D f);
 
 	// Fields (private)
-	Edges_ptr				_boundary;	// Full boundary
-	Entity2D::Fit2D			_fit;		// How to fit lines to boundaries
-	SurfaceRegion2D::Type	_type;		// Type of surface (e.g. 'line')
-	Edges_ptr				_edges;		// Boundary section this region covers
-	LineEntity2D_ptr		_active;	// Active side (stairlift side)
-	LineEntity2D_ptr		_passive;	// Passive side (opposite stairlift)
-	LineEntity2D_ptr		_entry;		// Edge lift crosses to enter region
-	LineEntity2D_ptr		_exit;		// Edge lift crosses to leave region
-
+	Edges_ptr			_boundary[2];	// Full boundary
+	Entity2D::Fit2D		_fit;			// How to fit lines to boundaries
+	Type				_type;			// Type of surface (e.g. 'line')
+	LineEntity2D_ptr	_inner;			// Rail side
+	LineEntity2D_ptr	_outer;			// Clearnance arc
+	LineEntity2D_ptr	_entry;			// Edge lift crosses to enter region
+	LineEntity2D_ptr	_exit;			// Edge lift crosses to leave region
+	
 	// Methods (private)
 	void	_init();
 	bool	_intercept();
@@ -100,8 +100,14 @@ public:
 		SurfaceRegion2D_ptr &f2, Edges_ptr &e);
 
 	// Methods (public)
-	RadEntity2D_ptr		getActive();
-	LineEntity2D_ptr*	getPassive();
+	Edges_ptr*			getBoundary();
+	Edges_ptr			getActive();
+	Edges_ptr			getPassive();
+	Entity2D::Fit2D		getFit();
+	RadEntity2D_ptr		inner();
+	LineEntity2D_ptr*	outer();
+	LineEntity2D_ptr	entry();
+	LineEntity2D_ptr	exit();
 
 private:
 	// Constructors
@@ -109,13 +115,12 @@ private:
 		Edges_ptr &b);
 
 	// Fields (private)
-	Edges_ptr			_boundary;	// Full boundary
-	Entity2D::Fit2D		_fit;		// How to fit lines to boundaries
-	Edges_ptr			_edges;		// Boundary section this region covers
-	RadEntity2D_ptr		_active;
-	LineEntity2D_ptr	_passive[2];
-	LineEntity2D_ptr	_entry;		// Edge lift crosses to enter region
-	LineEntity2D_ptr	_exit;		// Edge lift crosses to leave region
+	Edges_ptr			_boundary[2];	// Full boundary
+	Entity2D::Fit2D		_fit;			// How to fit lines to boundaries
+	RadEntity2D_ptr		_inner;			// Rail side
+	LineEntity2D_ptr	_outer[2];		// Clearnance arc
+	LineEntity2D_ptr	_entry;			// Edge lift crosses to enter region
+	LineEntity2D_ptr	_exit;			// Edge lift crosses to leave region
 
 	// Methods (private)
 	void _init();
@@ -151,6 +156,14 @@ public:
 private:
 	// Fields (private)
 	Type _type;
+};
+
+/**
+ *	A 3D radius feature - a fillet between two straight lines.
+ */
+class SurfaceTransition3D
+{
+
 };
 
 #endif

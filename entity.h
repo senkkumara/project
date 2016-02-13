@@ -49,16 +49,6 @@ typedef shared_ptr<VolumeEntity> VolumeEntity_ptr;
 class Entity
 {
 public:
-	// Sub-classes (public) - pre-definitions
-	class TransformationFunction;
-	typedef shared_ptr<TransformationFunction> TransformationFunction_ptr;
-
-	class TransformationMatrix;
-	typedef shared_ptr<TransformationMatrix> TransformationMatrix_ptr;
-
-	class Transformation;
-	typedef shared_ptr<Transformation> Transformation_ptr;
-
 	// Methods (public)
 	double*				getRange();
 	double				minT();
@@ -69,66 +59,13 @@ public:
 	double*				getXCoefficients();
 	double*				getYCoefficients();
 	double*				getZCoefficients();
-	Transformation_ptr	getTransformation();
 	bool				isTransformed();
 	void				setRange(double min, double max);
 	void				setMinT(double min);
 	void				setMaxT(double max);
 	virtual void		update() = 0;
 	virtual void		updateDeps() = 0;
-	virtual void		transform(Transformation_ptr &t) = 0;
 	virtual Point_ptr	posAt(double pc) = 0;
-
-	// Function pointers
-	typedef double(*Fn)(Entity_ptr, vector<double>);
-
-	// Sub-classes (public) - definitions
-	class TransformationFunction
-	{
-	public:
-		// Factories
-		TransformationFunction_ptr create(Entity_ptr &e, Fn fn, double p);
-		TransformationFunction_ptr create(Entity_ptr &e, Fn fn, vector<double> p);
-
-		// Methods (public)
-		Fn				getFn();
-		vector<double>	getInputs();
-		double			calculate();
-
-	private:
-		// Constructors
-		TransformationFunction(Entity_ptr &e, Fn fn, double p);
-		TransformationFunction(Entity_ptr &e, Fn fn, vector<double> p);
-
-		// Fields (private)
-		Entity_ptr		_entity;
-		Fn				_fn;
-		vector<double>	_inputs;
-	};
-
-	class TransformationMatrix
-	{
-	public:
-		// Factories
-		static TransformationMatrix_ptr create();
-
-	private:
-		// Constructors
-		TransformationMatrix();
-	};
-
-	class Transformation
-	{
-	public:
-		Point_ptr					getOrigin();
-		TransformationMatrix_ptr	getMatrix();
-		bool						isEmpty();
-
-	private:
-		Point_ptr _origin;
-		TransformationMatrix_ptr _t;
-		bool _empty;
-	};
 
 protected:
 	// Destructors
@@ -138,7 +75,6 @@ protected:
 	double				_cfs[3][2];
 	double				_range[2];
 	Point_ptr			_ends[2];
-	Transformation_ptr	_t;
 
 private:
 	virtual void		_applyTransform() = 0;
@@ -180,18 +116,16 @@ public:
 	static LineEntity2D_ptr create(Points_ptr &points, Fit2D fit);
 	static LineEntity2D_ptr create(Edge_ptr &e);
 	static LineEntity2D_ptr create(Edge_ptr &e, Fit2D fit);
-	static LineEntity2D_ptr create(LineEntity2D_ptr &l, Transformation_ptr &t);
+	static LineEntity2D_ptr create(Edges_ptr &es);
+	static LineEntity2D_ptr create(Edges_ptr &es, Fit2D fit);
 	static LineEntity2D_ptr createParallel(LineEntity2D_ptr &l,
 		double d, bool link);
-
-	static LineEntity2D_ptr createParallel(LineEntity2D_ptr &l,
-		double d, Fn t, bool link);
 
 	static LineEntity2D_ptr createNormal(LineEntity2D_ptr &l,
 		Point_ptr &p, bool link);
 
 	static LineEntity2D_ptr createNormal(LineEntity2D_ptr &l,
-		double f, bool link);
+		double t, bool link);
 
 	static LineEntity2D_ptr convertTo2D(LineEntity3D_ptr &l);
 	static LineEntity2D_ptr cast(Entity2D_ptr &e);
@@ -210,8 +144,9 @@ public:
 	bool		intercept(vector<LineEntity2D_ptr> e);
 	bool		intercept(Edge_ptr &e);
 	bool		intercept(Edges_ptr &e);
+	bool		intercept(RadEntity2D_ptr &e);
+	bool		intercept(vector<RadEntity2D_ptr> &es);
 	Point_ptr	getIntersect(LineEntity2D_ptr &l);
-	void		transform(Transformation_ptr &t);
 
 private:
 	// Constructors
@@ -221,7 +156,8 @@ private:
 	LineEntity2D(Points_ptr &p, Fit2D fit);
 	LineEntity2D(Edge_ptr &e);
 	LineEntity2D(Edge_ptr &e, Fit2D fit);
-	LineEntity2D(LineEntity2D_ptr &l, Transformation_ptr &t);
+	LineEntity2D(Edges_ptr &es);
+	LineEntity2D(Edges_ptr &es, Fit2D fit);
 
 	// Fields (private)
 	vector<Entity2D_ptr> _deps;
@@ -230,7 +166,7 @@ private:
 	void	_init(Points_ptr &p, Fit2D fit);
 	void	_calculate();
 	bool	_increment(Point_ptr &p);
-	void	_applyTransform();
+	bool	_decrement(Point_ptr &p);
 };
 
 class RadEntity2D : public Entity2D
@@ -240,7 +176,6 @@ public:
 	static RadEntity2D_ptr clone(RadEntity2D_ptr &l);
 	static RadEntity2D_ptr create(LineEntity2D_ptr &l1, LineEntity2D_ptr &l2);
 	static RadEntity2D_ptr createRadial(RadEntity2D_ptr &l, double d, bool link);
-	static RadEntity2D_ptr createRadial(RadEntity2D_ptr &l, Fn t, bool link);
 	static vector<LineEntity2D_ptr> createCorner(RadEntity2D_ptr &l, double d, bool link);
 	static RadEntity2D_ptr convertToArc(HelixEntity3D_ptr &l);
 	static RadEntity2D_ptr cast(Entity2D_ptr &e);
@@ -255,7 +190,6 @@ public:
 	bool		intercept(vector<LineEntity2D_ptr> e);
 	bool		intercept(Edge_ptr &e);
 	bool		intercept(Edges_ptr &e);
-	void		transform(Transformation_ptr &t);
 
 private:
 	// Constructors
@@ -332,7 +266,6 @@ public:
 	void		add(Points_ptr &p);
 	void		insert(Point_ptr &p, int i);
 	void		remove(Point_ptr &p);
-	void		transform(Transformation_ptr &t);
 
 private:
 	// Constructors
@@ -353,9 +286,6 @@ public:
 	static ArcEntity3D_ptr create(RadEntity2D_ptr &r, double h);
 	static ArcEntity3D_ptr cast(Entity3D_ptr &e);
 
-	// Methods (public)
-	void transform(Transformation_ptr &t);
-
 private:
 	// Constructors
 	ArcEntity3D(RadEntity2D_ptr &r, double h);
@@ -371,9 +301,7 @@ public:
 	static HelixEntity3D_ptr clone(HelixEntity3D_ptr &l);
 	static HelixEntity3D_ptr create(LineEntity3D_ptr &e1, LineEntity3D_ptr &e2);
 	static HelixEntity3D_ptr createOffset(HelixEntity3D_ptr &l, double d, bool link);
-	static HelixEntity3D_ptr createOffset(HelixEntity3D_ptr &l, Fn, bool link);
 	static HelixEntity3D_ptr createRadial(HelixEntity3D_ptr &l, double d, bool link);
-	static HelixEntity3D_ptr createRadial(HelixEntity3D_ptr &l, Fn, bool link);
 	static HelixEntity3D_ptr convertToHelix(RadEntity2D_ptr &l);
 	static HelixEntity3D_ptr cast(Entity3D_ptr &e);
 
@@ -388,7 +316,6 @@ public:
 	void		add(Points_ptr &p);
 	void		insert(Point_ptr &p, int i);
 	void		remove(Point_ptr &p);
-	void		transform(Transformation_ptr &t);
 
 private:
 	// Constructors

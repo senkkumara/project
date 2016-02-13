@@ -64,6 +64,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="build.cpp" />
     <ClCompile Include="feature.cpp" />
     <ClCompile Include="chair.cpp" />
     <ClCompile Include="connection.cpp" />
@@ -104,6 +105,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="attachable.h" />
+    <ClInclude Include="build.h" />
     <ClInclude Include="enums.h" />
     <ClInclude Include="feature.h" />
     <ClInclude Include="chair.h" />

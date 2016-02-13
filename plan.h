@@ -38,8 +38,19 @@ public:
 	static Plan_ptr create(Application_ptr &app, Specification &spec, Side side);
 
 	// Methods (public)
-	bool	applyChanges(PlanBuilderSnapshot_ptr &s);
-	bool	removeChanges(PlanBuilderSnapshot_ptr &s);
+	Application_ptr				getApplication();
+	Specification				getSpecification();
+	Side						getSide();
+	int							getIteration();
+	double						getQuality();
+	Edges_ptr*					getBoundary();
+	Edges_ptr					getActive();
+	Edges_ptr					getPassive();
+	SurfaceRegion2Ds_ptr		getRegions();
+	SurfaceTransition2Ds_ptr	getTransitions();
+	Feature2Ds_ptr				getFeatures();
+	bool						applyChanges(PlanBuilderSnapshot_ptr &s);
+	bool						removeChanges(PlanBuilderSnapshot_ptr &s);
 
 private:
 	// Constructors
@@ -52,8 +63,7 @@ private:
 	Side						_side;
 	int							_iter;
 	double						_quality;
-	Edges_ptr					_active;
-	Edges_ptr					_passive;
+	Edges_ptr					_boundary[2];
 	SurfaceRegion2Ds_ptr		_regions;
 	SurfaceTransition2Ds_ptr	_trans;
 	Feature2Ds_ptr				_feats;

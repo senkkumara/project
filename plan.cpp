@@ -22,6 +22,97 @@ Plan_ptr Plan::create(Application_ptr &app, Specification &spec, Side side)
 }
 
 /**
+ *	Get the application the plan is based on.
+ */
+Application_ptr Plan::getApplication()
+{
+	return _app;
+}
+
+/**
+ *	Get the specification the plan is based on.
+ */
+Specification Plan::getSpecification()
+{
+	return _spec;
+}
+
+/**
+ *	Get the side the plan is for.
+ */
+Side Plan::getSide()
+{
+	return _side;
+}
+
+/**
+ *	Get the iteration of the plan.
+ */
+int Plan::getIteration()
+{
+	return _iter;
+}
+
+/**
+ *	Get the quality of the plan.
+ */
+double Plan::getQuality()
+{
+	return _quality;
+}
+
+/**
+ *	Get the boundary of the plan. The zero-th element is the
+ *	rail-side and the one-th is the offset side.
+ */
+Edges_ptr* Plan::getBoundary()
+{
+	return _boundary;
+}
+
+/**
+ *	Get the active boundary of the plan - the one on
+ *	the same side of the rail.
+ */
+Edges_ptr Plan::getActive()
+{
+	return _boundary[0];
+}
+
+/**
+ *	Get the passive boundary of the plan - the one on the other
+ *	side of the stiarcase from the rail.
+ */
+Edges_ptr Plan::getPassive()
+{
+	return _boundary[1];
+}
+
+/**
+ *	Get the regions the plan consists of.
+ */
+SurfaceRegion2Ds_ptr Plan::getRegions()
+{
+	return _regions;
+}
+
+/**
+ *	Get the transitions the plan consists of.
+ */
+SurfaceTransition2Ds_ptr Plan::getTransitions()
+{
+	return _trans;
+}
+
+/**
+ *	Get the features the plan consists of.
+ */
+Feature2Ds_ptr Plan::getFeatures()
+{
+	return _feats;
+}
+
+/**
  *	Apply a previously created Plan Builder Snapshot.
  */
 bool Plan::applyChanges(PlanBuilderSnapshot_ptr &s)
@@ -68,17 +159,18 @@ void Plan::_init(Application_ptr &app, Specification &spec, Side side)
 	_spec = spec;
 	_side = side;
 	_iter = 0;
+	_quality = 0.0;
 
 	switch (_side)
 	{
 	case SIDE_LEFT:
-		_active = _app->left();
-		_passive = _app->right();
+		_boundary[0] = _app->left();
+		_boundary[1] = _app->right();
 		break;
 
 	case SIDE_RIGHT:
-		_active = _app->right();
-		_passive = _app->left();
+		_boundary[0] = _app->right();
+		_boundary[1] = _app->left();
 		break;
 
 	default:
@@ -89,8 +181,6 @@ void Plan::_init(Application_ptr &app, Specification &spec, Side side)
 	_regions = SurfaceRegion2Ds::create();
 	_trans = SurfaceTransition2Ds::create();
 	_feats = Feature2Ds::create();
-
-	_quality = 0.0;
 }
 
 /**
@@ -125,7 +215,7 @@ void Plan::_build()
 void Plan::_buildRegions()
 {
 	// Only build if there is 
-	if (_active->size() < 1)
+	if (_boundary[0]->size() < 1)
 	{
 		return;		//TODO: add exception handling
 	}
@@ -133,22 +223,22 @@ void Plan::_buildRegions()
 	Entity2D::Fit2D fit = _mapFit();
 
 	// Build the first region from the first edge
-	Edge_ptr e = _active->first();
-	SurfaceRegion2D_ptr reg = SurfaceRegion2D::create(e, _passive, fit);
+	Edge_ptr e = _boundary[0]->first();
+	SurfaceRegion2D_ptr reg = SurfaceRegion2D::create(e, _boundary[1], fit);
 	_regions->add(reg);
 
 	Feature2D_ptr feat = Feature2D::create(reg);
 	_feats->add(feat);
 
-	for (int i = 1; i < _active->size(); i++)
+	for (int i = 1; i < _boundary[0]->size(); i++)
 	{
-		e = _active->get(i);
+		e = _boundary[0]->get(i);
 
 		// Attempt to add edge to current region
 		if (! reg->append(e))
 		{
 			// Create new region
-			reg = SurfaceRegion2D::create(e, _passive, fit);
+			reg = SurfaceRegion2D::create(e, _boundary[1], fit);
 			_regions->add(reg);
 
 			feat = Feature2D::create(reg);
@@ -174,7 +264,7 @@ void Plan::_buildTransitions()
 		r[0] = f[0]->getRegion();
 		r[1] = f[1]->getRegion();
 
-		t = SurfaceTransition2D::create(r[0], r[1], _passive);
+		t = SurfaceTransition2D::create(r[0], r[1], _boundary[1]);
 		_trans->add(t);
 
 		f[0]->setOut(t);

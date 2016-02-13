@@ -56,16 +56,6 @@ double* Entity::getZCoefficients()
 	return _cfs[2];
 }
 
-Entity::Transformation_ptr Entity::getTransformation()
-{
-	return _t;
-}
-
-bool Entity::isTransformed()
-{
-	return (_t == nullptr) || _t->isEmpty();
-}
-
 void Entity::setRange(double min, double max)
 {
 	setMinT(min);
@@ -80,74 +70,6 @@ void Entity::setMinT(double min)
 void Entity::setMaxT(double max)
 {
 	_range[1] = max;
-}
-
-Entity::TransformationFunction_ptr Entity::TransformationFunction::create(Entity_ptr &e, Fn fn,
-		double p)
-{
-	return Entity::TransformationFunction_ptr(new Entity::TransformationFunction(
-		e, fn, p));
-}
-
-Entity::TransformationFunction_ptr Entity::TransformationFunction::create(Entity_ptr &e, Fn fn,
-		vector<double> p)
-{
-	return Entity::TransformationFunction_ptr(new Entity::TransformationFunction(
-		e, fn, p));
-}
-
-Entity::Fn Entity::TransformationFunction::getFn()
-{
-	return _fn;
-}
-
-vector<double> Entity::TransformationFunction::getInputs()
-{
-	return _inputs;
-}
-
-double Entity::TransformationFunction::calculate()
-{
-	return _fn(_entity, _inputs);
-}
-
-Entity::TransformationFunction::TransformationFunction(Entity_ptr &e, Fn fn, double p)
-{
-	_entity = e;
-	_fn = fn;
-	_inputs.push_back(p);
-}
-
-Entity::TransformationFunction::TransformationFunction(Entity_ptr &e, Fn fn, vector<double> p)
-{
-	_entity = e;
-	_fn = fn;
-	_inputs = p;
-}
-
-Entity::TransformationMatrix_ptr Entity::TransformationMatrix::create()
-{
-	return TransformationMatrix_ptr(new TransformationMatrix());
-}
-
-Entity::TransformationMatrix::TransformationMatrix()
-{
-	//TODO: implement method
-}
-
-Point_ptr Entity::Transformation::getOrigin()
-{
-	return _origin;
-}
-
-Entity::TransformationMatrix_ptr Entity::Transformation::getMatrix()
-{
-	return _t;
-}
-
-bool Entity::Transformation::isEmpty()
-{
-	return _empty;
 }
 
 Entity2D::~Entity2D()
@@ -180,50 +102,7 @@ LineEntity2D_ptr LineEntity2D::clone(LineEntity2D_ptr &l)
 	return 0;
 }
 
-LineEntity2D_ptr LineEntity2D::create(Point_ptr &p1, Point_ptr &p2)
-{
-	return LineEntity2D_ptr(new LineEntity2D(p1, p2));
-}
-
-LineEntity2D_ptr LineEntity2D::create(Point_ptr &p1, Point_ptr &p2,
-									  Entity2D::Fit2D f)
-{
-	return LineEntity2D_ptr(new LineEntity2D(p1, p2, f));
-}
-
-LineEntity2D_ptr LineEntity2D::create(Points_ptr &p)
-{
-	return LineEntity2D_ptr(new LineEntity2D(p));
-}
-
-LineEntity2D_ptr LineEntity2D::create(Points_ptr &p, Entity2D::Fit2D f)
-{
-	return LineEntity2D_ptr(new LineEntity2D(p, f));
-}
-
-LineEntity2D_ptr LineEntity2D::create(Edge_ptr &e)
-{
-	return LineEntity2D_ptr(new LineEntity2D(e));
-}
-
-LineEntity2D_ptr LineEntity2D::create(Edge_ptr &e, Entity2D::Fit2D f)
-{
-	return LineEntity2D_ptr(new LineEntity2D(e, f));
-}
-
-LineEntity2D_ptr LineEntity2D::create(LineEntity2D_ptr &l,
-									  Entity::Transformation_ptr &t)
-{
-	return LineEntity2D_ptr(new LineEntity2D(l, t));
-}
-
 LineEntity2D_ptr LineEntity2D::createParallel(LineEntity2D_ptr &l, double d, bool link)
-{
-	//TODO: implement method
-	return 0;
-}
-
-LineEntity2D_ptr LineEntity2D::createParallel(LineEntity2D_ptr &l, double d, Entity::Fn f, bool link)
 {
 	//TODO: implement method
 	return 0;
@@ -235,7 +114,7 @@ LineEntity2D_ptr LineEntity2D::createNormal(LineEntity2D_ptr &l, Point_ptr &p, b
 	return 0;
 }
 
-LineEntity2D_ptr LineEntity2D::createNormal(LineEntity2D_ptr &l, double f, bool link)
+LineEntity2D_ptr LineEntity2D::createNormal(LineEntity2D_ptr &l, double t, bool link)
 {
 	//TODO: implement method
 	return 0;
@@ -370,11 +249,6 @@ Point_ptr LineEntity2D::getIntersect(LineEntity2D_ptr &l)
 	return 0;
 }
 
-void LineEntity2D::transform(Transformation_ptr &t)
-{
-	//TODO: implement method
-}
-
 LineEntity2D::LineEntity2D(Point_ptr &p1, Point_ptr &p2)
 {
 	Points_ptr p = Points::create();
@@ -421,11 +295,6 @@ LineEntity2D::LineEntity2D(Edge_ptr &e, Entity2D::Fit2D f)
 	_init(p, f);
 }
 
-LineEntity2D::LineEntity2D(LineEntity2D_ptr &l, Transformation_ptr &t)
-{
-	//TODO: implement method
-}
-
 void LineEntity2D::_init(Points_ptr &p, Entity2D::Fit2D f)
 {
 	//TODO: implement method
@@ -442,11 +311,6 @@ bool LineEntity2D::_increment(Point_ptr &p)
 	return false;
 }
 
-void LineEntity2D::_applyTransform()
-{
-	//TODO: implement method
-}
-
 RadEntity2D_ptr RadEntity2D::clone(RadEntity2D_ptr &l)
 {
 	//TODO: implement method
@@ -459,12 +323,6 @@ RadEntity2D_ptr RadEntity2D::create(LineEntity2D_ptr &l1, LineEntity2D_ptr &l2)
 }
 
 RadEntity2D_ptr RadEntity2D::createRadial(RadEntity2D_ptr &l, double d, bool link)
-{
-	//TODO: implement method
-	return 0;
-}
-
-RadEntity2D_ptr RadEntity2D::createRadial(RadEntity2D_ptr &l, Fn t, bool link)
 {
 	//TODO: implement method
 	return 0;
@@ -547,11 +405,6 @@ bool RadEntity2D::intercept(Edges_ptr &e)
 	}
 
 	return false;
-}
-
-void RadEntity2D::transform(Transformation_ptr &t)
-{
-	//TODO: implement method
 }
 
 RadEntity2D::RadEntity2D(LineEntity2D_ptr &e1, LineEntity2D_ptr &e2)
@@ -673,11 +526,6 @@ void LineEntity3D::insert(Point_ptr &p, int i)
 }
 
 void LineEntity3D::remove(Point_ptr &p)
-{
-	//TODO: implement method
-}
-
-void LineEntity3D::transform(Transformation_ptr &t)
 {
 	//TODO: implement method
 }

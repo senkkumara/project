@@ -14,18 +14,28 @@ SurfaceRegion2D_ptr SurfaceRegion2D::create(Edge_ptr &e, Edges_ptr &b,
 
 bool SurfaceRegion2D::append(Edge_ptr &e)
 {
-	_active->add(e->right());
+	_inner->add(e->right());
 	if (_intercept())
 	{
-		_active->remove(e->right());
+		_inner->remove(e->right());
 		return false;
 	}
 	return true;
 }
 
-Edges_ptr SurfaceRegion2D::getBoundary()
+Edges_ptr* SurfaceRegion2D::getBoundary()
 {
 	return _boundary;
+}
+
+Edges_ptr SurfaceRegion2D::getActive()
+{
+	return _boundary[0];
+}
+
+Edges_ptr SurfaceRegion2D::getPassive()
+{
+	return _boundary[1];
 }
 
 Entity2D::Fit2D SurfaceRegion2D::getFit()
@@ -38,19 +48,14 @@ SurfaceRegion2D::Type SurfaceRegion2D::getType()
 	return _type;
 }
 
-Edges_ptr SurfaceRegion2D::getEdges()
+LineEntity2D_ptr SurfaceRegion2D::inner()
 {
-	return _edges;
+	return _inner;
 }
 
-LineEntity2D_ptr SurfaceRegion2D::getActive()
+LineEntity2D_ptr SurfaceRegion2D::outer()
 {
-	return _active;
-}
-
-LineEntity2D_ptr SurfaceRegion2D::getPassive()
-{
-	return _passive;
+	return _outer;
 }
 
 LineEntity2D_ptr SurfaceRegion2D::entry()
@@ -97,21 +102,51 @@ SurfaceTransition2D_ptr SurfaceTransition2D::create(SurfaceRegion2D_ptr &f1,
 	return SurfaceTransition2D_ptr(new SurfaceTransition2D(f1, f2, e));
 }
 
-RadEntity2D_ptr SurfaceTransition2D::getActive()
+Edges_ptr* SurfaceTransition2D::getBoundary()
 {
-	return _active;
+	return _boundary;
 }
 
-LineEntity2D_ptr* SurfaceTransition2D::getPassive()
+Edges_ptr SurfaceTransition2D::getActive()
 {
-	return _passive;
+	return _boundary[0];
+}
+
+Edges_ptr SurfaceTransition2D::getPassive()
+{
+	return _boundary[1];
+}
+
+Entity2D::Fit2D SurfaceTransition2D::getFit()
+{
+	return _fit;
+}
+
+RadEntity2D_ptr SurfaceTransition2D::inner()
+{
+	return _inner;
+}
+
+LineEntity2D_ptr* SurfaceTransition2D::outer()
+{
+	return _outer;
+}
+
+LineEntity2D_ptr SurfaceTransition2D::entry()
+{
+	return _entry;
+}
+
+LineEntity2D_ptr SurfaceTransition2D::exit()
+{
+	return _exit;
 }
 
 SurfaceTransition2D::SurfaceTransition2D(SurfaceRegion2D_ptr &f1, SurfaceRegion2D_ptr &f2, Edges_ptr &b)
 {
 	_init();
 
-	_boundary = b;
+	//_boundary = b;
 
 	LineEntity2D_ptr l[2];
 	Point_ptr p[4];
@@ -119,7 +154,7 @@ SurfaceTransition2D::SurfaceTransition2D(SurfaceRegion2D_ptr &f1, SurfaceRegion2
 	l[0] = f1->getActive();
 	l[1] = f2->getActive();
 
-	_active = RadEntity2D::create(l[0], l[1]);
+	//_active = RadEntity2D::create(l[0], l[1]);
 	//_passive = RadEntity2D::createCorner(_active, 150.0, true);
 
 	if (_intercept())
@@ -128,8 +163,8 @@ SurfaceTransition2D::SurfaceTransition2D(SurfaceRegion2D_ptr &f1, SurfaceRegion2
 		throw SolutionBuildException();
 	}
 
-	p[0] = _active->left();
-	p[1] = _active->right();
+	//p[0] = _active->left();
+	//p[1] = _active->right();
 	//p[2] = _passive.at(0)->left();
 	//p[3] = _passive.at(1)->right();
 
