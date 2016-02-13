@@ -213,7 +213,7 @@ void LineEntity2D::setMaxT(double max)
  */
 Point_ptr LineEntity2D::posAt(double t)
 {
-	double t = 0.0, xP = 0.0, yP = 0.0, zP = 0.0;
+	double xP = 0.0, yP = 0.0, zP = 0.0;
 
 	if (_range[0] != 0 || _range[1] != 0)
 	{
@@ -582,7 +582,7 @@ double RadEntity2D::z(double t)
 /**
  *	Get the range of "t" value for the entity.
  */
-void LineEntity2D::setRange(double min, double max)
+void RadEntity2D::setRange(double min, double max)
 {
 	_range[0] = min;
 	_range[1] = max;
@@ -594,7 +594,7 @@ void LineEntity2D::setRange(double min, double max)
 /**
  *	Get the minimum "t" value for the entity.
  */
-void LineEntity2D::setMinT(double min)
+void RadEntity2D::setMinT(double min)
 {
 	_range[0] = min;
 	_ends[0] = posAt(min);
@@ -603,7 +603,7 @@ void LineEntity2D::setMinT(double min)
 /**
  *	Get the maximum "t" value for the entity.
  */
-void LineEntity2D::setMaxT(double max)
+void RadEntity2D::setMaxT(double max)
 {
 	_range[1] = max;
 	_ends[1] = posAt(max);
@@ -612,9 +612,9 @@ void LineEntity2D::setMaxT(double max)
 /**
  *	Get the point at a given "t" value.
  */
-Point_ptr LineEntity2D::posAt(double t)
+Point_ptr RadEntity2D::posAt(double t)
 {
-	double t = 0.0, xP = 0.0, yP = 0.0, zP = 0.0;
+	double xP = 0.0, yP = 0.0, zP = 0.0;
 
 	if (_range[0] != 0 || _range[1] != 0)
 	{
@@ -629,7 +629,7 @@ Point_ptr LineEntity2D::posAt(double t)
 /**
  *	Get the Point a given percentage along the entity.
  */
-Point_ptr LineEntity2D::posAtDist(double pc)
+Point_ptr RadEntity2D::posAtDist(double pc)
 {
 	double t = 0.0;
 
@@ -754,7 +754,7 @@ LineEntity3D_ptr LineEntity3D::clone(LineEntity3D_ptr &l)
 /**
  *	
  */
-LineEntity3D_ptr LineEntity3D::createParallel(LineEntity3D_ptr &l, double d, bool link)
+LineEntity3D_ptr LineEntity3D::createParallel(LineEntity3D_ptr &l, double d)
 {
 	//TODO: implement method
 	return 0;
@@ -763,7 +763,7 @@ LineEntity3D_ptr LineEntity3D::createParallel(LineEntity3D_ptr &l, double d, boo
 /**
  *	
  */
-LineEntity3D_ptr LineEntity3D::createNormal(LineEntity3D_ptr &l, Point_ptr &p, bool link)
+LineEntity3D_ptr LineEntity3D::createNormal(LineEntity3D_ptr &l, Point_ptr &p)
 {
 	//TODO: implement method
 	return 0;

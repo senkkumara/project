@@ -40,6 +40,9 @@ typedef shared_ptr<ArcEntity3D> ArcEntity3D_ptr;
 class HelixEntity3D;	// Pre-declare class for shared pointer typedef
 typedef shared_ptr<HelixEntity3D> HelixEntity3D_ptr;
 
+class RadEntity3D;		// Pre-declare class for shared pointer typedef
+typedef shared_ptr<RadEntity3D> RadEntity3D_ptr;
+
 class SurfaceEntity;		// Pre-declare class for shared pointer typedef
 typedef shared_ptr<SurfaceEntity> SurfaceEntity_ptr;
 
@@ -108,10 +111,10 @@ class LineEntity2D : public Entity, public Entity2D,
 public:
 	// Factories
 	static LineEntity2D_ptr clone(LineEntity2D_ptr &l);
-	static LineEntity2D_ptr create(Point_ptr &point, Point_ptr &point2);
-	static LineEntity2D_ptr create(Point_ptr &point, Point_ptr &point2, Fit2D fit);
-	static LineEntity2D_ptr create(Points_ptr &points);
-	static LineEntity2D_ptr create(Points_ptr &points, Fit2D fit);
+	static LineEntity2D_ptr create(Point_ptr &p1, Point_ptr &p2);
+	static LineEntity2D_ptr create(Point_ptr &p1, Point_ptr &p2, Fit2D fit);
+	static LineEntity2D_ptr create(Points_ptr &ps);
+	static LineEntity2D_ptr create(Points_ptr &ps, Fit2D fit);
 	static LineEntity2D_ptr create(Edge_ptr &e);
 	static LineEntity2D_ptr create(Edge_ptr &e, Fit2D fit);
 	static LineEntity2D_ptr create(Edges_ptr &es);
@@ -120,28 +123,30 @@ public:
 	static LineEntity2D_ptr createNormal(LineEntity2D_ptr &l, Point_ptr &p);
 	static LineEntity2D_ptr createNormal(LineEntity2D_ptr &l, double t);
 	static LineEntity2D_ptr convertTo2D(LineEntity3D_ptr &l);
-	static LineEntity2D_ptr cast(Entity2D_ptr &e);
+	static LineEntity2D_ptr split(double t);
 
 	// Methods (public)
-	double		x(double t);
-	double		y(double t);
-	double		z(double t);
-	void		setRange(double min, double max);
-	void		setMinT(double min);
-	void		setMaxT(double max);
-	Point_ptr	posAt(double t);
-	Point_ptr	posAtDist(double pc);
-	void		add(Point_ptr &p);						// Override
-	void		add(Points_ptr &p);						// Override
-	void		insert(Point_ptr &p, int i);			// Override
-	void		remove(Point_ptr &p);					// Override
-	bool		intersects(LineEntity2D_ptr &e);
-	bool		intersects(vector<LineEntity2D_ptr> e);
-	bool		intersects(Edge_ptr &e);
-	bool		intersects(Edges_ptr &e);
-	bool		intersects(RadEntity2D_ptr &e);
-	bool		intersects(vector<RadEntity2D_ptr> &es);
-	Point_ptr	getIntersect(LineEntity2D_ptr &l);
+	double				x(double t);
+	double				y(double t);
+	double				z(double t);
+	void				setRange(double min, double max);
+	void				setMinT(double min);
+	void				setMaxT(double max);
+	Point_ptr			posAt(double t);
+	Point_ptr			posAtDist(double pc);
+	void				add(Point_ptr &p);						// Override
+	void				add(Points_ptr &p);						// Override
+	void				insert(Point_ptr &p, int i);			// Override
+	void				remove(Point_ptr &p);					// Override
+	void				merge(LineEntity2D_ptr &l);
+	LineEntity2D_ptr	cast(Entity2D_ptr &e);
+	bool				intersects(LineEntity2D_ptr &e);
+	bool				intersects(vector<LineEntity2D_ptr> e);
+	bool				intersects(Edge_ptr &e);
+	bool				intersects(Edges_ptr &e);
+	bool				intersects(RadEntity2D_ptr &e);
+	bool				intersects(vector<RadEntity2D_ptr> &es);
+	Point_ptr			getIntersect(LineEntity2D_ptr &l);
 
 private:
 	// Constructors
@@ -207,6 +212,7 @@ public:
 	// Enumerations (public)
 	enum InterceptPlane
 	{
+		// Used when determining if two entities intersect.
 		PLANE_XY,
 		PLANE_YZ,
 		PLANE_XZ,
@@ -229,7 +235,7 @@ public:
 	};
 
 	// Methods (public)
-	Fit3D				getFit();
+	Fit3D getFit();
 
 protected:
 	// Destructor
@@ -244,26 +250,29 @@ class LineEntity3D : public Entity, public Entity3D,
 {
 public:
 	// Factories
-	static LineEntity3D_ptr clone(LineEntity3D_ptr &l);
-	static LineEntity3D_ptr createParallel(LineEntity3D_ptr &l, double d, bool link);
-	static LineEntity3D_ptr createNormal(LineEntity3D_ptr &l, Point_ptr &p, bool link);
-	static LineEntity3D_ptr convertTo3D(LineEntity2D_ptr &l);
+	static LineEntity3D_ptr clone(LineEntity3D_ptr &e);
+	static LineEntity3D_ptr create(LineEntity2D_ptr &e);
+	static LineEntity3D_ptr createParallel(LineEntity3D_ptr &e, double d);
+	static LineEntity3D_ptr createNormal(LineEntity3D_ptr &e, Point_ptr &p);
+	static LineEntity3D_ptr convertTo3D(LineEntity2D_ptr &e);
 	static LineEntity3D_ptr cast(Entity3D_ptr &e);
 
 	// Methods (public)
-	double		x(double t);
-	double		y(double t);
-	double		z(double t);
-	void		setRange(double min, double max);
-	void		setMinT(double min);
-	void		setMaxT(double max);
-	Point_ptr	posAt(double t);
-	Point_ptr	posAtDist(double pc);
-	void		add(Point_ptr &p);						// Override
-	void		add(Points_ptr &p);						// Override
-	void		insert(Point_ptr &p, int i);			// Override
-	void		remove(Point_ptr &p);					// Override
-	bool		remove(Point_ptr &p, bool dry);
+	double				x(double t);
+	double				y(double t);
+	double				z(double t);
+	void				setRange(double min, double max);
+	void				setMinT(double min);
+	void				setMaxT(double max);
+	Point_ptr			posAt(double t);
+	Point_ptr			posAtDist(double pc);
+	void				add(Point_ptr &p);						// Override
+	void				add(Points_ptr &p);						// Override
+	void				insert(Point_ptr &p, int i);			// Override
+	void				remove(Point_ptr &p);					// Override
+	bool				remove(Point_ptr &p, bool dry);
+	LineEntity3D_ptr	split(double t);
+	void				merge(LineEntity3D_ptr &l);
 
 private:
 	// Constructors
@@ -334,13 +343,42 @@ private:
 	RadEntity2D_ptr	_rad;
 
 	// Methods (private)
+	void _calculate();
 	void _increment(Point_ptr &p);
 	void _decrement(Point_ptr &p);
 };
 
-class RadEntity3D: public Entity3D
+class RadEntity3D: public Entity, public Entity3D
 {
+public:
+// Factories
+	static RadEntity3D_ptr clone(RadEntity3D_ptr &e);
+	static RadEntity3D_ptr create(Entity3D_ptr &e1, Entity3D_ptr &e2);
+	static RadEntity2D_ptr cast(Entity3D_ptr &e);
 
+	// Methods (public)
+	double		x(double t);
+	double		y(double t);
+	double		z(double t);
+	void		setRange(double min, double max);
+	void		setMinT(double min);
+	void		setMaxT(double max);
+	Point_ptr	posAt(double t);
+	Point_ptr	posAtDist(double pc);
+	bool		intersects(LineEntity3D_ptr &e, InterceptPlane p);
+	bool		intersects(vector<LineEntity3D_ptr> e, InterceptPlane p);
+	bool		intersects(Edge_ptr &e, InterceptPlane p);
+	bool		intersects(Edges_ptr &e, InterceptPlane p);
+
+private:
+	// Constructors
+	RadEntity3D(Entity3D_ptr &e1, Entity3D_ptr &e2);
+
+	// Fields (private)
+	Entity3D_ptr		_adj[2];
+
+	// Methods (private)
+	void _calculate();
 };
 
 /**

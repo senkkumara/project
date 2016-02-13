@@ -38,6 +38,9 @@ typedef shared_ptr<ArcEntity3Ds> ArcEntity3Ds_ptr;
 class HelixEntity3Ds;	// Pre-declare class for shared pointer typedef
 typedef shared_ptr<HelixEntity3Ds> HelixEntity3Ds_ptr;
 
+class RadEntity3Ds;	// Pre-declare class for shared pointer typedef
+typedef shared_ptr<RadEntity3Ds> RadEntity3Ds_ptr;
+
 /**
  *	Collection of Entities.
  */
@@ -48,9 +51,9 @@ private:
 	Entities();
 
 	// Operator overloads
-	friend std::ostream &operator<<(std::ostream &strm, const Entities &e);
+	friend std::ostream &operator<<(std::ostream &strm, const Entities &es);
 	friend std::ostream &operator<<(std::ostream &strm,
-		const Entities_ptr &e);
+		const Entities_ptr &es);
 
 public:
 	// Factories
@@ -86,9 +89,9 @@ private:
 	LineEntity2Ds();
 
 	// Operator overloads
-	friend std::ostream &operator<<(std::ostream &strm, const LineEntity2Ds &fs);
+	friend std::ostream &operator<<(std::ostream &strm, const LineEntity2Ds &es);
 	friend std::ostream &operator<<(std::ostream &strm,
-		const LineEntity2Ds_ptr &fs);
+		const LineEntity2Ds_ptr &es);
 
 public:
 	// Factories
@@ -143,9 +146,9 @@ private:
 	LineEntity3Ds();
 
 	// Operator overloads
-	friend std::ostream &operator<<(std::ostream &strm, const LineEntity3Ds &fs);
+	friend std::ostream &operator<<(std::ostream &strm, const LineEntity3Ds &es);
 	friend std::ostream &operator<<(std::ostream &strm,
-		const LineEntity3Ds_ptr &fs);
+		const LineEntity3Ds_ptr &es);
 
 public:
 	// Factories
@@ -162,9 +165,9 @@ private:
 	ArcEntity3Ds();
 
 	// Operator overloads
-	friend std::ostream &operator<<(std::ostream &strm, const ArcEntity3Ds &fs);
+	friend std::ostream &operator<<(std::ostream &strm, const ArcEntity3Ds &es);
 	friend std::ostream &operator<<(std::ostream &strm,
-		const ArcEntity3Ds_ptr &fs);
+		const ArcEntity3Ds_ptr &es);
 
 public:
 	// Factories
@@ -181,13 +184,32 @@ private:
 	HelixEntity3Ds();
 
 	// Operator overloads
-	friend std::ostream &operator<<(std::ostream &strm, const HelixEntity3Ds &fs);
+	friend std::ostream &operator<<(std::ostream &strm, const HelixEntity3Ds &es);
 	friend std::ostream &operator<<(std::ostream &strm,
-		const HelixEntity3Ds_ptr &fs);
+		const HelixEntity3Ds_ptr &es);
 
 public:
 	// Factories
 	static HelixEntity3Ds_ptr create();
+};
+
+/**
+ *	Collection of RadEntity2Ds.
+ */
+class RadEntity3Ds : public Collection<RadEntity3D_ptr, RadEntity3Ds_ptr>
+{
+private:
+	// Constructors
+	RadEntity3Ds();
+
+	// Operator overloads
+	friend std::ostream &operator<<(std::ostream &strm, const RadEntity3Ds &es);
+	friend std::ostream &operator<<(std::ostream &strm,
+		const RadEntity3Ds_ptr &es);
+
+public:
+	// Factories
+	static RadEntity2Ds_ptr create();
 };
 
 #endif

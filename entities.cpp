@@ -22,7 +22,7 @@ Entities::Entities()
 /**
  *	<< operator overload.
  */
-std::ostream &operator<<(std::ostream &strm, const Entities &e)
+std::ostream &operator<<(std::ostream &strm, const Entities &es)
 {
 	//TODO: Implement method
 	throw MethodNotImplementedException("<< Entities");
@@ -32,9 +32,9 @@ std::ostream &operator<<(std::ostream &strm, const Entities &e)
 /**
  *	<< operator overload.
  */
-std::ostream &operator<<(std::ostream &strm, const Entities_ptr &e)
+std::ostream &operator<<(std::ostream &strm, const Entities_ptr &es)
 {
-	return strm << *e;
+	return strm << *es;
 }
 
 /**
