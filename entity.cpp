@@ -92,6 +92,14 @@ Entity2D::Fit2D Entity2D::getFit()
 }
 
 /**
+ *	Virtual deconstructor, forcing Entity to be polymorphic.
+ */
+Entity2D::~Entity2D()
+{
+	// do nothing...
+}
+
+/**
  *	Factory method that creates a new entity from another.
  *	
  *	Note that it will reuse the same Points as the donor.
@@ -147,7 +155,7 @@ LineEntity2D_ptr LineEntity2D::cast(Entity2D_ptr &e)
 }
 
 /**
- *	
+ *	Calculate the x-coordinate at a given value of t.
  */
 double LineEntity2D::x(double t)
 {
@@ -155,7 +163,7 @@ double LineEntity2D::x(double t)
 }
 
 /**
- *	
+ *	Calculate the y-coordinate at a given value of t.
  */
 double LineEntity2D::y(double t)
 {
@@ -163,7 +171,7 @@ double LineEntity2D::y(double t)
 }
 
 /**
- *	
+ *	Calculate the z-coordinate at a given value of t.
  */
 double LineEntity2D::z(double t)
 {
@@ -171,7 +179,7 @@ double LineEntity2D::z(double t)
 }
 
 /**
- *	
+ *	Get the range of "t" value for the entity.
  */
 void LineEntity2D::setRange(double min, double max)
 {
@@ -183,7 +191,7 @@ void LineEntity2D::setRange(double min, double max)
 }
 
 /**
- *	
+ *	Get the minimum "t" value for the entity.
  */
 void LineEntity2D::setMinT(double min)
 {
@@ -192,7 +200,7 @@ void LineEntity2D::setMinT(double min)
 }
 
 /**
- *	
+ *	Get the maximum "t" value for the entity.
  */
 void LineEntity2D::setMaxT(double max)
 {
@@ -201,61 +209,77 @@ void LineEntity2D::setMaxT(double max)
 }
 
 /**
- *	
+ *	Get the point at a given "t" value.
  */
-Point_ptr LineEntity2D::posAtDist(double pc)
+Point_ptr LineEntity2D::posAt(double t)
 {
 	double t = 0.0, xP = 0.0, yP = 0.0, zP = 0.0;
 
 	if (_range[0] != 0 || _range[1] != 0)
 	{
-		t = ((_range[1] + _range[0]) * pc) + _range[0];
 		xP = x(t);
 		yP = y(t);
+		zP = z(t);
 	}
 
 	return Point::create(xP, yP, zP);
 }
 
 /**
- *	
+ *	Get the Point a given percentage along the entity.
+ */
+Point_ptr LineEntity2D::posAtDist(double pc)
+{
+	double t = 0.0;
+
+	if (_range[0] != 0 || _range[1] != 0)
+	{
+		t = ((_range[1] + _range[0]) * pc) + _range[0];
+		return posAt(t);
+	}
+
+	return Point::create(0.0, 0.0, 0.0);
+}
+
+/**
+ *	Add a point to the entity and recalculate the equation.
  */
 void LineEntity2D::add(Point_ptr &p)
 {
-	Points_ptr ps = Points::create();
-	ps->add(p);
-	add(ps);
-	//TODO: implement method
+	__super::add(p);
+	_increment(p);
 }
 
 /**
- *	
+ *	Add the points to the entity and recalculate the equation.
  */
 void LineEntity2D::add(Points_ptr &ps)
 {
-	//TODO: implement method
 	__super::add(ps);
+	_increment(ps);
 }
 
 /**
- *	
+ *	Inserts a point and recalculates the equation.
  */
 void LineEntity2D::insert(Point_ptr &p, int index)
 {
-	//TODO: implement method
 	__super::insert(p, index);
+	_increment(p);
 }
 
 /**
- *	
+ *	Remove a point and recalculate the equation.
  */
 void LineEntity2D::remove(Point_ptr &p)
 {
-	//TODO: implement method
+	__super::remove(p);
+	_decrement(p);
 }
 
 /**
- *	
+ *	Returns a boolean depending on whether an argument entity intersects
+ *	this entity.
  */
 bool LineEntity2D::intersects(LineEntity2D_ptr &l)
 {
@@ -292,7 +316,8 @@ bool LineEntity2D::intersects(LineEntity2D_ptr &l)
 }
 
 /**
- *	
+ *	Returns a boolean depending on whether one or more argument entities
+ *	intersect this entity.
  */
 bool LineEntity2D::intersects(vector<LineEntity2D_ptr> e)
 {
@@ -305,7 +330,8 @@ bool LineEntity2D::intersects(vector<LineEntity2D_ptr> e)
 }
 
 /**
- *	
+ *	Returns a boolean depending on whether an argument edge intersects
+ *	this entity.
  */
 bool LineEntity2D::intersects(Edge_ptr &e)
 {
@@ -313,7 +339,8 @@ bool LineEntity2D::intersects(Edge_ptr &e)
 }
 
 /**
- *	
+ *	Returns a boolean depending on whether one or more of the argument
+ *	edges intersects this entity.
  */
 bool LineEntity2D::intersects(Edges_ptr &e)
 {
@@ -325,8 +352,24 @@ bool LineEntity2D::intersects(Edges_ptr &e)
 	return false;
 }
 
+bool LineEntity2D::intersects(RadEntity2D_ptr &e)
+{
+	//TODO: implement method
+	return false;
+}
+
+bool LineEntity2D::intersects(vector<RadEntity2D_ptr> &es)
+{
+	for (unsigned int i = 0; i < es.size(); i++)
+	{
+		if (intersects(es.at(i))) return true;
+	}
+
+	return false;
+}
+
 /**
- *	
+ *	Gets the point where this entity intersects an argument entity.
  */
 Point_ptr LineEntity2D::getIntersect(LineEntity2D_ptr &l)
 {
@@ -335,23 +378,14 @@ Point_ptr LineEntity2D::getIntersect(LineEntity2D_ptr &l)
 }
 
 /**
- *	Default destructor.
- */
-Entity2D::~Entity2D()
-{
-	// do nothing...
-}
-
-/**
  *	
  */
 LineEntity2D::LineEntity2D(Point_ptr &p1, Point_ptr &p2)
 {
-	Points_ptr p = Points::create();
-	p->add(p1);
-	p->add(p2);
+	__super::add(p1);
+	__super::add(p2);
 
-	_init(p, Entity2D::FIT2D_BEST);
+	_init(Entity2D::FIT2D_BEST);
 }
 
 /**
@@ -359,27 +393,30 @@ LineEntity2D::LineEntity2D(Point_ptr &p1, Point_ptr &p2)
  */
 LineEntity2D::LineEntity2D(Point_ptr &p1, Point_ptr &p2, Entity2D::Fit2D f)
 {
-	Points_ptr p = Points::create();
-	p->add(p1);
-	p->add(p2);
+	__super::add(p1);
+	__super::add(p2);
 
-	_init(p, f);
+	_init(f);
 }
 
 /**
  *	
  */
-LineEntity2D::LineEntity2D(Points_ptr &p)
+LineEntity2D::LineEntity2D(Points_ptr &ps)
 {
-	_init(p, Entity2D::FIT2D_BEST);
+	__super::add(ps);
+
+	_init(Entity2D::FIT2D_BEST);
 }
 
 /**
  *	
  */
-LineEntity2D::LineEntity2D(Points_ptr &p, Entity2D::Fit2D f)
+LineEntity2D::LineEntity2D(Points_ptr &ps, Entity2D::Fit2D f)
 {
-	_init(p, f);
+	__super::add(ps);
+
+	_init(f);
 }
 
 /**
@@ -387,11 +424,10 @@ LineEntity2D::LineEntity2D(Points_ptr &p, Entity2D::Fit2D f)
  */
 LineEntity2D::LineEntity2D(Edge_ptr &e)
 {
-	Points_ptr p = Points::create();
-	p->add(e->left());
-	p->add(e->right());
+	__super::add(e->left());
+	__super::add(e->right());
 
-	_init(p, Entity2D::FIT2D_BEST);
+	_init(Entity2D::FIT2D_BEST);
 }
 
 /**
@@ -399,23 +435,23 @@ LineEntity2D::LineEntity2D(Edge_ptr &e)
  */
 LineEntity2D::LineEntity2D(Edge_ptr &e, Entity2D::Fit2D f)
 {
-	Points_ptr p = Points::create();
-	p->add(e->left());
-	p->add(e->right());
+	__super::add(e->left());
+	__super::add(e->right());
 
-	_init(p, f);
+	_init(f);
 }
 
 /**
- *	
+ *	Initialise the fields.
  */
-void LineEntity2D::_init(Points_ptr &p, Entity2D::Fit2D f)
+void LineEntity2D::_init(Entity2D::Fit2D f)
 {
-	//TODO: implement method
+	_fit = f;
+	_calculate();
 }
 
 /**
- *	
+ *	Full recalculate the coefficients of the equation.
  */
 void LineEntity2D::_calculate()
 {
@@ -423,12 +459,47 @@ void LineEntity2D::_calculate()
 }
 
 /**
- *	
+ *	Update the coefficients of the equation to include the additional point.
+ *
+ *	This equation does not recalculate the whole equation, it merely
+ *	incorporates the partial contribution of the point.
  */
-bool LineEntity2D::_increment(Point_ptr &p)
+void LineEntity2D::_increment(Point_ptr &p)
 {
 	//TODO: implement method
-	return false;
+}
+
+/**
+ *	Update the coefficients of the equation to include the additional points.
+ *
+ *	This equation does not recalculate the whole equation, it merely
+ *	incorporates the partial contribution of the points.
+ */
+void LineEntity2D::_increment(Points_ptr &ps)
+{
+	//TODO: implement method
+}
+
+/**
+ *	Update the coefficients of the equation to exclude the argument point.
+ *
+ *	This equation does not recalculate the whole equation, it merely
+ *	removes the partial contribution of the point.
+ */
+void LineEntity2D::_decrement(Point_ptr &p)
+{
+	//TODO: implement method
+}
+
+/**
+ *	Update the coefficients of the equation to exclude the argument points.
+ *
+ *	This equation does not recalculate the whole equation, it merely
+ *	removes the partial contribution of the point.
+ */
+void LineEntity2D::_decrement(Points_ptr &ps)
+{
+	//TODO: implement method
 }
 
 /**
@@ -451,7 +522,7 @@ RadEntity2D_ptr RadEntity2D::create(LineEntity2D_ptr &l1, LineEntity2D_ptr &l2)
 /**
  *	
  */
-RadEntity2D_ptr RadEntity2D::createRadial(RadEntity2D_ptr &l, double d, bool link)
+RadEntity2D_ptr RadEntity2D::createRadial(RadEntity2D_ptr &l, double d)
 {
 	//TODO: implement method
 	return 0;
@@ -460,7 +531,7 @@ RadEntity2D_ptr RadEntity2D::createRadial(RadEntity2D_ptr &l, double d, bool lin
 /**
  *	
  */
-vector<LineEntity2D_ptr> RadEntity2D::createCorner(RadEntity2D_ptr &l, double d, bool link)
+vector<LineEntity2D_ptr> RadEntity2D::createCorner(RadEntity2D_ptr &l, double d)
 {
 	//TODO: implement method
 	vector<LineEntity2D_ptr> v;
@@ -485,21 +556,90 @@ RadEntity2D_ptr RadEntity2D::cast(Entity2D_ptr &e)
 }
 
 /**
- *	
+ *	Calculate the x-coordinate at a given value of t.
  */
 double RadEntity2D::x(double t)
 {
-	//TODO: correct(?)
-	return (_range[0] * cos(t)) + _range[1];
+	return (_cfs[0][0] * cos(t)) + _cfs[0][1];
 }
 
 /**
- *	
+ *	Calculate the y-coordinate at a given value of t.
  */
 double RadEntity2D::y(double t)
 {
-	//TODO: correct(?)
-	return (_range[0] * sin(t)) + _range[1];
+	return (_cfs[1][0] * sin(t)) + _cfs[1][1];
+}
+
+/**
+ *	Calculate the z-coordinate at a given value of t.
+ */
+double RadEntity2D::z(double t)
+{
+	return 0.0;
+}
+
+/**
+ *	Get the range of "t" value for the entity.
+ */
+void LineEntity2D::setRange(double min, double max)
+{
+	_range[0] = min;
+	_range[1] = max;
+
+	_ends[0] = posAt(min);
+	_ends[1] = posAt(max);
+}
+
+/**
+ *	Get the minimum "t" value for the entity.
+ */
+void LineEntity2D::setMinT(double min)
+{
+	_range[0] = min;
+	_ends[0] = posAt(min);
+}
+
+/**
+ *	Get the maximum "t" value for the entity.
+ */
+void LineEntity2D::setMaxT(double max)
+{
+	_range[1] = max;
+	_ends[1] = posAt(max);
+}
+
+/**
+ *	Get the point at a given "t" value.
+ */
+Point_ptr LineEntity2D::posAt(double t)
+{
+	double t = 0.0, xP = 0.0, yP = 0.0, zP = 0.0;
+
+	if (_range[0] != 0 || _range[1] != 0)
+	{
+		xP = x(t);
+		yP = y(t);
+		zP = z(t);
+	}
+
+	return Point::create(xP, yP, zP);
+}
+
+/**
+ *	Get the Point a given percentage along the entity.
+ */
+Point_ptr LineEntity2D::posAtDist(double pc)
+{
+	double t = 0.0;
+
+	if (_range[0] != 0 || _range[1] != 0)
+	{
+		t = ((_range[1] + _range[0]) * pc) + _range[0];
+		return posAt(t);
+	}
+
+	return Point::create(0.0, 0.0, 0.0);
 }
 
 /**
@@ -537,9 +677,31 @@ bool RadEntity2D::intersects(Edge_ptr &e)
  */
 bool RadEntity2D::intersects(Edges_ptr &e)
 {
-	for (int i = 0; i < e->size(); i++)
+	for (unsigned int i = 0; i < e->size(); i++)
 	{
 		if (intersects(e->get(i))) return true;
+	}
+
+	return false;
+}
+
+/**
+ *
+ */
+bool RadEntity2D::intersects(RadEntity2D_ptr &e)
+{
+	//TODO: implement method
+	return false;
+}
+
+/**
+ *
+ */
+bool RadEntity2D::intersects(vector<RadEntity2D_ptr> &es)
+{
+	for (unsigned int i = 0; i < es.size(); i++)
+	{
+		if (intersects(es.at(i))) return true;
 	}
 
 	return false;
@@ -557,7 +719,7 @@ RadEntity2D::RadEntity2D(LineEntity2D_ptr &e1, LineEntity2D_ptr &e2)
 }
 
 /**
- *	
+ *	Fully recalculate the coefficients from the adjacent lines.
  */
 void RadEntity2D::_calculate()
 {
@@ -565,7 +727,7 @@ void RadEntity2D::_calculate()
 }
 
 /**
- *	
+ *	Get the fit used to create the entity.
  */
 Entity3D::Fit3D Entity3D::getFit()
 {

@@ -92,7 +92,7 @@ public:
 	};
 
 	// Methods (public)
-	Fit2D				getFit();
+	Fit2D	getFit();
 
 protected:
 	// Destructor
@@ -155,10 +155,12 @@ private:
 	LineEntity2D(Edges_ptr &es, Fit2D fit);
 
 	// Methods (private)
-	void	_init(Points_ptr &p, Fit2D fit);
+	void	_init(Fit2D fit);
 	void	_calculate();
-	bool	_increment(Point_ptr &p);
-	bool	_decrement(Point_ptr &p);
+	void	_increment(Point_ptr &p);
+	void	_increment(Points_ptr &ps);
+	void	_decrement(Point_ptr &p);
+	void	_decrement(Points_ptr &ps);
 };
 
 class RadEntity2D : public Entity, public Entity2D
@@ -167,8 +169,8 @@ public:
 	// Factories
 	static RadEntity2D_ptr clone(RadEntity2D_ptr &l);
 	static RadEntity2D_ptr create(LineEntity2D_ptr &l1, LineEntity2D_ptr &l2);
-	static RadEntity2D_ptr createRadial(RadEntity2D_ptr &l, double d, bool link);
-	static vector<LineEntity2D_ptr> createCorner(RadEntity2D_ptr &l, double d, bool link);
+	static RadEntity2D_ptr createRadial(RadEntity2D_ptr &l, double d);
+	static vector<LineEntity2D_ptr> createCorner(RadEntity2D_ptr &l, double d);
 	static RadEntity2D_ptr convertToArc(HelixEntity3D_ptr &l);
 	static RadEntity2D_ptr cast(Entity2D_ptr &e);
 
@@ -179,15 +181,14 @@ public:
 	void		setRange(double min, double max);
 	void		setMinT(double min);
 	void		setMaxT(double max);
-	void		setEnds(Point_ptr &start, Point_ptr &end);
-	void		setStart(Point_ptr &start);
-	void		setEnd(Point_ptr &end);
 	Point_ptr	posAt(double t);
 	Point_ptr	posAtDist(double pc);
 	bool		intersects(LineEntity2D_ptr &e);
 	bool		intersects(vector<LineEntity2D_ptr> e);
 	bool		intersects(Edge_ptr &e);
 	bool		intersects(Edges_ptr &e);
+	bool		intersects(RadEntity2D_ptr &e);
+	bool		intersects(vector<RadEntity2D_ptr> &es);
 
 private:
 	// Constructors
@@ -258,10 +259,11 @@ public:
 	void		setMaxT(double max);
 	Point_ptr	posAt(double t);
 	Point_ptr	posAtDist(double pc);
-	void		add(Point_ptr &p);				// Override
-	void		add(Points_ptr &p);				// Override
-	void		insert(Point_ptr &p, int i);	// Override
-	void		remove(Point_ptr &p);			// Override
+	void		add(Point_ptr &p);						// Override
+	void		add(Points_ptr &p);						// Override
+	void		insert(Point_ptr &p, int i);			// Override
+	void		remove(Point_ptr &p);					// Override
+	bool		remove(Point_ptr &p, bool dry);
 
 private:
 	// Constructors
@@ -270,10 +272,12 @@ private:
 
 	// Methods (private)
 	void _increment(Point_ptr &p);
+	void _increment(Points_ptr &ps);
 	void _decrement(Point_ptr &p);
+	void _decrement(Points_ptr &ps);
 };
 
-class ArcEntity3D : public RadEntity2D,
+class ArcEntity3D : public Entity, public Entity3D,
 	public Collection<Point_ptr, Points_ptr>
 {
 public:
@@ -296,7 +300,7 @@ private:
 	ArcEntity3D(RadEntity2D_ptr &r, double h);
 };
 
-class HelixEntity3D : public RadEntity2D,
+class HelixEntity3D : public Entity, public Entity3D,
 	public Collection<Point_ptr, Points_ptr>
 {
 public:
@@ -327,11 +331,16 @@ private:
 	HelixEntity3D(LineEntity3D_ptr &e1, LineEntity3D_ptr &e2);
 
 	// Fields (private)
-	LineEntity3D_ptr		_adj[2];
+	RadEntity2D_ptr	_rad;
 
 	// Methods (private)
 	void _increment(Point_ptr &p);
 	void _decrement(Point_ptr &p);
+};
+
+class RadEntity3D: public Entity3D
+{
+
 };
 
 /**
