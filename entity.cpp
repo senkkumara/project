@@ -76,6 +76,41 @@ double* Entity::getZCoefficients()
 }
 
 /**
+ *	Set the coefficients for a single direction - not all coefficients.
+ */
+void Entity::setCoefficients(int dir, double* cfs)
+{
+	for (unsigned int i = 0; i < 3; i++)
+	{
+		_cfs[dir][i] = cfs[i];
+	}
+}
+
+/**
+ *	Set the X coefficients of the equation of the entity.
+ */
+void Entity::setXCoefficients(double* cfs)
+{
+	setCoefficients(0, cfs);
+}
+
+/**
+ *	Set the Y coefficients of the equation of the entity.
+ */
+void Entity::setYCoefficients(double* cfs)
+{
+	setCoefficients(1, cfs);
+}
+
+/**
+ *	Set the Z coefficients of the equation of the entity.
+ */
+void Entity::setZCoefficients(double* cfs)
+{
+	setCoefficients(2, cfs);
+}
+
+/**
  *	Virtual deconstructor, forcing Entity to be polymorphic.
  */
 Entity::~Entity()
@@ -100,14 +135,91 @@ Entity2D::~Entity2D()
 }
 
 /**
- *	Factory method that creates a new entity from another.
- *	
- *	Note that it will reuse the same Points as the donor.
+ *
  */
-LineEntity2D_ptr LineEntity2D::clone(LineEntity2D_ptr &l)
+LineEntity2D_ptr LineEntity2D::create()
 {
-	//TODO: implement method
-	return 0;
+	return LineEntity2D_ptr(new LineEntity2D());
+}
+
+/**
+ *
+ */
+LineEntity2D_ptr LineEntity2D::create(vector<Point_ptr> &ps)
+{
+	return LineEntity2D_ptr(new LineEntity2D(ps));
+}
+
+/**
+ *
+ */
+LineEntity2D_ptr LineEntity2D::create(vector<Point_ptr> &ps, Fit2D fit)
+{
+	return LineEntity2D_ptr(new LineEntity2D(ps));
+}
+
+/**
+ *
+ */
+LineEntity2D_ptr LineEntity2D::create(Point_ptr &p1, Point_ptr &p2)
+{
+	return LineEntity2D_ptr(new LineEntity2D(p1, p2));
+}
+
+/**
+ *
+ */
+LineEntity2D_ptr LineEntity2D::create(Point_ptr &p1, Point_ptr &p2, Fit2D fit)
+{
+	return LineEntity2D_ptr(new LineEntity2D(p1, p2, fit));
+}
+
+/**
+ *
+ */
+LineEntity2D_ptr LineEntity2D::create(Points_ptr &ps)
+{
+	return LineEntity2D_ptr(new LineEntity2D(ps));
+}
+
+/**
+ *
+ */
+LineEntity2D_ptr LineEntity2D::create(Points_ptr &ps, Fit2D fit)
+{
+	return LineEntity2D_ptr(new LineEntity2D(ps, fit));
+}
+
+/**
+ *
+ */
+LineEntity2D_ptr LineEntity2D::create(Edge_ptr &e)
+{
+	return LineEntity2D_ptr(new LineEntity2D(e));
+}
+
+/**
+ *
+ */
+LineEntity2D_ptr LineEntity2D::create(Edge_ptr &e, Fit2D fit)
+{
+	return LineEntity2D_ptr(new LineEntity2D(e, fit));
+}
+
+/**
+ *
+ */
+LineEntity2D_ptr LineEntity2D::create(Edges_ptr &es)
+{
+	return LineEntity2D_ptr(new LineEntity2D(es));
+}
+
+/**
+ *
+ */
+LineEntity2D_ptr LineEntity2D::create(Edges_ptr &es, Fit2D fit)
+{
+	return LineEntity2D_ptr(new LineEntity2D(es, fit));
 }
 
 /**
@@ -115,8 +227,9 @@ LineEntity2D_ptr LineEntity2D::clone(LineEntity2D_ptr &l)
  */
 LineEntity2D_ptr LineEntity2D::createParallel(LineEntity2D_ptr &l, double d)
 {
-	//TODO: implement method
-	return 0;
+	LineEntity2D_ptr lp = LineEntity2D::create();
+
+	return lp;
 }
 
 /**
@@ -133,14 +246,49 @@ LineEntity2D_ptr LineEntity2D::createNormal(LineEntity2D_ptr &l, Point_ptr &p)
  */
 LineEntity2D_ptr LineEntity2D::createNormal(LineEntity2D_ptr &l, double t)
 {
-	//TODO: implement method
-	return 0;
+	return LineEntity2D::createNormal(l, l->posAt(t));
+}
+
+/**
+ *	
+ */
+LineEntity2D_ptr LineEntity2D::createNormalAtStart(LineEntity2D_ptr &l)
+{
+	return LineEntity2D::createNormal(l, l->start());
+}
+
+/**
+ *	
+ */
+LineEntity2D_ptr LineEntity2D::createNormalAtEnd(LineEntity2D_ptr &l)
+{
+	return LineEntity2D::createNormal(l, l->end());
 }
 
 /**
  *	
  */
 LineEntity2D_ptr LineEntity2D::convertTo2D(LineEntity3D_ptr &l)
+{
+	//TODO: implement method
+	return 0;
+}
+
+/**
+ *	Factory method that creates a new entity from another.
+ *	
+ *	Note that it will reuse the same Points as the donor.
+ */
+LineEntity2D_ptr LineEntity2D::clone(LineEntity2D_ptr &l)
+{
+	//TODO: implement method
+	return 0;
+}
+
+/**
+ *
+ */
+LineEntity2D_ptr LineEntity2D::split(double t)
 {
 	//TODO: implement method
 	return 0;
@@ -374,6 +522,7 @@ bool LineEntity2D::intersects(vector<RadEntity2D_ptr> &es)
 Point_ptr LineEntity2D::getIntersect(LineEntity2D_ptr &l)
 {
 	//TODO: implement method
+	if (! intersects(l)) return 0;
 	return 0;
 }
 

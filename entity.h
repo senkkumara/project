@@ -65,6 +65,10 @@ public:
 	double*				getXCoefficients();
 	double*				getYCoefficients();
 	double*				getZCoefficients();
+	void				setCoefficients(int dir, double* cfs);
+	void				setXCoefficients(double* cfs);
+	void				setYCoefficients(double* cfs);
+	void				setZCoefficients(double* cfs);
 	virtual void		setRange(double min, double max) = 0;
 	virtual void		setMinT(double min) = 0;
 	virtual void		setMaxT(double max) = 0;
@@ -110,7 +114,9 @@ class LineEntity2D : public Entity, public Entity2D,
 {
 public:
 	// Factories
-	static LineEntity2D_ptr clone(LineEntity2D_ptr &l);
+	static LineEntity2D_ptr create();
+	static LineEntity2D_ptr create(vector<Point_ptr> &ps);
+	static LineEntity2D_ptr create(vector<Point_ptr> &ps, Fit2D fit);
 	static LineEntity2D_ptr create(Point_ptr &p1, Point_ptr &p2);
 	static LineEntity2D_ptr create(Point_ptr &p1, Point_ptr &p2, Fit2D fit);
 	static LineEntity2D_ptr create(Points_ptr &ps);
@@ -122,7 +128,10 @@ public:
 	static LineEntity2D_ptr createParallel(LineEntity2D_ptr &l, double d);
 	static LineEntity2D_ptr createNormal(LineEntity2D_ptr &l, Point_ptr &p);
 	static LineEntity2D_ptr createNormal(LineEntity2D_ptr &l, double t);
+	static LineEntity2D_ptr createNormalAtStart(LineEntity2D_ptr &l);
+	static LineEntity2D_ptr createNormalAtEnd(LineEntity2D_ptr &l);
 	static LineEntity2D_ptr convertTo2D(LineEntity3D_ptr &l);
+	static LineEntity2D_ptr clone(LineEntity2D_ptr &l);
 	static LineEntity2D_ptr split(double t);
 
 	// Methods (public)
@@ -150,6 +159,8 @@ public:
 
 private:
 	// Constructors
+	LineEntity2D();
+	LineEntity2D(vector<Point_ptr> &ps);
 	LineEntity2D(Point_ptr &p1, Point_ptr &p2);
 	LineEntity2D(Point_ptr &p1, Point_ptr &p2, Fit2D fit);
 	LineEntity2D(Points_ptr &p);

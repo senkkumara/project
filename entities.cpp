@@ -58,7 +58,7 @@ Entity2Ds::Entity2Ds()
 /**
  *	<< operator overload.
  */
-std::ostream &operator<<(std::ostream &strm, const Entity2Ds &e)
+std::ostream &operator<<(std::ostream &strm, const Entity2Ds &es)
 {
 	//TODO: Implement method
 	throw MethodNotImplementedException("<< Entity2Ds");
@@ -68,9 +68,9 @@ std::ostream &operator<<(std::ostream &strm, const Entity2Ds &e)
 /**
  *	<< operator overload.
  */
-std::ostream &operator<<(std::ostream &strm, const Entity2Ds_ptr &e)
+std::ostream &operator<<(std::ostream &strm, const Entity2Ds_ptr &es)
 {
-	return strm << *e;
+	return strm << *es;
 }
 
 /**
@@ -94,7 +94,7 @@ LineEntity2Ds::LineEntity2Ds()
 /**
  *	<< operator overload.
  */
-std::ostream &operator<<(std::ostream &strm, const LineEntity2Ds &e)
+std::ostream &operator<<(std::ostream &strm, const LineEntity2Ds &es)
 {
 	//TODO: Implement method
 	throw MethodNotImplementedException("<< LineEntity2Ds");
@@ -104,9 +104,9 @@ std::ostream &operator<<(std::ostream &strm, const LineEntity2Ds &e)
 /**
  *	<< operator overload.
  */
-std::ostream &operator<<(std::ostream &strm, const LineEntity2Ds_ptr &e)
+std::ostream &operator<<(std::ostream &strm, const LineEntity2Ds_ptr &es)
 {
-	return strm << *e;
+	return strm << *es;
 }
 
 /**
