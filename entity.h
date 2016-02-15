@@ -93,9 +93,9 @@ public:
 	{
 		// Fits relative to someone 'standing' on the start & looking at
 		// the end of the entity.
-		FIT2D_BEST,		// Do not adjust LOBF
-		FIT2D_LEFT,		// Adjust LOBF so is left of all points
-		FIT2D_RIGHT		// Adjust LOBF so is right of all points
+		FIT2D_LEFT = -1,	// Adjust LOBF so is left of all points
+		FIT2D_BEST,			// Do not adjust LOBF
+		FIT2D_RIGHT			// Adjust LOBF so is right of all points
 	};
 
 	// Methods (public)

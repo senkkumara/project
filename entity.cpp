@@ -663,7 +663,14 @@ void LineEntity2D::_calculate()
 	if (this->size() == 0) return;
 
 	vector<vector<double>> v;
-	double m = 0.0, c = 0.0;
+	double m = 0.0, c = 0.0, tmp = 0.0, of = 0.0;
+
+	// Set up array
+	v.resize(size());
+	for (int i = 0; i < size(); i++)
+	{
+		v[i].resize(12);
+	}
 
 	// Populate X and Y
 	_avgs[0] = 0.0;
@@ -671,14 +678,14 @@ void LineEntity2D::_calculate()
 
 	for (int i = 0; i < size(); i++)
 	{
-		v.at(i).at(0) = this->get(i)->getX();	// X
-		v.at(i).at(1) = this->get(i)->getY();	// Y
-		v.at(i).at(2) = pow(v.at(i).at(0), 2);	// X^2
-		v.at(i).at(3) = pow(v.at(i).at(1), 2);	// Y^2
+		v[i][0] = this->get(i)->getX();	// X
+		v[i][1] = this->get(i)->getY();	// Y
+		v[i][2] = pow(v[i][0], 2);	// X^2
+		v[i][3] = pow(v[i][1], 2);	// Y^2
 
 		// Keep running total for means
-		_avgs[0] += v.at(i).at(0);
-		_avgs[1] += v.at(i).at(1);
+		_avgs[0] += v[i][0];
+		_avgs[1] += v[i][1];
 	}
 
 	// Calculate means
@@ -692,15 +699,15 @@ void LineEntity2D::_calculate()
 
 	for (int i = 0; i < size(); i++)
 	{
-		v.at(i).at(4) = v.at(i).at(0) - _avgs[0];		// (X - Xb)
-		v.at(i).at(5) = v.at(i).at(1) - _avgs[1];		// (Y - Yb)
-		v.at(i).at(6) = pow(v.at(i).at(4), 2);			// (X - Xb) ^ 2
-		v.at(i).at(7) = pow(v.at(i).at(5), 2);			// (Y - Yb) ^ 2
-		v.at(i).at(8) = v.at(i).at(4) * v.at(i).at(5);	// (X - Xb) * (Y - Yb)
+		v[i].at(4) = v[i][0] - _avgs[0];		// (X - Xb)
+		v[i].at(5) = v[i][1] - _avgs[1];		// (Y - Yb)
+		v[i].at(6) = pow(v[i][4], 2);			// (X - Xb) ^ 2
+		v[i].at(7) = pow(v[i][5], 2);			// (Y - Yb) ^ 2
+		v[i].at(8) = v[i][4] * v[i][5];			// (X - Xb) * (Y - Yb)
 
-		_ss[0] += v.at(i).at(6);	// SSxx
-		_ss[1] += v.at(i).at(7);	// SSyy
-		_ss[2] += v.at(i).at(8);	// SSxy
+		_ss[0] += v[i][6];						// SSxx
+		_ss[1] += v[i][7];						// SSyy
+		_ss[2] += v[i][8];						// SSxy
 	}
 
 	// jic by some miracle SSxx = 0
@@ -716,6 +723,28 @@ void LineEntity2D::_calculate()
 
 		_cfs[1][0] = m;
 		_cfs[1][1] = c;
+
+		// Find point furthest away from line (use fit)
+		// NB. due to coefficients potentially being 0, this differs from below
+		if (_fit == FIT2D_BEST) return;
+		for (int i = 0; i < size(); i++)
+		{
+			// Get the equivalent t values
+			v[i][9] = (v[i][0] - _cfs[0][1]) / _cfs[0][0];
+
+			// Calculate actual values at equivalent t
+			v[i][10] = (v[i][9] * _cfs[1][0]) + _cfs[1][1];
+
+			// Calculate cartesian distances
+			v[i][11] = v[i][10] - v[i].at(1);
+
+			// Calculate distance (-ive = left, +ive = right)
+			tmp = v[i][11] * cos(atan2(_cfs[1][0],_cfs[0][0]));
+
+			// Find largest on side of interest
+			if ((tmp * _fit) > of) of = tmp;
+		}
+
 	}
 	else
 	{
@@ -729,13 +758,33 @@ void LineEntity2D::_calculate()
 
 		_cfs[0][0] = m;
 		_cfs[0][1] = c;
+
+		// Find point furthest away from line (use fit)
+		// NB. due to coefficients potentially being 0, this differs from above
+		if (_fit == FIT2D_BEST) return;
+		for (int i = 0; i < size(); i++)
+		{
+			// Get the equivalent t values
+			v[i][9] = (v[i][1] - _cfs[1][1]) / _cfs[1][0];
+
+			// Calculate actual values at equivalent t
+			v[i][10] = (v[i][9] * _cfs[0][0]) + _cfs[0][1];
+
+			// Calculate cartesian distances
+			v[i][11] = v[i][10] - v[i][0];
+
+			// Calculate distance (-ive = left, +ive = right - need minus to correct
+			// this direction)
+			tmp = v[i][11] * sin(atan2(_cfs[1][0],_cfs[0][0])) * -1;
+
+			// Find largest on side of interest
+			if ((tmp * _fit) > of) of = tmp;
+		}
 	}
 
-	//TODO:
-	// Find point furthest away from line (use fit)
-
 	// Move line
-
+	_cfs[0][1] += of * sin(atan2(_cfs[1][0], _cfs[0][0]));
+	_cfs[1][1] += of * cos(atan2(_cfs[1][0], _cfs[0][0]));
 }
 
 /**
