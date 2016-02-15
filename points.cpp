@@ -19,6 +19,11 @@ Points::Points()
 	// do nothing...
 }
 
+Points::Points(vector<Point_ptr> &ps)
+{
+	_items = ps;
+}
+
 /**
  *	(Private) Mirror the points about the axis specified by an index
  *	(X = 0, Y = 1, Z = 2).
@@ -56,6 +61,14 @@ std::ostream &operator<<(std::ostream &strm, const Points_ptr &p)
 Points_ptr Points::create()
 {
 	return Points_ptr(new Points());
+}
+
+/**
+ *	Factory method using constructor with a vector argument.
+ */
+Points_ptr Points::create(vector<Point_ptr> &ps)
+{
+	return Points_ptr(new Points(ps));
 }
 
 /**

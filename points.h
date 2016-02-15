@@ -26,6 +26,7 @@ class Points : public Collection<Point_ptr, Points_ptr>
 private:
 	// Constructors
 	Points();
+	Points(vector<Point_ptr> &ps);
 
 	// Methods (private)
 	void _mirrorComponent(int index);
@@ -38,6 +39,7 @@ private:
 public:
 	// Factories
 	static Points_ptr create();
+	static Points_ptr create(vector<Point_ptr> &ps);
 	
 	// Methods (public)
 	void mirrorX();
