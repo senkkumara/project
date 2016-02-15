@@ -24,6 +24,8 @@ Point::Point(double xcoord = 0.0,
 	coords.push_back(xcoord);
 	coords.push_back(ycoord);
 	coords.push_back(zcoord);
+
+	_coords = coords;
 }
 
 /**
