@@ -133,6 +133,7 @@ public:
 	static LineEntity2D_ptr convertTo2D(LineEntity3D_ptr &l);
 	static LineEntity2D_ptr clone(LineEntity2D_ptr &l);
 	static LineEntity2D_ptr split(double t);
+	static LineEntity2D_ptr	cast(Entity2D_ptr &e);
 
 	// Methods (public)
 	double				x(double t);
@@ -148,7 +149,6 @@ public:
 	void				insert(Point_ptr &p, int i);			// Override
 	void				remove(Point_ptr &p);					// Override
 	void				merge(LineEntity2D_ptr &l);
-	LineEntity2D_ptr	cast(Entity2D_ptr &e);
 	bool				intersects(LineEntity2D_ptr &e);
 	bool				intersects(vector<LineEntity2D_ptr> e);
 	bool				intersects(Edge_ptr &e);
@@ -161,14 +161,19 @@ private:
 	// Constructors
 	LineEntity2D();
 	LineEntity2D(vector<Point_ptr> &ps);
+	LineEntity2D(vector<Point_ptr> &ps, Fit2D f);
 	LineEntity2D(Point_ptr &p1, Point_ptr &p2);
-	LineEntity2D(Point_ptr &p1, Point_ptr &p2, Fit2D fit);
+	LineEntity2D(Point_ptr &p1, Point_ptr &p2, Fit2D f);
 	LineEntity2D(Points_ptr &p);
-	LineEntity2D(Points_ptr &p, Fit2D fit);
+	LineEntity2D(Points_ptr &p, Fit2D f);
 	LineEntity2D(Edge_ptr &e);
-	LineEntity2D(Edge_ptr &e, Fit2D fit);
+	LineEntity2D(Edge_ptr &e, Fit2D f);
 	LineEntity2D(Edges_ptr &es);
-	LineEntity2D(Edges_ptr &es, Fit2D fit);
+	LineEntity2D(Edges_ptr &es, Fit2D f);
+
+	// Fields (private)
+	double	_avgs[2];
+	double	_ss[3];
 
 	// Methods (private)
 	void	_init(Fit2D fit);
@@ -177,6 +182,7 @@ private:
 	void	_increment(Points_ptr &ps);
 	void	_decrement(Point_ptr &p);
 	void	_decrement(Points_ptr &ps);
+	double	_findIntersect(LineEntity2D_ptr &l);
 };
 
 class RadEntity2D : public Entity, public Entity2D

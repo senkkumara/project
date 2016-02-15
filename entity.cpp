@@ -1,6 +1,7 @@
 using namespace std;
 
 #include "entity.h"
+#include <math.h>
 #include "utils.h"
 
 /**
@@ -527,13 +528,38 @@ Point_ptr LineEntity2D::getIntersect(LineEntity2D_ptr &l)
 }
 
 /**
+ *	Default constructor.
+ */
+LineEntity2D::LineEntity2D()
+{
+	_init(Entity2D::FIT2D_BEST);
+}
+
+/**
+ *	
+ */
+LineEntity2D::LineEntity2D(vector<Point_ptr> &ps)
+{
+	_items = ps;
+	_init(Entity2D::FIT2D_BEST);
+}
+
+/**
+ *	
+ */
+LineEntity2D::LineEntity2D(vector<Point_ptr> &ps, Fit2D f)
+{
+	_items = ps;
+	_init(f);
+}
+
+/**
  *	
  */
 LineEntity2D::LineEntity2D(Point_ptr &p1, Point_ptr &p2)
 {
 	__super::add(p1);
 	__super::add(p2);
-
 	_init(Entity2D::FIT2D_BEST);
 }
 
@@ -544,7 +570,6 @@ LineEntity2D::LineEntity2D(Point_ptr &p1, Point_ptr &p2, Entity2D::Fit2D f)
 {
 	__super::add(p1);
 	__super::add(p2);
-
 	_init(f);
 }
 
@@ -554,7 +579,6 @@ LineEntity2D::LineEntity2D(Point_ptr &p1, Point_ptr &p2, Entity2D::Fit2D f)
 LineEntity2D::LineEntity2D(Points_ptr &ps)
 {
 	__super::add(ps);
-
 	_init(Entity2D::FIT2D_BEST);
 }
 
@@ -564,7 +588,6 @@ LineEntity2D::LineEntity2D(Points_ptr &ps)
 LineEntity2D::LineEntity2D(Points_ptr &ps, Entity2D::Fit2D f)
 {
 	__super::add(ps);
-
 	_init(f);
 }
 
@@ -586,6 +609,39 @@ LineEntity2D::LineEntity2D(Edge_ptr &e, Entity2D::Fit2D f)
 {
 	__super::add(e->left());
 	__super::add(e->right());
+	_init(f);
+}
+
+/**
+ *	
+ */
+LineEntity2D::LineEntity2D(Edges_ptr &es)
+{
+	Edge_ptr e = es->get(0);
+	__super::add(e->left());
+
+	for (unsigned int i = 0; i < size(); i++)
+	{
+		e = es->get(i);
+		__super::add(e->right());
+	}
+
+	_init(Entity2D::FIT2D_BEST);
+}
+
+/**
+ *	
+ */
+LineEntity2D::LineEntity2D(Edges_ptr &es, Entity2D::Fit2D f)
+{
+	Edge_ptr e = es->get(0);
+	__super::add(e->left());
+
+	for (unsigned int i = 0; i < size(); i++)
+	{
+		e = es->get(i);
+		__super::add(e->right());
+	}
 
 	_init(f);
 }
@@ -604,7 +660,82 @@ void LineEntity2D::_init(Entity2D::Fit2D f)
  */
 void LineEntity2D::_calculate()
 {
-	//TODO: implement method
+	if (this->size() == 0) return;
+
+	vector<vector<double>> v;
+	double m = 0.0, c = 0.0;
+
+	// Populate X and Y
+	_avgs[0] = 0.0;
+	_avgs[1] = 0.0;
+
+	for (int i = 0; i < size(); i++)
+	{
+		v.at(i).at(0) = this->get(i)->getX();	// X
+		v.at(i).at(1) = this->get(i)->getY();	// Y
+		v.at(i).at(2) = pow(v.at(i).at(0), 2);	// X^2
+		v.at(i).at(3) = pow(v.at(i).at(1), 2);	// Y^2
+
+		// Keep running total for means
+		_avgs[0] += v.at(i).at(0);
+		_avgs[1] += v.at(i).at(1);
+	}
+
+	// Calculate means
+	_avgs[0] /= size();
+	_avgs[1] /= size();
+
+	// Calculate remaining fields
+	_ss[0] = 0.0;
+	_ss[1] = 0.0;
+	_ss[2] = 0.0;
+
+	for (int i = 0; i < size(); i++)
+	{
+		v.at(i).at(4) = v.at(i).at(0) - _avgs[0];		// (X - Xb)
+		v.at(i).at(5) = v.at(i).at(1) - _avgs[1];		// (Y - Yb)
+		v.at(i).at(6) = pow(v.at(i).at(4), 2);			// (X - Xb) ^ 2
+		v.at(i).at(7) = pow(v.at(i).at(5), 2);			// (Y - Yb) ^ 2
+		v.at(i).at(8) = v.at(i).at(4) * v.at(i).at(5);	// (X - Xb) * (Y - Yb)
+
+		_ss[0] += v.at(i).at(6);	// SSxx
+		_ss[1] += v.at(i).at(7);	// SSyy
+		_ss[2] += v.at(i).at(8);	// SSxy
+	}
+
+	// jic by some miracle SSxx = 0
+	if (_ss[0] != 0.0)
+	{
+		// y = mx + c
+		m = _ss[2] / _ss[0];
+		c = _avgs[1] - (m * _avgs[0]);
+
+		// set x = t
+		_cfs[0][0] = 1.0;
+		_cfs[0][1] = 0.0;
+
+		_cfs[1][0] = m;
+		_cfs[1][1] = c;
+	}
+	else
+	{
+		// x = my + c
+		m = _ss[2] / _ss[1];
+		c = _avgs[0] - (m * _avgs[1]);
+
+		// set y = t;
+		_cfs[1][0] = 1.0;
+		_cfs[1][1] = 0.0;
+
+		_cfs[0][0] = m;
+		_cfs[0][1] = c;
+	}
+
+	//TODO:
+	// Find point furthest away from line (use fit)
+
+	// Move line
+
 }
 
 /**
@@ -649,6 +780,12 @@ void LineEntity2D::_decrement(Point_ptr &p)
 void LineEntity2D::_decrement(Points_ptr &ps)
 {
 	//TODO: implement method
+}
+
+double LineEntity2D::_findIntersect(LineEntity2D_ptr &l)
+{
+	//TODO: implement method
+	return 0.0;
 }
 
 /**
@@ -960,6 +1097,48 @@ double LineEntity3D::z(double t)
 {
 	//TODO: implement method
 	return 0.0;
+}
+
+/**
+ *	Get the range of "t" value for the entity.
+ */
+void LineEntity3D::setRange(double min, double max)
+{
+	//TODO: implement method
+}
+
+/**
+ *	Get the minimum "t" value for the entity.
+ */
+void LineEntity3D::setMinT(double min)
+{
+	//TODO: implement method
+}
+
+/**
+ *	Get the maximum "t" value for the entity.
+ */
+void LineEntity3D::setMaxT(double max)
+{
+	//TODO: implement method
+}
+
+/**
+ *
+ */
+Point_ptr LineEntity3D::posAt(double t)
+{
+	//TODO: implement method
+	return 0;
+}
+
+/**
+ *
+ */
+Point_ptr LineEntity3D::posAtDist(double pc)
+{
+	//TODO: implement method
+	return 0;
 }
 
 /**
