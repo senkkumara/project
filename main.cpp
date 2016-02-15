@@ -4,8 +4,31 @@ using namespace std;
 #include "main.h"
 #include "job.h"
 
+#include "point.h"
+#include "entity.h"
+
 int main()
 {
+	Point_ptr p1 = Point::create(-4.0,-2.0,0.0);
+	Point_ptr p2 = Point::create(-2.0,-4.0,0.0);
+	Point_ptr p3 = Point::create(2.0,4.0,0.0);
+	Point_ptr p4 = Point::create(4.0,2.0,0.0);
+
+	Points_ptr p = Points::create();
+	p->add(p1);
+	p->add(p2);
+	p->add(p3);
+	p->add(p4);
+
+	LineEntity2D_ptr l = LineEntity2D::create(p, Entity2D::FIT2D_LEFT);
+	LineEntity2D_ptr l2 = LineEntity2D::createParallel(l, 1.0);
+
+	while (true)
+	{
+
+	}
+
+	/*
 	while (true) {
 		// Get filename
 		std::string filename;
@@ -76,4 +99,5 @@ int main()
 
 EXIT:
 	cout << "Exiting application... :)" << endl;
+	*/
 }

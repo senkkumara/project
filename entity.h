@@ -178,10 +178,13 @@ private:
 	// Methods (private)
 	void	_init(Fit2D fit);
 	void	_calculate();
+	void	_calculateOffset();
 	void	_increment(Point_ptr &p);
 	void	_increment(Points_ptr &ps);
+	void	_incrementCFS(Point_ptr &p);
 	void	_decrement(Point_ptr &p);
 	void	_decrement(Points_ptr &ps);
+	void	_decrementCFS(Point_ptr &p);
 	double	_findIntersect(LineEntity2D_ptr &l);
 };
 

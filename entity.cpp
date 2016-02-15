@@ -1,6 +1,7 @@
 using namespace std;
 
 #include "entity.h"
+#include <iostream>
 #include <math.h>
 #include "utils.h"
 
@@ -136,7 +137,7 @@ Entity2D::~Entity2D()
 }
 
 /**
- *
+ *	
  */
 LineEntity2D_ptr LineEntity2D::create()
 {
@@ -152,7 +153,7 @@ LineEntity2D_ptr LineEntity2D::create(vector<Point_ptr> &ps)
 }
 
 /**
- *
+ *	
  */
 LineEntity2D_ptr LineEntity2D::create(vector<Point_ptr> &ps, Fit2D fit)
 {
@@ -160,7 +161,7 @@ LineEntity2D_ptr LineEntity2D::create(vector<Point_ptr> &ps, Fit2D fit)
 }
 
 /**
- *
+ *	
  */
 LineEntity2D_ptr LineEntity2D::create(Point_ptr &p1, Point_ptr &p2)
 {
@@ -226,9 +227,46 @@ LineEntity2D_ptr LineEntity2D::create(Edges_ptr &es, Fit2D fit)
 /**
  *	
  */
-LineEntity2D_ptr LineEntity2D::createParallel(LineEntity2D_ptr &l, double d)
+LineEntity2D_ptr LineEntity2D::createParallel(LineEntity2D_ptr &line, double d)
 {
 	LineEntity2D_ptr lp = LineEntity2D::create();
+	
+	double cfs[3][2];
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 2; j++)
+		{
+			cfs[i][j] = 0.0;
+		}
+	}
+
+	double* donor[2];
+	donor[0] = line->getXCoefficients();
+	donor[1] = line->getYCoefficients();
+
+	double ang = atan2(donor[1][0], donor[0][0]);
+	cout << ang << endl;
+
+	cfs[0][0] = donor[0][0];
+	cfs[1][0] = donor[1][0];
+
+	cfs[0][1] = (d * sin(ang)) + donor[0][1];
+	cfs[1][1] = (d * cos(ang)) + donor[1][1];
+
+	/*
+	cout << "donor:" << endl;
+	cout << "x = " << donor[0][0] << "t + " << donor[0][1] << endl;
+	cout << "y = " << donor[1][0] << "t + " << donor[1][1] << endl;
+
+	cout << "cfs:" << endl;
+	cout << "x = " << cfs[0][0] << "t + " << cfs[0][1] << endl;
+	cout << "y = " << cfs[1][0] << "t + " << cfs[1][1] << endl;
+	*/
+
+	for (int i = 0; i < 3; i++)
+	{
+		lp->setCoefficients(i, cfs[i]);
+	}
 
 	return lp;
 }
@@ -672,14 +710,19 @@ void LineEntity2D::_calculate()
 		v[i].resize(12);
 	}
 
+	for (int j = 0; j < size(); j++)
+	{
+		cout << _items.at(j) << endl;
+	}
+
 	// Populate X and Y
 	_avgs[0] = 0.0;
 	_avgs[1] = 0.0;
 
 	for (int i = 0; i < size(); i++)
 	{
-		v[i][0] = this->get(i)->getX();	// X
-		v[i][1] = this->get(i)->getY();	// Y
+		v[i][0] = get(i)->getX();	// X
+		v[i][1] = get(i)->getY();	// Y
 		v[i][2] = pow(v[i][0], 2);	// X^2
 		v[i][3] = pow(v[i][1], 2);	// Y^2
 
@@ -691,6 +734,8 @@ void LineEntity2D::_calculate()
 	// Calculate means
 	_avgs[0] /= size();
 	_avgs[1] /= size();
+
+	cout << _avgs[0] << " " << _avgs[1] << endl;
 
 	// Calculate remaining fields
 	_ss[0] = 0.0;
@@ -710,6 +755,8 @@ void LineEntity2D::_calculate()
 		_ss[2] += v[i][8];						// SSxy
 	}
 
+	cout << _ss[0] << " " << _ss[1] << " " << _ss[2] << endl;
+
 	// jic by some miracle SSxx = 0
 	if (_ss[0] != 0.0)
 	{
@@ -723,6 +770,9 @@ void LineEntity2D::_calculate()
 
 		_cfs[1][0] = m;
 		_cfs[1][1] = c;
+
+		cout << "x = " << _cfs[0][0] << "t + " << _cfs[0][1] << endl;
+		cout << "y = " << _cfs[1][0] << "t + " << _cfs[1][1] << endl;
 
 		// Find point furthest away from line (use fit)
 		// NB. due to coefficients potentially being 0, this differs from below
@@ -742,7 +792,16 @@ void LineEntity2D::_calculate()
 			tmp = v[i][11] * cos(atan2(_cfs[1][0],_cfs[0][0]));
 
 			// Find largest on side of interest
-			if ((tmp * _fit) > of) of = tmp;
+			switch (_fit)
+			{
+			case FIT2D_LEFT:
+				if (tmp < of) of = tmp;
+				break;
+
+			case FIT2D_RIGHT:
+				if (tmp > of) of = tmp;
+				break;
+			}
 		}
 
 	}
@@ -758,6 +817,9 @@ void LineEntity2D::_calculate()
 
 		_cfs[0][0] = m;
 		_cfs[0][1] = c;
+
+		cout << "x = " << _cfs[0][0] << "t + " << _cfs[0][1] << endl;
+		cout << "y = " << _cfs[1][0] << "t + " << _cfs[1][1] << endl;
 
 		// Find point furthest away from line (use fit)
 		// NB. due to coefficients potentially being 0, this differs from above
@@ -778,13 +840,31 @@ void LineEntity2D::_calculate()
 			tmp = v[i][11] * sin(atan2(_cfs[1][0],_cfs[0][0])) * -1;
 
 			// Find largest on side of interest
-			if ((tmp * _fit) > of) of = tmp;
+			switch (_fit)
+			{
+			case FIT2D_LEFT:
+				if (tmp < of) of = tmp;
+				break;
+
+			case FIT2D_RIGHT:
+				if (tmp > of) of = tmp;
+				break;
+			}
 		}
 	}
 
 	// Move line
+	cout << of << endl;
 	_cfs[0][1] += of * sin(atan2(_cfs[1][0], _cfs[0][0]));
 	_cfs[1][1] += of * cos(atan2(_cfs[1][0], _cfs[0][0]));
+}
+
+/**
+ *	
+ */
+void LineEntity2D::_calculateOffset()
+{
+	//TODO: implement method
 }
 
 /**
@@ -795,7 +875,8 @@ void LineEntity2D::_calculate()
  */
 void LineEntity2D::_increment(Point_ptr &p)
 {
-	//TODO: implement method
+	__super::add(p);
+	_incrementCFS(p);
 }
 
 /**
@@ -805,6 +886,21 @@ void LineEntity2D::_increment(Point_ptr &p)
  *	incorporates the partial contribution of the points.
  */
 void LineEntity2D::_increment(Points_ptr &ps)
+{
+	__super::add(ps);
+
+	for (int i = 0; i < ps->size(); i++)
+	{
+		_incrementCFS(ps->get(i));
+	}
+}
+
+/**
+ *	(Private) Update the coefficients to include argument point.
+ *	
+ *	This method DOES NOT add the part to the collection.
+ */
+void LineEntity2D::_incrementCFS(Point_ptr &p)
 {
 	//TODO: implement method
 }
@@ -817,7 +913,8 @@ void LineEntity2D::_increment(Points_ptr &ps)
  */
 void LineEntity2D::_decrement(Point_ptr &p)
 {
-	//TODO: implement method
+	__super::remove(p);
+	_decrementCFS(p);
 }
 
 /**
@@ -827,6 +924,21 @@ void LineEntity2D::_decrement(Point_ptr &p)
  *	removes the partial contribution of the point.
  */
 void LineEntity2D::_decrement(Points_ptr &ps)
+{
+	for (int i = 0; i < ps->size(); i++)
+	{
+		Point_ptr p = ps->get(i);
+		__super::remove(p);
+		_decrementCFS(p);
+	}
+}
+
+/**
+ *	(Private) Update the coefficients to exclude argument point.
+ *	
+ *	This method DOES NOT remove the point to the collection.
+ */
+void LineEntity2D::_decrementCFS(Point_ptr &p)
 {
 	//TODO: implement method
 }
