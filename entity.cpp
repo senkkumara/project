@@ -1,5 +1,7 @@
 using namespace std;
 
+#define _USE_MATH_DEFINES
+
 #include "entity.h"
 #include <iostream>
 #include <math.h>
@@ -137,7 +139,7 @@ Entity2D::~Entity2D()
 }
 
 /**
- *	
+ *	Factory method using the default constructor.
  */
 LineEntity2D_ptr LineEntity2D::create()
 {
@@ -145,7 +147,10 @@ LineEntity2D_ptr LineEntity2D::create()
 }
 
 /**
+ *	Factory method using the constructor that takes a vector of points -
+ *	least squares regression on the coordinates is used to determine the line.
  *
+ *	Note that a "Best Fit" is used - there are no adjustments made.
  */
 LineEntity2D_ptr LineEntity2D::create(vector<Point_ptr> &ps)
 {
@@ -153,7 +158,12 @@ LineEntity2D_ptr LineEntity2D::create(vector<Point_ptr> &ps)
 }
 
 /**
- *	
+ *	Factory method using the constructor that takes a vector of points -
+ *	least squares regression on the coordinates is used to determine the line
+ *	- along with a fit.
+ *
+ *	The specified fit specified ensures all the points are on one side of the
+ *	line.
  */
 LineEntity2D_ptr LineEntity2D::create(vector<Point_ptr> &ps, Fit2D fit)
 {
@@ -161,7 +171,7 @@ LineEntity2D_ptr LineEntity2D::create(vector<Point_ptr> &ps, Fit2D fit)
 }
 
 /**
- *	
+ *	Factory method using the constructor that takes two points.
  */
 LineEntity2D_ptr LineEntity2D::create(Point_ptr &p1, Point_ptr &p2)
 {
@@ -169,7 +179,10 @@ LineEntity2D_ptr LineEntity2D::create(Point_ptr &p1, Point_ptr &p2)
 }
 
 /**
+ *	Factory method using the constructor that takes two points and a fit.
  *
+ *	The specified fit specified ensures all the points are on one side of the
+ *	line.
  */
 LineEntity2D_ptr LineEntity2D::create(Point_ptr &p1, Point_ptr &p2, Fit2D fit)
 {
@@ -177,7 +190,7 @@ LineEntity2D_ptr LineEntity2D::create(Point_ptr &p1, Point_ptr &p2, Fit2D fit)
 }
 
 /**
- *
+ *	Factory method using a Points collection.
  */
 LineEntity2D_ptr LineEntity2D::create(Points_ptr &ps)
 {
@@ -185,7 +198,10 @@ LineEntity2D_ptr LineEntity2D::create(Points_ptr &ps)
 }
 
 /**
+ *	Factory method using a Points collection and a fit.
  *
+ *	The specified fit specified ensures all the points are on one side of the
+ *	line.
  */
 LineEntity2D_ptr LineEntity2D::create(Points_ptr &ps, Fit2D fit)
 {
@@ -193,7 +209,7 @@ LineEntity2D_ptr LineEntity2D::create(Points_ptr &ps, Fit2D fit)
 }
 
 /**
- *
+ *	Factory method using an edge.
  */
 LineEntity2D_ptr LineEntity2D::create(Edge_ptr &e)
 {
@@ -201,7 +217,10 @@ LineEntity2D_ptr LineEntity2D::create(Edge_ptr &e)
 }
 
 /**
+ *	Factory method using an edge and a fit.
  *
+ *	The specified fit specified ensures all the points are on one side of the
+ *	line.
  */
 LineEntity2D_ptr LineEntity2D::create(Edge_ptr &e, Fit2D fit)
 {
@@ -209,7 +228,7 @@ LineEntity2D_ptr LineEntity2D::create(Edge_ptr &e, Fit2D fit)
 }
 
 /**
- *
+ *	Factory method using an edge collection.
  */
 LineEntity2D_ptr LineEntity2D::create(Edges_ptr &es)
 {
@@ -217,7 +236,10 @@ LineEntity2D_ptr LineEntity2D::create(Edges_ptr &es)
 }
 
 /**
+ *	Factory method using an edge collection and a fit.
  *
+ *	The specified fit specified ensures all the points are on one side of the
+ *	line.
  */
 LineEntity2D_ptr LineEntity2D::create(Edges_ptr &es, Fit2D fit)
 {
@@ -225,14 +247,19 @@ LineEntity2D_ptr LineEntity2D::create(Edges_ptr &es, Fit2D fit)
 }
 
 /**
- *	
+ *	Factory method that creates a new line that is parallel to an existing
+ *	line and at a given distance. The direction is determined by the sign
+ *	of the distance (-ive = left, +ive = right).
  */
-LineEntity2D_ptr LineEntity2D::createParallel(LineEntity2D_ptr &line, double d)
+LineEntity2D_ptr LineEntity2D::createParallel(LineEntity2D_ptr &l, double d)
 {
 	LineEntity2D_ptr lp = LineEntity2D::create();
 	
 	double cfs[3][2];
-	for (int i = 0; i < 3; i++)
+	double* donor[2];
+	double ang = 0.0;
+
+	for (int i = 0; i < 3; i++)	// Zero-fill array
 	{
 		for (int j = 0; j < 2; j++)
 		{
@@ -240,29 +267,21 @@ LineEntity2D_ptr LineEntity2D::createParallel(LineEntity2D_ptr &line, double d)
 		}
 	}
 
-	double* donor[2];
-	donor[0] = line->getXCoefficients();
-	donor[1] = line->getYCoefficients();
+	// Get donor coefficients
+	donor[0] = l->getXCoefficients();
+	donor[1] = l->getYCoefficients();
 
-	double ang = atan2(donor[1][0], donor[0][0]);
-	cout << ang << endl;
+	// Get angle of donor line
+	ang = atan2(donor[1][0], donor[0][0]);
 
+	// Create new coefficients
 	cfs[0][0] = donor[0][0];
 	cfs[1][0] = donor[1][0];
 
 	cfs[0][1] = (d * sin(ang)) + donor[0][1];
-	cfs[1][1] = (d * cos(ang)) + donor[1][1];
+	cfs[1][1] = (-1 * d * cos(ang)) + donor[1][1];
 
-	/*
-	cout << "donor:" << endl;
-	cout << "x = " << donor[0][0] << "t + " << donor[0][1] << endl;
-	cout << "y = " << donor[1][0] << "t + " << donor[1][1] << endl;
-
-	cout << "cfs:" << endl;
-	cout << "x = " << cfs[0][0] << "t + " << cfs[0][1] << endl;
-	cout << "y = " << cfs[1][0] << "t + " << cfs[1][1] << endl;
-	*/
-
+	// Populate new line's coefficients
 	for (int i = 0; i < 3; i++)
 	{
 		lp->setCoefficients(i, cfs[i]);
@@ -272,40 +291,170 @@ LineEntity2D_ptr LineEntity2D::createParallel(LineEntity2D_ptr &line, double d)
 }
 
 /**
- *	
+ *	Factory method that creates a new line that is parallel to an existing
+ *	line, at a given distance and in a given direction.
+ *
+ *	Note that the distance should always be positive regardless of direction
+ *	since the directionality is achieved by multiplying the direction and the
+ *	distance. Therefore, in this case two lefts would definitely make a right..
  */
-LineEntity2D_ptr LineEntity2D::createNormal(LineEntity2D_ptr &l, Point_ptr &p)
+LineEntity2D_ptr LineEntity2D::createParallel(LineEntity2D_ptr &l, double d,
+											  Entity::EntitySide s)
 {
-	//TODO: implement method
-	return 0;
+	d *= s;
+	return LineEntity2D::createParallel(l, d);
 }
 
 /**
  *	
  */
-LineEntity2D_ptr LineEntity2D::createNormal(LineEntity2D_ptr &l, double t)
+LineEntity2D_ptr LineEntity2D::createNormal(LineEntity2D_ptr &l,
+											Entity::EntityDir dir, double t1)
 {
-	return LineEntity2D::createNormal(l, l->posAt(t));
+	LineEntity2D_ptr ln = LineEntity2D::create();
+
+	double cfs[3][2];
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 2; j++)
+		{
+			cfs[i][j] = 0.0;
+		}
+	}
+
+	double t[2] = {t1, 0.0};
+
+	double* donor[2];
+	donor[0] = l->getXCoefficients();
+	donor[1] = l->getYCoefficients();
+
+	double ang = dir * M_PI / 2;
+
+	double coords[2];
+	coords[0] = l->x(t[0]);
+	coords[1] = l->y(t[0]);
+
+	cfs[0][0] = (donor[0][0] * cos(ang)) - (donor[1][0] * sin(ang));
+	cfs[1][0] = (donor[0][0] * sin(ang)) + (donor[1][0] * cos(ang));
+
+	cfs[0][1] = coords[0] - (cfs[0][0] * t[1]);
+	cfs[1][1] = coords[1] - (cfs[1][0] * t[1]);
+
+	for (int i = 0; i < 3; i++)
+	{
+		ln->setCoefficients(i, cfs[i]);
+	}
+
+	return ln;
 }
 
 /**
  *	
  */
-LineEntity2D_ptr LineEntity2D::createNormalAtStart(LineEntity2D_ptr &l)
+LineEntity2D_ptr LineEntity2D::createNormal(LineEntity2D_ptr &l,
+											Entity::EntityDir dir,
+											Entity::EntityLoc loc)
 {
-	return LineEntity2D::createNormal(l, l->start());
+	double t = 0.0;
+
+	switch (loc)
+	{
+	case ENTITYLOC_START:
+		t = l->minT();
+		break;
+
+	case ENTITYLOC_END:
+		t = l->maxT();
+		break;
+
+	case ENTITYLOC_MID:
+		t = (l->minT() + l->maxT()) / 2;
+		break;
+
+	}
+
+	return LineEntity2D::createNormal(l, dir, t);
 }
 
 /**
  *	
  */
-LineEntity2D_ptr LineEntity2D::createNormalAtEnd(LineEntity2D_ptr &l)
+LineEntity2D_ptr LineEntity2D::join(LineEntity2D_ptr &l1, LineEntity2D_ptr &l2,
+									double t1, double t2)
 {
-	return LineEntity2D::createNormal(l, l->end());
+	LineEntity2D_ptr l = LineEntity2D::create(l1->posAt(t1),
+		l2->posAt(t2));
+
+	double r[2];
+	Point_ptr p[2];
+	p[0] = l1->posAt(t1);
+	p[1] = l2->posAt(t2);
+
+	double* lx = l->getXCoefficients();
+	double* ly = l->getYCoefficients();
+
+	if (lx[0] != 0)
+	{
+		r[0] = (p[0]->getX() - lx[1]) / lx[0];
+		r[1] = (p[1]->getX() - lx[1]) / lx[0];
+	}
+	else
+	{
+		r[0] = (p[0]->getY() - ly[1]) / ly[0];
+		r[1] = (p[1]->getY() - ly[1]) / ly[0];
+	}
+
+	l->setRange(r[0], r[1]);
+
+	return l;
 }
 
 /**
  *	
+ */
+LineEntity2D_ptr LineEntity2D::join(LineEntity2D_ptr &l1, LineEntity2D_ptr &l2,
+									Entity::EntityLoc loc1,
+									Entity::EntityLoc loc2)
+{
+	double t1 = 0.0, t2 = 0.0;
+
+	switch (loc1)
+	{
+	case ENTITYLOC_START:
+		t1 = l1->minT();
+		break;
+
+	case ENTITYLOC_END:
+		t1 = l1->maxT();
+		break;
+
+	case ENTITYLOC_MID:
+		t1 = (l1->minT() + l1->maxT()) / 2;
+		break;
+
+	}
+
+	switch (loc2)
+	{
+	case ENTITYLOC_START:
+		t2 = l2->minT();
+		break;
+
+	case ENTITYLOC_END:
+		t2 = l2->maxT();
+		break;
+
+	case ENTITYLOC_MID:
+		t2 = (l2->minT() + l2->maxT()) / 2;
+		break;
+
+	}
+
+	return LineEntity2D::join(l1, l2, t1, t2);
+}
+
+/**
+ *	Factory method that creates a 2D equivalent of the 3D argument.
  */
 LineEntity2D_ptr LineEntity2D::convertTo2D(LineEntity3D_ptr &l)
 {
@@ -319,15 +468,6 @@ LineEntity2D_ptr LineEntity2D::convertTo2D(LineEntity3D_ptr &l)
  *	Note that it will reuse the same Points as the donor.
  */
 LineEntity2D_ptr LineEntity2D::clone(LineEntity2D_ptr &l)
-{
-	//TODO: implement method
-	return 0;
-}
-
-/**
- *
- */
-LineEntity2D_ptr LineEntity2D::split(double t)
 {
 	//TODO: implement method
 	return 0;
@@ -402,12 +542,8 @@ Point_ptr LineEntity2D::posAt(double t)
 {
 	double xP = 0.0, yP = 0.0, zP = 0.0;
 
-	if (_range[0] != 0 || _range[1] != 0)
-	{
-		xP = x(t);
-		yP = y(t);
-		zP = z(t);
-	}
+	xP = x(t);
+	yP = y(t);
 
 	return Point::create(xP, yP, zP);
 }
@@ -419,13 +555,8 @@ Point_ptr LineEntity2D::posAtDist(double pc)
 {
 	double t = 0.0;
 
-	if (_range[0] != 0 || _range[1] != 0)
-	{
-		t = ((_range[1] + _range[0]) * pc) + _range[0];
-		return posAt(t);
-	}
-
-	return Point::create(0.0, 0.0, 0.0);
+	t = ((_range[1] + _range[0]) * pc) + _range[0];
+	return posAt(t);
 }
 
 /**
@@ -465,38 +596,31 @@ void LineEntity2D::remove(Point_ptr &p)
 }
 
 /**
+ *	
+ */
+LineEntity2D_ptr LineEntity2D::split(double t)
+{
+	//TODO: implement method
+	return 0;
+}
+
+/**
+ *	
+ */
+void LineEntity2D::merge(LineEntity2D_ptr &l)
+{
+	//TODO: implement method
+}
+
+/**
  *	Returns a boolean depending on whether an argument entity intersects
  *	this entity.
  */
-bool LineEntity2D::intersects(LineEntity2D_ptr &l)
+bool LineEntity2D::intersects(LineEntity2D_ptr &l, bool incRange)
 {
-	double a, b, c, d, e, f, g, h;
-	double r[4];
-
-	a = _cfs[0][0];
-	b = _cfs[0][1];
-	c = _cfs[1][0];
-	d = _cfs[1][1];
-	e = l->getXCoefficients()[0];
-	f = l->getXCoefficients()[1];
-	g = l->getYCoefficients()[0];
-	h = l->getYCoefficients()[1];
-
-	r[0] = _range[0];
-	r[1] = _range[1];
-	r[2] = l->getRange()[0];
-	r[3] = l->getRange()[1];
-
-	if (a == 0.0 && e == 0.0)
+	if (getIntersect(l, incRange))
 	{
-		// Lines are colinear (vertical)
-		return false;
-	}
-
-	if (c == 0.0 && g == 0.0)
-	{
-		// Lines are colinear (horizontal)
-		return false;
+		return true;
 	}
 
 	return false;
@@ -506,11 +630,11 @@ bool LineEntity2D::intersects(LineEntity2D_ptr &l)
  *	Returns a boolean depending on whether one or more argument entities
  *	intersect this entity.
  */
-bool LineEntity2D::intersects(vector<LineEntity2D_ptr> e)
+bool LineEntity2D::intersects(vector<LineEntity2D_ptr> e, bool incRange)
 {
 	for (unsigned int i = 0; i < e.size(); i++)
 	{
-		if (intersects(e.at(i))) return true;
+		if (intersects(e.at(i), incRange)) return true;
 	}
 
 	return false;
@@ -520,36 +644,36 @@ bool LineEntity2D::intersects(vector<LineEntity2D_ptr> e)
  *	Returns a boolean depending on whether an argument edge intersects
  *	this entity.
  */
-bool LineEntity2D::intersects(Edge_ptr &e)
+bool LineEntity2D::intersects(Edge_ptr &e, bool incRange)
 {
-	return intersects(LineEntity2D::create(e));
+	return intersects(LineEntity2D::create(e), incRange);
 }
 
 /**
  *	Returns a boolean depending on whether one or more of the argument
  *	edges intersects this entity.
  */
-bool LineEntity2D::intersects(Edges_ptr &e)
+bool LineEntity2D::intersects(Edges_ptr &e, bool incRange)
 {
 	for (int i = 0; i < e->size(); i++)
 	{
-		if (intersects(e->get(i))) return true;
+		if (intersects(e->get(i), incRange)) return true;
 	}
 
 	return false;
 }
 
-bool LineEntity2D::intersects(RadEntity2D_ptr &e)
+bool LineEntity2D::intersects(RadEntity2D_ptr &e, bool incRange)
 {
 	//TODO: implement method
 	return false;
 }
 
-bool LineEntity2D::intersects(vector<RadEntity2D_ptr> &es)
+bool LineEntity2D::intersects(vector<RadEntity2D_ptr> &es, bool incRange)
 {
 	for (unsigned int i = 0; i < es.size(); i++)
 	{
-		if (intersects(es.at(i))) return true;
+		if (intersects(es.at(i), incRange)) return true;
 	}
 
 	return false;
@@ -558,11 +682,98 @@ bool LineEntity2D::intersects(vector<RadEntity2D_ptr> &es)
 /**
  *	Gets the point where this entity intersects an argument entity.
  */
-Point_ptr LineEntity2D::getIntersect(LineEntity2D_ptr &l)
+Point_ptr LineEntity2D::getIntersect(LineEntity2D_ptr &l, bool incRange)
 {
-	//TODO: implement method
-	if (! intersects(l)) return 0;
-	return 0;
+	double c[2][2][2];	// coefficients [line][coordinate][coefficient]
+	double r[2][2];		// ranges [line][min / max]
+	double g[2];		// gradient [line]
+	double I[2];		// coordinates of intercept [coordinate]
+
+	// Matrices used to solve simultaneous equations
+	double frac = 0.0, tmp = 0.0;
+	double A[2][2];
+	double X[2];
+	double B[2];
+
+	c[0][0][0] = _cfs[0][0];
+	c[0][0][1] = _cfs[0][1];
+	c[0][1][0] = _cfs[1][0];
+	c[0][1][1] = _cfs[1][1];
+	c[1][0][0] = l->getXCoefficients()[0];
+	c[1][0][1] = l->getXCoefficients()[1];
+	c[1][1][0] = l->getYCoefficients()[0];
+	c[1][1][1] = l->getYCoefficients()[1];
+
+	if (c[0][0][0] == 0.0 && c[1][0][0] == 0.0)
+	{
+		// Lines are colinear (vertical)
+		return 0;
+	}
+
+	if (c[0][1][0] == 0.0 && c[1][1][0] == 0.0)
+	{
+		// Lines are colinear (horizontal)
+		return 0;
+	}
+
+	g[0] = c[0][1][0] / c[0][0][0];
+	g[1] = c[1][1][0] / c[1][0][0];
+
+	if (g[0] == g[1])
+	{
+		// Lines are colinear
+		return 0;
+	}
+
+	if (incRange)
+	{
+		r[0][0] = _range[0];
+		r[0][1] = _range[1];
+		r[1][0] = l->getRange()[0];
+		r[1][1] = l->getRange()[1];
+	}
+
+	A[0][0] = c[0][0][0];
+	A[0][1] = c[1][0][0] * -1;
+	A[1][0] = c[0][1][0];
+	A[1][1] = c[1][1][0] * -1;
+
+	B[0] = c[1][0][1] - c[0][0][1];
+	B[1] = c[1][1][1] - c[0][1][1];
+
+	// Invert A
+	frac = 1 / ((A[0][0] * A[1][1]) - (A[0][1] * A[1][0]));
+	tmp = A[0][0];
+	A[0][0] = A[1][1];
+	A[1][1] = tmp;
+	A[0][1] *= -1;
+	A[1][0] *= -1;
+
+	// Calculate X = (A-1)*B
+	X[0] = ((A[0][0] * B[0]) + (A[0][1] * B[1])) * frac;
+	X[1] = ((A[1][0] * B[0]) + (A[1][1] * B[1])) * frac;
+
+	// Check if is finite - if not, they do not intersect!
+	if (!(_finite(X[0]) && _finite(X[1])))
+	{
+		return 0;
+	}
+
+	// Do we want to only check in range for intercept?
+	if (incRange)
+	{
+		// Has to be in range for BOTH lines!
+		if (! ((X[0] > r[0][0]) && (X[0] < r[0][1]) &&
+			(X[1] > r[1][0]) && (X[1] > r[1][1])))
+		{
+			return 0;
+		}
+	}
+
+	I[0] = this->x(X[0]);
+	I[1] = this->y(X[0]);
+
+	return Point::create(I[0], I[1], 0.0);
 }
 
 /**
@@ -690,6 +901,26 @@ LineEntity2D::LineEntity2D(Edges_ptr &es, Entity2D::Fit2D f)
 void LineEntity2D::_init(Entity2D::Fit2D f)
 {
 	_fit = f;
+	_range[0] = 0.0;
+	_range[1] = 0.0;
+	_ends[0] = Point::create(0.0, 0.0, 0.0);
+	_ends[1] = Point::create(0.0, 0.0, 0.0);
+
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 2; j++)
+		{
+			_cfs[i][j] = 0.0;
+		}
+	}
+
+	_avgs[0] = 0.0;
+	_avgs[1] = 0.0;
+	_ss[0] = 0.0;
+	_ss[1] = 0.0;
+	_ss[2] = 0.0;
+
+	// Initial calculation
 	_calculate();
 }
 
@@ -704,22 +935,17 @@ void LineEntity2D::_calculate()
 	double m = 0.0, c = 0.0, tmp = 0.0, of = 0.0;
 
 	// Set up array
-	v.resize(size());
-	for (int i = 0; i < size(); i++)
+	v.resize(this->size());
+	for (int i = 0; i < this->size(); i++)
 	{
 		v[i].resize(12);
-	}
-
-	for (int j = 0; j < size(); j++)
-	{
-		cout << _items.at(j) << endl;
 	}
 
 	// Populate X and Y
 	_avgs[0] = 0.0;
 	_avgs[1] = 0.0;
 
-	for (int i = 0; i < size(); i++)
+	for (int i = 0; i < this->size(); i++)
 	{
 		v[i][0] = get(i)->getX();	// X
 		v[i][1] = get(i)->getY();	// Y
@@ -734,8 +960,6 @@ void LineEntity2D::_calculate()
 	// Calculate means
 	_avgs[0] /= size();
 	_avgs[1] /= size();
-
-	cout << _avgs[0] << " " << _avgs[1] << endl;
 
 	// Calculate remaining fields
 	_ss[0] = 0.0;
@@ -755,8 +979,6 @@ void LineEntity2D::_calculate()
 		_ss[2] += v[i][8];						// SSxy
 	}
 
-	cout << _ss[0] << " " << _ss[1] << " " << _ss[2] << endl;
-
 	// jic by some miracle SSxx = 0
 	if (_ss[0] != 0.0)
 	{
@@ -770,9 +992,6 @@ void LineEntity2D::_calculate()
 
 		_cfs[1][0] = m;
 		_cfs[1][1] = c;
-
-		cout << "x = " << _cfs[0][0] << "t + " << _cfs[0][1] << endl;
-		cout << "y = " << _cfs[1][0] << "t + " << _cfs[1][1] << endl;
 
 		// Find point furthest away from line (use fit)
 		// NB. due to coefficients potentially being 0, this differs from below
@@ -818,9 +1037,6 @@ void LineEntity2D::_calculate()
 		_cfs[0][0] = m;
 		_cfs[0][1] = c;
 
-		cout << "x = " << _cfs[0][0] << "t + " << _cfs[0][1] << endl;
-		cout << "y = " << _cfs[1][0] << "t + " << _cfs[1][1] << endl;
-
 		// Find point furthest away from line (use fit)
 		// NB. due to coefficients potentially being 0, this differs from above
 		if (_fit == FIT2D_BEST) return;
@@ -854,9 +1070,10 @@ void LineEntity2D::_calculate()
 	}
 
 	// Move line
-	cout << of << endl;
 	_cfs[0][1] += of * sin(atan2(_cfs[1][0], _cfs[0][0]));
-	_cfs[1][1] += of * cos(atan2(_cfs[1][0], _cfs[0][0]));
+	_cfs[1][1] -= of * cos(atan2(_cfs[1][0], _cfs[0][0]));
+
+	v.clear();
 }
 
 /**
@@ -903,6 +1120,7 @@ void LineEntity2D::_increment(Points_ptr &ps)
 void LineEntity2D::_incrementCFS(Point_ptr &p)
 {
 	//TODO: implement method
+	_calculate();
 }
 
 /**
@@ -941,6 +1159,7 @@ void LineEntity2D::_decrement(Points_ptr &ps)
 void LineEntity2D::_decrementCFS(Point_ptr &p)
 {
 	//TODO: implement method
+	_calculate();
 }
 
 double LineEntity2D::_findIntersect(LineEntity2D_ptr &l)

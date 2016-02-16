@@ -52,6 +52,26 @@ typedef shared_ptr<VolumeEntity> VolumeEntity_ptr;
 class Entity
 {
 public:
+	// Enumerations
+	enum EntitySide
+	{
+		ENTITYSIDE_LEFT = -1,
+		ENTITYSIDE_RIGHT = 1
+	};
+
+	enum EntityDir
+	{
+		ENTITYDIR_CLOCK = -1,
+		ENTITYDIR_ANTICLOCK = 1
+	};
+
+	enum EntityLoc
+	{
+		ENTITYLOC_START,
+		ENTITYLOC_MID,
+		ENTITYLOC_END
+	};
+
 	// Methods (public)
 	virtual double		x(double t) = 0;
 	virtual double		y(double t) = 0;
@@ -126,13 +146,23 @@ public:
 	static LineEntity2D_ptr create(Edges_ptr &es);
 	static LineEntity2D_ptr create(Edges_ptr &es, Fit2D fit);
 	static LineEntity2D_ptr createParallel(LineEntity2D_ptr &l, double d);
-	static LineEntity2D_ptr createNormal(LineEntity2D_ptr &l, Point_ptr &p);
-	static LineEntity2D_ptr createNormal(LineEntity2D_ptr &l, double t);
-	static LineEntity2D_ptr createNormalAtStart(LineEntity2D_ptr &l);
-	static LineEntity2D_ptr createNormalAtEnd(LineEntity2D_ptr &l);
+	static LineEntity2D_ptr createParallel(LineEntity2D_ptr &l, double d,
+		EntitySide s);
+
+	static LineEntity2D_ptr createNormal(LineEntity2D_ptr &l, EntityDir dir,
+		double t);
+
+	static LineEntity2D_ptr createNormal(LineEntity2D_ptr &l, EntityDir dir,
+		EntityLoc loc);
+
+	static LineEntity2D_ptr join(LineEntity2D_ptr &l1, LineEntity2D_ptr &l2,
+		double t1, double t2);
+
+	static LineEntity2D_ptr join(LineEntity2D_ptr &l1, LineEntity2D_ptr &l2,
+		EntityLoc loc1, EntityLoc loc2);
+
 	static LineEntity2D_ptr convertTo2D(LineEntity3D_ptr &l);
 	static LineEntity2D_ptr clone(LineEntity2D_ptr &l);
-	static LineEntity2D_ptr split(double t);
 	static LineEntity2D_ptr	cast(Entity2D_ptr &e);
 
 	// Methods (public)
@@ -148,14 +178,15 @@ public:
 	void				add(Points_ptr &p);						// Override
 	void				insert(Point_ptr &p, int i);			// Override
 	void				remove(Point_ptr &p);					// Override
+	LineEntity2D_ptr	split(double t);
 	void				merge(LineEntity2D_ptr &l);
-	bool				intersects(LineEntity2D_ptr &e);
-	bool				intersects(vector<LineEntity2D_ptr> e);
-	bool				intersects(Edge_ptr &e);
-	bool				intersects(Edges_ptr &e);
-	bool				intersects(RadEntity2D_ptr &e);
-	bool				intersects(vector<RadEntity2D_ptr> &es);
-	Point_ptr			getIntersect(LineEntity2D_ptr &l);
+	bool				intersects(LineEntity2D_ptr &e, bool incRange);
+	bool				intersects(vector<LineEntity2D_ptr> e, bool incRange);
+	bool				intersects(Edge_ptr &e, bool incRange);
+	bool				intersects(Edges_ptr &e, bool incRange);
+	bool				intersects(RadEntity2D_ptr &e, bool incRange);
+	bool				intersects(vector<RadEntity2D_ptr> &es, bool incRange);
+	Point_ptr			getIntersect(LineEntity2D_ptr &l, bool incRange);
 
 private:
 	// Constructors
@@ -172,8 +203,8 @@ private:
 	LineEntity2D(Edges_ptr &es, Fit2D f);
 
 	// Fields (private)
-	double	_avgs[2];
-	double	_ss[3];
+	double	_avgs[2];	// Keep track of avg and ss so can incrementally
+	double	_ss[3];		// build the line - rather than from scratch
 
 	// Methods (private)
 	void	_init(Fit2D fit);
