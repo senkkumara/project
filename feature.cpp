@@ -1,9 +1,16 @@
+/**
+ *	feature.cpp
+ *	---------------------------------------------------------------------------
+ *	See "feature.h" for a description.
+ */
+
 using namespace std;
 
 #include "feature.h"
 
 /**
- *
+ *	Factory method taking a SurfaceRegion as an argument - the expectation
+ *	is that the transitions are added at a later stage.
  */
 Feature2D_ptr Feature2D::create(SurfaceRegion2D_ptr &r)
 {
@@ -11,7 +18,7 @@ Feature2D_ptr Feature2D::create(SurfaceRegion2D_ptr &r)
 }
 
 /**
- *
+ *	Factory method taking a SurfaceRegion and a SurfaceTransition as arguments.
  */
 Feature2D_ptr Feature2D::create(SurfaceRegion2D_ptr &r, 
 								SurfaceTransition2D_ptr &out)
@@ -20,7 +27,8 @@ Feature2D_ptr Feature2D::create(SurfaceRegion2D_ptr &r,
 }
 
 /**
- *
+ *	Factory method taking a SurfaceRegion and two SurfaceTransitions as
+ *	arguments.
  */
 Feature2D_ptr Feature2D::create(SurfaceRegion2D_ptr &r,
 								SurfaceTransition2D_ptr &out,
@@ -30,7 +38,7 @@ Feature2D_ptr Feature2D::create(SurfaceRegion2D_ptr &r,
 }
 
 /**
- *
+ *	Get the region belonging to the feature.
  */
 SurfaceRegion2D_ptr Feature2D::getRegion()
 {
@@ -38,7 +46,7 @@ SurfaceRegion2D_ptr Feature2D::getRegion()
 }
 
 /**
- *
+ *	Get the transitions belonging to the feature.
  */
 SurfaceTransition2D_ptr* Feature2D::getTransitions()
 {
@@ -46,7 +54,7 @@ SurfaceTransition2D_ptr* Feature2D::getTransitions()
 }
 
 /**
- *
+ *	Get the inward transition belonging to the feature.
  */
 SurfaceTransition2D_ptr Feature2D::in()
 {
@@ -54,7 +62,7 @@ SurfaceTransition2D_ptr Feature2D::in()
 }
 
 /**
- *
+ *	Get the outward transition belonging to the feature.
  */
 SurfaceTransition2D_ptr Feature2D::out()
 {
@@ -62,7 +70,7 @@ SurfaceTransition2D_ptr Feature2D::out()
 }
 
 /**
- *
+ *	Get the type of the feature.
  */
 SurfaceRegion2D::Type Feature2D::getType()
 {
@@ -70,7 +78,7 @@ SurfaceRegion2D::Type Feature2D::getType()
 }
 
 /**
- *
+ *	Set the inward transition for the feature.
  */
 void Feature2D::setIn(SurfaceTransition2D_ptr &t)
 {
@@ -78,7 +86,7 @@ void Feature2D::setIn(SurfaceTransition2D_ptr &t)
 }
 
 /**
- *
+ *	Set the outward transition for the feature.
  */
 void Feature2D::setOut(SurfaceTransition2D_ptr &t)
 {
@@ -86,7 +94,9 @@ void Feature2D::setOut(SurfaceTransition2D_ptr &t)
 }
 
 /**
+ *	(Private) Constructor taking a SurfaceRegion argument.
  *
+ *	Do not use this directly, use the provided factory method.
  */
 Feature2D::Feature2D(SurfaceRegion2D_ptr &r)
 {

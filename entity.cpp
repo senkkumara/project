@@ -1,3 +1,9 @@
+/**
+ *	region.cpp
+ *	---------------------------------------------------------------------------
+ *	See "region.h" for a description.
+ */
+
 using namespace std;
 
 #define _USE_MATH_DEFINES
@@ -459,6 +465,7 @@ LineEntity2D_ptr LineEntity2D::join(LineEntity2D_ptr &l1, LineEntity2D_ptr &l2,
 LineEntity2D_ptr LineEntity2D::convertTo2D(LineEntity3D_ptr &l)
 {
 	//TODO: implement method
+	throw MethodNotImplementedException("LineEntity2D::convertTo2D");
 	return 0;
 }
 
@@ -470,6 +477,7 @@ LineEntity2D_ptr LineEntity2D::convertTo2D(LineEntity3D_ptr &l)
 LineEntity2D_ptr LineEntity2D::clone(LineEntity2D_ptr &l)
 {
 	//TODO: implement method
+	throw MethodNotImplementedException("LineEntity2D::clone");
 	return 0;
 }
 
@@ -564,7 +572,10 @@ Point_ptr LineEntity2D::posAtDist(double pc)
  */
 void LineEntity2D::add(Point_ptr &p)
 {
-	__super::add(p);
+	//__super::add(p);
+	int s = _items.size();
+
+	_items.push_back(p);
 	_increment(p);
 }
 
@@ -601,6 +612,7 @@ void LineEntity2D::remove(Point_ptr &p)
 LineEntity2D_ptr LineEntity2D::split(double t)
 {
 	//TODO: implement method
+	throw MethodNotImplementedException("LineEntity2D::split");
 	return 0;
 }
 
@@ -610,6 +622,7 @@ LineEntity2D_ptr LineEntity2D::split(double t)
 void LineEntity2D::merge(LineEntity2D_ptr &l)
 {
 	//TODO: implement method
+	throw MethodNotImplementedException("LineEntity2D::merge");
 }
 
 /**
@@ -666,6 +679,7 @@ bool LineEntity2D::intersects(Edges_ptr &e, bool incRange)
 bool LineEntity2D::intersects(RadEntity2D_ptr &e, bool incRange)
 {
 	//TODO: implement method
+	throw MethodNotImplementedException("RadEntity2D::convertTo2D");
 	return false;
 }
 
@@ -725,6 +739,7 @@ Point_ptr LineEntity2D::getIntersect(LineEntity2D_ptr &l, bool incRange)
 		return 0;
 	}
 
+	// get ranges if required
 	if (incRange)
 	{
 		r[0][0] = _range[0];
@@ -770,6 +785,7 @@ Point_ptr LineEntity2D::getIntersect(LineEntity2D_ptr &l, bool incRange)
 		}
 	}
 
+	// Get location for point
 	I[0] = this->x(X[0]);
 	I[1] = this->y(X[0]);
 
@@ -1082,6 +1098,7 @@ void LineEntity2D::_calculate()
 void LineEntity2D::_calculateOffset()
 {
 	//TODO: implement method
+	throw MethodNotImplementedException("LineEntity2D::_calculateOffset");
 }
 
 /**
@@ -1390,6 +1407,47 @@ RadEntity2D::RadEntity2D(LineEntity2D_ptr &e1, LineEntity2D_ptr &e2)
 void RadEntity2D::_calculate()
 {
 	//TODO: implement method
+	Point_ptr p = _adj[0]->getIntersect(_adj[1],false);
+	double trim = 0.0;
+	double a[2];
+
+	_calculateAngle();
+
+	trim = 1.0 * tan(_ang / 2);
+
+	for (int i = 0; i < 2; i++)
+	{
+		a[i] = atan2(_adj[i]->getYCoefficients()[0],
+			_adj[i]->getXCoefficients()[0]);
+	}
+
+	double trims[2];
+	trims[0] = 1.0;
+
+}
+
+void RadEntity2D::_calculateAngle()
+{
+	double a[2];
+
+	for (int i = 0; i < 2; i++)
+	{
+		a[i] = atan2(_adj[i]->getYCoefficients()[0],
+			_adj[i]->getXCoefficients()[0]);
+	}
+
+	a[1] -= a[0];
+	a[0] -= a[0];
+	
+	// Rotate so first line is on origin
+	if (a[1] < (-1 * M_PI)) a[1] += 2 * M_PI;
+	if (a[1] > (M_PI)) a[1] -= 2 * M_PI;
+
+	// Correct for over-rotation (lines flipping from -180 to +180)
+	if (a[1] < 0) a[1] = (-1 * M_PI) - a[1];
+	if (a[1] > 0) a[1] = M_PI - a[1];
+
+	_ang = a[1];
 }
 
 /**

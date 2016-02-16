@@ -11,6 +11,22 @@ using namespace std;
 
 int main()
 {
+	/*
+	LineEntity2D_ptr l1 = LineEntity2D::create();
+	double x1[2] = {3.0, -33.0};
+	double y1[2] = {3.0, -33.0};
+	l1->setXCoefficients(x1);
+	l1->setYCoefficients(y1);
+
+	LineEntity2D_ptr l2 = LineEntity2D::create();
+	double x2[2] = {-3.0, 0.0};
+	double y2[2] = {3.0, 0.0};
+	l2->setXCoefficients(x2);
+	l2->setYCoefficients(y2);
+
+	RadEntity2D_ptr r = RadEntity2D::create(l1, l2);
+	*/
+
 	while (true) {
 		// Get filename
 		std::string filename;

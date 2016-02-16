@@ -77,9 +77,9 @@ private:
 	
 	// Methods (private)
 	void	_init();
-	bool	_intercept();
-	bool	_intercept(Edges_ptr &e);
-	bool	_intercept(Edge_ptr &e);
+	bool	_intersects();
+	bool	_intersects(Edges_ptr &e);
+	bool	_intersects(Edge_ptr &e);
 
 	// Operator overloads
 	friend std::ostream &operator<<(std::ostream &strm,

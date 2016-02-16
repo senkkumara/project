@@ -1,5 +1,13 @@
+/**
+ *	plan.cpp
+ *	---------------------------------------------------------------------------
+ *	See "plan.h" for a description.
+ */
+
 using namespace std;
 
+#include "exceptions.h"
+#include <iostream>
 #include "plan.h"
 #include "utils.h"
 
@@ -113,26 +121,32 @@ Feature2Ds_ptr Plan::getFeatures()
 }
 
 /**
- *	Apply a previously created Plan Builder Snapshot.
+ *	Apply a previously created PlanBuilder Snapshot.
  */
 bool Plan::applyChanges(PlanBuilderSnapshot_ptr &s)
 {
 	//TODO: implement method
+	throw MethodNotImplementedException("Plan::applyChanges");
 	return true;
 }
 
 /**
- *	Remove a previously applied Plan Builder Snapshot.
+ *	Remove a previously applied PlanBuilder Snapshot.
  */
 bool Plan::removeChanges(PlanBuilderSnapshot_ptr &s)
 {
 	//TODO: implement method
+	throw MethodNotImplementedException("Plan::removeChanges");
 	return true;
 }
 
 /**
  *	(Private) Constructs a Plan from an Application and Specification
  *	arguments.
+ *
+ *	Note, since no side was specified, it takes it from the Specification.
+ *	The assumption is that only one side was specified and therefore this
+ *	plan forms part of the one and only solution.
  */
 Plan::Plan(Application_ptr &app, Specification &spec)
 {
@@ -197,6 +211,7 @@ void Plan::_build()
 	_buildRegions();
 
 	// Only build radii if more than one line
+	/*
 	if (_feats->size() < 2)
 	{
 		// Build the radii...
@@ -206,7 +221,7 @@ void Plan::_build()
 		// Optimise the plan... (if it has radii, otherwise its just a
 		// straight rail and is intrinsically optimised!)
 		_optimise();
-	}
+	}*/
 }
 
 /**
@@ -217,7 +232,7 @@ void Plan::_buildRegions()
 	// Only build if there is 
 	if (_boundary[0]->size() < 1)
 	{
-		return;		//TODO: add exception handling
+		throw SolutionBuildException();
 	}
 
 	Entity2D::Fit2D fit = _mapFit();
@@ -245,6 +260,11 @@ void Plan::_buildRegions()
 			_feats->add(feat);
 		}
 	}
+
+	cout << _regions->size() << endl;
+	cout << _regions->get(0)->inner()->size() << endl;
+	cout << _regions->get(0)->inner()->getXCoefficients()[0] << " " << _regions->get(0)->inner()->getXCoefficients()[1] << endl;
+	cout << _regions->get(0)->inner()->getYCoefficients()[0] << " " << _regions->get(0)->inner()->getYCoefficients()[1] << endl;
 }
 
 /**
@@ -252,9 +272,9 @@ void Plan::_buildRegions()
  */
 void Plan::_buildTransitions()
 {
-	Feature2D_ptr f[2];
-	SurfaceRegion2D_ptr r[2];
-	SurfaceTransition2D_ptr t;
+	Feature2D_ptr f[2];			// holder for WIP features
+	SurfaceRegion2D_ptr r[2];	// holder for WIP regions
+	SurfaceTransition2D_ptr t;	// transition being built
 
 	// Add transition between each pair of regions
 	for (int i = 0; i < _feats->size() - 2; i++)
@@ -267,6 +287,7 @@ void Plan::_buildTransitions()
 		t = SurfaceTransition2D::create(r[0], r[1], _boundary[1]);
 		_trans->add(t);
 
+		// Set transition on the features
 		f[0]->setOut(t);
 		f[1]->setIn(t);
 	}
@@ -279,6 +300,7 @@ void Plan::_buildTransitions()
 void Plan::_checkTransitions()
 {
 	//TODO: implement method
+	throw MethodNotImplementedException("Plan::_checkTransitions");
 }
 
 /**
@@ -287,6 +309,7 @@ void Plan::_checkTransitions()
 void Plan::_optimise()
 {
 	//TODO: implement method
+	throw MethodNotImplementedException("Plan::_optimise");
 }
 
 /**
@@ -295,6 +318,7 @@ void Plan::_optimise()
 void Plan::_calculateQuality()
 {
 	//TODO: implement method
+	throw MethodNotImplementedException("Plan::_calculateQuality");
 }
 
 /**
@@ -304,6 +328,7 @@ void Plan::_calculateQuality()
 void Plan::_fixFeature(Feature2D_ptr &f)
 {
 	//TODO: implement method
+	throw MethodNotImplementedException("Plan::_fixFeature");
 }
 
 /**
@@ -323,20 +348,4 @@ Entity2D::Fit2D Plan::_mapFit()
 	default:
 		return Entity2D::FIT2D_BEST;
 	}
-}
-
-/**
- *	Factory method using the constructor with no arguments.
- */
-PlanBuilderSnapshot_ptr PlanBuilderSnapshot::create()
-{
-	return PlanBuilderSnapshot_ptr(new PlanBuilderSnapshot());
-}
-
-/**
- *	(Private) Constructs a Plan Builder Snapshot.
- */
-PlanBuilderSnapshot::PlanBuilderSnapshot()
-{
-	//TODO: implement method
 }

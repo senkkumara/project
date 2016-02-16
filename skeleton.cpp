@@ -61,11 +61,19 @@ Plan_ptr Skeleton::getPlan()
 }
 
 /**
+ *	Get the paths belonging to the skeleton.
+ */
+Path_ptr* Skeleton::getPaths()
+{
+	return _path;
+}
+
+/**
  *	Get the lower rail path for the skeleton.
  */
 Path_ptr Skeleton::getLower()
 {
-	return _lower;
+	return _path[0];
 }
 
 /**
@@ -73,7 +81,7 @@ Path_ptr Skeleton::getLower()
  */
 Path_ptr Skeleton::getUpper()
 {
-	return _upper;
+	return _path[1];
 }
 
 /**
@@ -88,36 +96,9 @@ Skeleton::Skeleton(Application_ptr &app, Specification &spec, Side side)
 	_side = side;
 	_iter = 0;
 
-	_buildPlan();
-	_buildLower();
-	_buildUpper();
-}
-
-/**
- *	(Private) Build the plan for the rail.
- */
-void Skeleton::_buildPlan()
-{
-	//TODO: implement method
 	_plan = Plan::create(_app, _spec, _side);
-}
-
-/**
- *	(Private) Builds the lower rail.
- */
-void Skeleton::_buildLower()
-{
-	//TODO: implement method
-	_lower = Path::create(_app, _spec, _plan);
-}
-
-/**
- *	(Private) Builds the upper rail - by offsetting the lower rail.
- */
-void Skeleton::_buildUpper()
-{
-	//::TODO: implement method
-	_upper = Path::create(_lower);
+	_path[0] = Path::create(_app, _spec, _plan);
+	_path[1] = Path::create(_app, _spec, _plan);
 }
 
 /**

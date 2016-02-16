@@ -252,9 +252,11 @@ private:
 
 	// Fields (private)
 	LineEntity2D_ptr		_adj[2];
+	double					_ang;
 
 	// Methods (private)
 	void _calculate();
+	void _calculateAngle();
 };
 
 class Entity3D

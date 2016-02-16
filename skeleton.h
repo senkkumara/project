@@ -33,7 +33,8 @@ class Skeleton
 {
 public:
 	// Factories
-	static Skeleton_ptr create(Application_ptr &app, Specification &spec, Side side);
+	static Skeleton_ptr create(Application_ptr &app, Specification &spec,
+		Side side);
 
 	// Methods (public)
 	int					getIteration();
@@ -41,6 +42,7 @@ public:
 	Specification		getSpecification();
 	Side				getSide();
 	Plan_ptr			getPlan();
+	Path_ptr*			getPaths();
 	Path_ptr			getLower();
 	Path_ptr			getUpper();
 
@@ -54,13 +56,7 @@ private:
 	Specification		_spec;		// Additional app details
 	Side				_side;
 	Plan_ptr			_plan;
-	Path_ptr			_upper;
-	Path_ptr			_lower;
-
-	// Methods (private)
-	void _buildPlan();
-	void _buildLower();
-	void _buildUpper();
+	Path_ptr			_path[2];
 
 	// Operator overloads
 	friend std::ostream &operator<<(std::ostream &strm,

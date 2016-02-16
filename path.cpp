@@ -1,8 +1,15 @@
+/**
+ *	path.cpp
+ *	---------------------------------------------------------------------------
+ *	See "path.h" for a description.
+ */
+
 using namespace std;
 
 #include "path.h"
 
-Path_ptr Path::create(Application_ptr &app, Specification &spec, Plan_ptr &plan)
+Path_ptr Path::create(Application_ptr &app, Specification &spec,
+					  Plan_ptr &plan)
 {
 	return Path_ptr(new Path(app, spec, plan));
 }

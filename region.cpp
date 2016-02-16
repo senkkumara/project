@@ -1,3 +1,9 @@
+/**
+ *	region.cpp
+ *	---------------------------------------------------------------------------
+ *	See "region.h" for a description.
+ */
+
 using namespace std;
 
 #include "region.h"
@@ -15,7 +21,15 @@ SurfaceRegion2D_ptr SurfaceRegion2D::create(Edge_ptr &e, Edges_ptr &b,
 bool SurfaceRegion2D::append(Edge_ptr &e)
 {
 	_inner->add(e->right());
-	if (_intercept())
+
+	_outer = LineEntity2D::createParallel(_inner, -1000);
+	_entry = LineEntity2D::join(_inner, _outer, Entity::ENTITYLOC_START,
+		Entity::ENTITYLOC_START);
+
+	_exit = LineEntity2D::join(_inner, _outer, Entity::ENTITYLOC_END,
+		Entity::ENTITYLOC_END);
+
+	if (_intersects())
 	{
 		_inner->remove(e->right());
 		return false;
@@ -70,7 +84,13 @@ LineEntity2D_ptr SurfaceRegion2D::exit()
 
 SurfaceRegion2D::SurfaceRegion2D(Edge_ptr &e, Edges_ptr &b, Entity2D::Fit2D f)
 {
-	//TODO: implement method
+	_inner = LineEntity2D::create(e,f);
+	_outer = LineEntity2D::createParallel(_inner, -1000);
+	_entry = LineEntity2D::join(_inner, _outer, Entity::ENTITYLOC_START,
+		Entity::ENTITYLOC_START);
+
+	_exit = LineEntity2D::join(_inner, _outer, Entity::ENTITYLOC_END,
+		Entity::ENTITYLOC_END);
 }
 
 void SurfaceRegion2D::_init()
@@ -78,22 +98,31 @@ void SurfaceRegion2D::_init()
 	//TODO: implement method
 }
 
-bool SurfaceRegion2D::_intercept()
+bool SurfaceRegion2D::_intersects()
 {
 	//TODO: implement method
 	return false;
 }
 
-bool SurfaceRegion2D::_intercept(Edges_ptr &e)
+bool SurfaceRegion2D::_intersects(Edges_ptr &es)
 {
-	//TODO: implement method
+	for (int i = 0; i < es->size(); i++)
+	{
+		if (_intersects(es->get(i)))
+		{
+			return true;
+		}
+	}
+
 	return false;
 }
 
-bool SurfaceRegion2D::_intercept(Edge_ptr &e)
+bool SurfaceRegion2D::_intersects(Edge_ptr &e)
 {
-	//TODO: implement method
-	return false;
+	return (_inner->intersects(e, true) ||
+		_outer->intersects(e, true) ||
+		_entry->intersects(e, true) ||
+		_exit->intersects(e, true));
 }
 
 SurfaceTransition2D_ptr SurfaceTransition2D::create(SurfaceRegion2D_ptr &f1,
