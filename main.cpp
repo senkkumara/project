@@ -27,6 +27,36 @@ int main()
 	RadEntity2D_ptr r = RadEntity2D::create(l1, l2);
 	*/
 
+	Points_ptr p = Points::create();
+	p->add(Point::create(-4.0, -2.0, 0.0));
+	p->add(Point::create(-2.0, -4.0, 0.0));
+	p->add(Point::create(2.0, 4.0, 0.0));
+	p->add(Point::create(4.0, 2.0, 0.0));
+
+	LineEntity2D_ptr l[4];
+	
+	l[0] = LineEntity2D::create(p,Entity2D::FIT2D_BEST);
+	l[1] = LineEntity2D::createParallel(l[0], 5);
+	l[2] = LineEntity2D::join(l[0], l[1], Entity::ENTITYLOC_START, Entity::ENTITYLOC_START);
+	l[3] = LineEntity2D::join(l[0], l[1], Entity::ENTITYLOC_END, Entity::ENTITYLOC_END);
+
+	l[0]->add(Point::create(-4.0, -2.0, 0.0));
+	l[0]->remove(Point::create(-4.0, -2.0, 0.0));
+
+	for (int i = 0; i < 4; i++)
+	{
+		cout << i << ": " << endl;
+		cout << l[i]->getXCoefficients()[0] << " " << l[i]->getXCoefficients()[1] << endl;
+		cout << l[i]->getYCoefficients()[0] << " " << l[i]->getYCoefficients()[1] << endl;
+		cout << l[i]->minT() << " " << l[i]->maxT() << endl;
+	}
+
+	while (true)
+	{
+
+	}
+
+	/*
 	while (true) {
 		// Get filename
 		std::string filename;
@@ -97,4 +127,5 @@ int main()
 
 EXIT:
 	cout << "Exiting application... :)" << endl;
+	*/
 }

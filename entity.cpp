@@ -293,6 +293,9 @@ LineEntity2D_ptr LineEntity2D::createParallel(LineEntity2D_ptr &l, double d)
 		lp->setCoefficients(i, cfs[i]);
 	}
 
+	lp->setMinT(l->minT());
+	lp->setMaxT(l->maxT());
+
 	return lp;
 }
 
@@ -572,10 +575,7 @@ Point_ptr LineEntity2D::posAtDist(double pc)
  */
 void LineEntity2D::add(Point_ptr &p)
 {
-	//__super::add(p);
-	int s = _items.size();
-
-	_items.push_back(p);
+	__super::add(p);
 	_increment(p);
 }
 
@@ -793,6 +793,15 @@ Point_ptr LineEntity2D::getIntersect(LineEntity2D_ptr &l, bool incRange)
 }
 
 /**
+ *	
+ */
+double LineEntity2D::getT(Point_ptr &p)
+{
+	//TODO: implement method
+	return 0.0;
+}
+
+/**
  *	Default constructor.
  */
 LineEntity2D::LineEntity2D()
@@ -930,8 +939,8 @@ void LineEntity2D::_init(Entity2D::Fit2D f)
 		}
 	}
 
-	_avgs[0] = 0.0;
-	_avgs[1] = 0.0;
+	_means[0] = 0.0;
+	_means[1] = 0.0;
 	_ss[0] = 0.0;
 	_ss[1] = 0.0;
 	_ss[2] = 0.0;
@@ -948,18 +957,18 @@ void LineEntity2D::_calculate()
 	if (this->size() == 0) return;
 
 	vector<vector<double>> v;
-	double m = 0.0, c = 0.0, tmp = 0.0, of = 0.0;
+	double m = 0.0, c = 0.0, of = 0.0;
 
 	// Set up array
 	v.resize(this->size());
 	for (int i = 0; i < this->size(); i++)
 	{
-		v[i].resize(12);
+		v[i].resize(18);
 	}
 
 	// Populate X and Y
-	_avgs[0] = 0.0;
-	_avgs[1] = 0.0;
+	_means[0] = 0.0;
+	_means[1] = 0.0;
 
 	for (int i = 0; i < this->size(); i++)
 	{
@@ -969,13 +978,13 @@ void LineEntity2D::_calculate()
 		v[i][3] = pow(v[i][1], 2);	// Y^2
 
 		// Keep running total for means
-		_avgs[0] += v[i][0];
-		_avgs[1] += v[i][1];
+		_means[0] += v[i][0];
+		_means[1] += v[i][1];
 	}
 
 	// Calculate means
-	_avgs[0] /= size();
-	_avgs[1] /= size();
+	_means[0] /= size();
+	_means[1] /= size();
 
 	// Calculate remaining fields
 	_ss[0] = 0.0;
@@ -984,8 +993,8 @@ void LineEntity2D::_calculate()
 
 	for (int i = 0; i < size(); i++)
 	{
-		v[i].at(4) = v[i][0] - _avgs[0];		// (X - Xb)
-		v[i].at(5) = v[i][1] - _avgs[1];		// (Y - Yb)
+		v[i].at(4) = v[i][0] - _means[0];		// (X - Xb)
+		v[i].at(5) = v[i][1] - _means[1];		// (Y - Yb)
 		v[i].at(6) = pow(v[i][4], 2);			// (X - Xb) ^ 2
 		v[i].at(7) = pow(v[i][5], 2);			// (Y - Yb) ^ 2
 		v[i].at(8) = v[i][4] * v[i][5];			// (X - Xb) * (Y - Yb)
@@ -1000,7 +1009,7 @@ void LineEntity2D::_calculate()
 	{
 		// y = mx + c
 		m = _ss[2] / _ss[0];
-		c = _avgs[1] - (m * _avgs[0]);
+		c = _means[1] - (m * _means[0]);
 
 		// set x = t
 		_cfs[0][0] = 1.0;
@@ -1009,9 +1018,7 @@ void LineEntity2D::_calculate()
 		_cfs[1][0] = m;
 		_cfs[1][1] = c;
 
-		// Find point furthest away from line (use fit)
-		// NB. due to coefficients potentially being 0, this differs from below
-		if (_fit == FIT2D_BEST) return;
+		// Calculate perpendicular distance from point to entity
 		for (int i = 0; i < size(); i++)
 		{
 			// Get the equivalent t values
@@ -1024,27 +1031,14 @@ void LineEntity2D::_calculate()
 			v[i][11] = v[i][10] - v[i].at(1);
 
 			// Calculate distance (-ive = left, +ive = right)
-			tmp = v[i][11] * cos(atan2(_cfs[1][0],_cfs[0][0]));
-
-			// Find largest on side of interest
-			switch (_fit)
-			{
-			case FIT2D_LEFT:
-				if (tmp < of) of = tmp;
-				break;
-
-			case FIT2D_RIGHT:
-				if (tmp > of) of = tmp;
-				break;
-			}
+			v[i][12] = v[i][11] * cos(atan2(_cfs[1][0],_cfs[0][0]));
 		}
-
 	}
 	else
 	{
 		// x = my + c
 		m = _ss[2] / _ss[1];
-		c = _avgs[0] - (m * _avgs[1]);
+		c = _means[0] - (m * _means[1]);
 
 		// set y = t;
 		_cfs[1][0] = 1.0;
@@ -1053,9 +1047,7 @@ void LineEntity2D::_calculate()
 		_cfs[0][0] = m;
 		_cfs[0][1] = c;
 
-		// Find point furthest away from line (use fit)
-		// NB. due to coefficients potentially being 0, this differs from above
-		if (_fit == FIT2D_BEST) return;
+		// Calculate perpendicular distance from point to entity
 		for (int i = 0; i < size(); i++)
 		{
 			// Get the equivalent t values
@@ -1069,25 +1061,56 @@ void LineEntity2D::_calculate()
 
 			// Calculate distance (-ive = left, +ive = right - need minus to correct
 			// this direction)
-			tmp = v[i][11] * sin(atan2(_cfs[1][0],_cfs[0][0])) * -1;
-
-			// Find largest on side of interest
-			switch (_fit)
-			{
-			case FIT2D_LEFT:
-				if (tmp < of) of = tmp;
-				break;
-
-			case FIT2D_RIGHT:
-				if (tmp > of) of = tmp;
-				break;
-			}
+			v[i][12] = v[i][11] * sin(-1 * atan2(_cfs[1][0],_cfs[0][0]));
 		}
 	}
 
+	// Calculate equivalent "t" value - this is the value of t that
+	// corresponds to the point where a perpendicular line from the
+	// point to this entity meets the entity.
+	for (int i = 0; i < this->size(); i++)
+	{
+		// Find location on line
+		v[i][13] = v[i][0] - (v[i][12] * sin(atan2(_cfs[1][0],_cfs[0][0])));
+		v[i][14] = v[i][1] + (v[i][12] * cos(atan2(_cfs[1][0],_cfs[0][0])));
+
+		// Convert location into t-value
+		v[i][15] = (v[i][13] - _cfs[0][1]) / _cfs[0][0];
+		v[i][16] = (v[i][14] - _cfs[1][1]) / _cfs[1][0];
+
+		if (_finite(v[i][15]))
+		{
+			v[i][17] = v[i][15];
+		}
+		else
+		{
+			v[i][17] = v[i][16];
+		}
+	}
+
+	_range[0] = v[0][17];
+	_range[1] = v[0][17];
+	for (int i = 0; i < this->size(); i++)
+	{
+		// Find largest on side of interest
+		switch (_fit)
+		{
+		case FIT2D_LEFT:
+			if (v[i][12] < of) of = v[i][12];
+			break;
+
+		case FIT2D_RIGHT:
+			if (v[i][12] > of) of = v[i][12];
+			break;
+		}
+
+		if (v[i][17] < _range[0]) _range[0] = v[i][17];
+		if (v[i][17] > _range[1]) _range[1] = v[i][17];
+	}
+
 	// Move line
-	_cfs[0][1] += of * sin(atan2(_cfs[1][0], _cfs[0][0]));
-	_cfs[1][1] -= of * cos(atan2(_cfs[1][0], _cfs[0][0]));
+	_cfs[0][1] += (of + (_fit * 108)) * sin(atan2(_cfs[1][0], _cfs[0][0]));
+	_cfs[1][1] -= (of + (_fit * 108)) * cos(atan2(_cfs[1][0], _cfs[0][0]));
 
 	v.clear();
 }
@@ -1109,7 +1132,6 @@ void LineEntity2D::_calculateOffset()
  */
 void LineEntity2D::_increment(Point_ptr &p)
 {
-	__super::add(p);
 	_incrementCFS(p);
 }
 
@@ -1121,8 +1143,6 @@ void LineEntity2D::_increment(Point_ptr &p)
  */
 void LineEntity2D::_increment(Points_ptr &ps)
 {
-	__super::add(ps);
-
 	for (int i = 0; i < ps->size(); i++)
 	{
 		_incrementCFS(ps->get(i));
@@ -1148,7 +1168,6 @@ void LineEntity2D::_incrementCFS(Point_ptr &p)
  */
 void LineEntity2D::_decrement(Point_ptr &p)
 {
-	__super::remove(p);
 	_decrementCFS(p);
 }
 
@@ -1160,10 +1179,10 @@ void LineEntity2D::_decrement(Point_ptr &p)
  */
 void LineEntity2D::_decrement(Points_ptr &ps)
 {
+	Point_ptr p;
 	for (int i = 0; i < ps->size(); i++)
 	{
-		Point_ptr p = ps->get(i);
-		__super::remove(p);
+		p = ps->get(i);
 		_decrementCFS(p);
 	}
 }

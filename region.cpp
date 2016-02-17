@@ -22,7 +22,7 @@ bool SurfaceRegion2D::append(Edge_ptr &e)
 {
 	_inner->add(e->right());
 
-	_outer = LineEntity2D::createParallel(_inner, -1000);
+	_outer = LineEntity2D::createParallel(_inner, -500);
 	_entry = LineEntity2D::join(_inner, _outer, Entity::ENTITYLOC_START,
 		Entity::ENTITYLOC_START);
 

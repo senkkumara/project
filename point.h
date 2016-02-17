@@ -43,6 +43,8 @@ private:
 	friend std::ostream &operator<<(std::ostream &strm,	const Point_ptr &p);
 	friend bool operator==(Point &p1, Point &p2);
 	friend bool operator!=(Point &p1, Point &p2);
+	friend bool operator==(Point_ptr &p1, Point_ptr &p2);
+	friend bool operator!=(Point_ptr &p1, Point_ptr &p2);
 
 public:
 	// Factories

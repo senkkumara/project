@@ -55,8 +55,8 @@ public:
 	// Enumerations
 	enum EntitySide
 	{
-		ENTITYSIDE_LEFT = -1,
-		ENTITYSIDE_RIGHT = 1
+		ENTITYSIDE_RIGHT = -1,
+		ENTITYSIDE_LEFT = 1
 	};
 
 	enum EntityDir
@@ -187,6 +187,7 @@ public:
 	bool				intersects(RadEntity2D_ptr &e, bool incRange);
 	bool				intersects(vector<RadEntity2D_ptr> &es, bool incRange);
 	Point_ptr			getIntersect(LineEntity2D_ptr &l, bool incRange);
+	double				getT(Point_ptr &p);
 
 private:
 	// Constructors
@@ -203,7 +204,7 @@ private:
 	LineEntity2D(Edges_ptr &es, Fit2D f);
 
 	// Fields (private)
-	double	_avgs[2];	// Keep track of avg and ss so can incrementally
+	double	_means[2];	// Keep track of avg and ss so can incrementally
 	double	_ss[3];		// build the line - rather than from scratch
 
 	// Methods (private)

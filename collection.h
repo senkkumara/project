@@ -11,6 +11,7 @@ using namespace std;
 
 #include <vector>
 #include "exceptions.h"
+#include <iostream>
 
 /**
  *	"C" is the container type - e.g. "Points_ptr" (required for clone)

@@ -95,6 +95,22 @@ bool operator!=(Point &cP1, Point &cP2)
 }
 
 /**
+ *	== operator overload.
+ */
+bool operator==(Point_ptr &cP1, Point_ptr &cP2)
+{
+	return (*cP1 == *cP2);
+}
+
+/**
+ *	!= operator overload.
+ */
+bool operator!=(Point_ptr &cP1, Point_ptr &cP2)
+{
+	return !(*cP1 == *cP2);
+}
+
+/**
  *	Factory method using constructor with numeric arguments.
  */
 Point_ptr Point::create(double xcoord = 0.0,
